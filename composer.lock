@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3764566bf44448e7b37a8aa2b7d89cb2",
+    "content-hash": "7d3b0536d310ef0f9e631662819c23a6",
     "packages": [
         {
             "name": "aura/di",
@@ -565,6 +565,51 @@
                 "templating"
             ],
             "time": "2018-04-02T09:24:19+00:00"
+        },
+        {
+            "name": "webonyx/graphql-php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webonyx/graphql-php.git",
+                "reference": "a032367e2635b1cec0c8eb8d3b742228ea4c61d5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/a032367e2635b1cec0c8eb8d3b742228ea4c61d5",
+                "reference": "a032367e2635b1cec0c8eb8d3b742228ea4c61d5",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.1"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^4.0",
+                "phpunit/phpunit": "^4.8",
+                "psr/http-message": "^1.0"
+            },
+            "suggest": {
+                "psr/http-message": "To use standard GraphQL server",
+                "react/promise": "To leverage async resolving on React PHP platform"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "GraphQL\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "A PHP port of GraphQL reference implementation",
+            "homepage": "https://github.com/webonyx/graphql-php",
+            "keywords": [
+                "api",
+                "graphql"
+            ],
+            "time": "2018-06-23T06:50:25+00:00"
         },
         {
             "name": "zendframework/zend-auradi-config",
@@ -3492,6 +3537,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "webonyx/graphql-php": 20,
         "roave/security-advisories": 20
     },
     "prefer-stable": false,
