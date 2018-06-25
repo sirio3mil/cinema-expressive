@@ -8,7 +8,10 @@
 
 namespace App\GraphQL;
 
+use App\GraphQL\Type\BlogStoryType;
+use App\GraphQL\Type\QueryType;
 use App\GraphQL\Type\TestType;
+use App\GraphQL\Type\UserType;
 
 class TypeRegistry
 {
@@ -22,8 +25,18 @@ class TypeRegistry
         return $this->types[$name];
     }
 
-    public function test()
+    public function query()
     {
-        return new TestType($this);
+        return new QueryType($this);
+    }
+
+    public function blogStory()
+    {
+        return new BlogStoryType($this);
+    }
+
+    public function user()
+    {
+        return new UserType($this);
     }
 }
