@@ -18,17 +18,7 @@ class QueryType extends ObjectType
     {
         parent::__construct([
             'fields' => [
-                'lastStory' => [
-                    'type' => $types->get('blogStory'),
-                    'resolve' => function() {
-                        return [
-                            'id' => 1,
-                            'title' => 'Example blog post',
-                            'authorId' => 1
-                        ];
-                    }
-                ]
-
+                'lastStory' => $types->get('blogStory')
             ]
         ]);
     }

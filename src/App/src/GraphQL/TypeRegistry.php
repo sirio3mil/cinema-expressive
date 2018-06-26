@@ -12,17 +12,16 @@ use App\GraphQL\Type\BlogStoryType;
 use App\GraphQL\Type\QueryType;
 use App\GraphQL\Type\TestType;
 use App\GraphQL\Type\UserType;
+use Aura\Router\Exception\UnexpectedValue;
 
 class TypeRegistry
 {
-    private $types = [];
-
     public function get($name)
     {
-        if (!isset($this->types[$name])) {
-            $this->types[$name] = $this->{$name}();
+        if (!method_exists($this, $name)) {
+            throw new UnexpectedValue('Wrong type requested ' . $name);
         }
-        return $this->types[$name];
+        return $this->{$name}();
     }
 
     public function query()

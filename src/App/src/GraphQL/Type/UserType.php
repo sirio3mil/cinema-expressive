@@ -19,15 +19,22 @@ class UserType extends ObjectType
     {
         parent::__construct([
             'fields' => [
-                'name' => [
-                    'type' => Type::string()
-                ],
-
-                'id' => [
-                    'type' => Type::int()
-                ]
-
-            ]
+                'name' => Type::string(),
+                'id' => Type::int()
+            ],
+            'resolve' => function(BlogStoryType $blogStory) {
+                $users = [
+                    1 => [
+                        'id' => 1,
+                        'name' => 'Smith'
+                    ],
+                    2 => [
+                        'id' => 2,
+                        'name' => 'Anderson'
+                    ]
+                ];
+                return $users[$blogStory['authorId']];
+            }
         ]);
     }
 }

@@ -19,27 +19,16 @@ class BlogStoryType extends ObjectType
     {
         parent::__construct([
             'fields' => [
-                'author' => [
-                    'type' => $types->get('user'),
-                    'resolve' => function($blogStory) {
-                        $users = [
-                            1 => [
-                                'id' => 1,
-                                'name' => 'Smith'
-                            ],
-                            2 => [
-                                'id' => 2,
-                                'name' => 'Anderson'
-                            ]
-                        ];
-                        return $users[$blogStory['authorId']];
-                    }
-                ],
-                'title' => [
-                    'type' => Type::string()
-                ]
-
-            ]
+                'author' => $types->get('user'),
+                'title' => Type::string()
+            ],
+            'resolve' => function() {
+                return [
+                    'id' => 1,
+                    'title' => 'Example blog post',
+                    'authorId' => 1
+                ];
+            }
         ]);
     }
 }
