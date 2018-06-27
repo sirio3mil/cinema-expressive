@@ -36,6 +36,6 @@ class TypeRegistry
 
     public function user()
     {
-        return new UserType($this);
+        return new UserType();
     }
 }

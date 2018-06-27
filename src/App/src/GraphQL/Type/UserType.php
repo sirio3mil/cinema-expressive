@@ -9,25 +9,17 @@
 namespace App\GraphQL\Type;
 
 
-use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
 class UserType extends ObjectType
 {
-    public function __construct(TypeRegistry $types)
+    public function __construct()
     {
         parent::__construct([
             'fields' => [
-
-                'id' => [
-                    'type' => Type::int()
-                ],
-
-                'name' => [
-                    'type' => Type::string()
-                ]
-
+                'id' => Type::int(),
+                'name' => Type::string()
             ]
         ]);
     }
