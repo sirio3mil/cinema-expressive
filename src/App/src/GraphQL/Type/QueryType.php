@@ -11,18 +11,26 @@ namespace App\GraphQL\Type;
 
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
-use GraphQL\Type\Definition\ResolveInfo;
-use GraphQL\Type\Definition\Type;
 
 class QueryType extends ObjectType
 {
     public function __construct(TypeRegistry $types)
     {
         parent::__construct([
+            'name' => 'Query',
             'fields' => [
+
                 'lastStory' => [
-                    'type' => Type::string()
+                    'type' => $types->get('blogStory'),
+                    'resolve' => function() {
+                        return [
+                            'id' => 1,
+                            'title' => 'Example blog post',
+                            'authorId' => 1
+                        ];
+                    }
                 ]
+
             ]
         ]);
     }
