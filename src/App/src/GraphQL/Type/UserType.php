@@ -18,7 +18,6 @@ class UserType extends ObjectType
     public function __construct(TypeRegistry $types)
     {
         parent::__construct([
-            'name' => 'User',
             'fields' => [
 
                 'id' => [

@@ -18,7 +18,6 @@ class BlogStoryType extends ObjectType
     public function __construct(TypeRegistry $types)
     {
         parent::__construct([
-            'name' => 'BlogStory',
             'fields' => [
 
                 'author' => [
