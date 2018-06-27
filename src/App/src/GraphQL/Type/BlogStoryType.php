@@ -21,7 +21,7 @@ class BlogStoryType extends ObjectType
             'fields' => [
                 'author' => [
                     'type' => $types->get('user'),
-                    'resolve' => function(array $blogStory) {
+                    'resolve' => function (array $blogStory) {
                         $users = [
                             1 => [
                                 'id' => 1,

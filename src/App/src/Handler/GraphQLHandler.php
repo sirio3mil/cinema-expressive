@@ -19,7 +19,7 @@ use Zend\Diactoros\Response\JsonResponse;
 
 class GraphQLHandler implements RequestHandlerInterface
 {
-    public function handle(ServerRequestInterface $request) : ResponseInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $typeRegistry = new TypeRegistry();
         $config = SchemaConfig::create()
