@@ -8,11 +8,18 @@
 
 namespace App\GraphQL;
 
+use GraphQL\Type\Definition\ObjectType;
+
 class TypeRegistry
 {
-    public function get(string $name)
+    public function get(string $name): ObjectType
     {
-        $className = '\\App\\GraphQL\\Type\\' . ucfirst($name) . 'Type';
+        $className = self::getClassName($name);
         return new $className($this);
+    }
+
+    protected static function getClassName(string $name): string
+    {
+        return __NAMESPACE__ . '\\Type\\' . ucfirst($name) . 'Type';
     }
 }
