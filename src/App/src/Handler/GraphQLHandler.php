@@ -16,17 +16,73 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
+use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\Type;
 
 class GraphQLHandler implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request) : ResponseInterface
     {
-        $registry = new TypeRegistry();
+        $userType = new ObjectType([
+            'name' => 'User',
+            'fields' => [
+
+                'id' => [
+                    'type' => Type::int()
+                ],
+
+                'name' => [
+                    'type' => Type::string()
+                ]
+
+            ]
+        ]);
+        $blogStoryType = new ObjectType([
+            'name' => 'BlogStory',
+            'fields' => [
+
+                'author' => [
+                    'type' => $userType,
+                    'resolve' => function($blogStory) {
+                        $users = [
+                            1 => [
+                                'id' => 1,
+                                'name' => 'Smith'
+                            ],
+                            2 => [
+                                'id' => 2,
+                                'name' => 'Anderson'
+                            ]
+                        ];
+                        return $users[$blogStory['authorId']];
+                    }
+                ],
+
+                'title' => [
+                    'type' => Type::string()
+                ]
+
+            ]
+        ]);
+        $queryType = new ObjectType([
+            'name' => 'Query',
+            'fields' => [
+
+                'lastStory' => [
+                    'type' => $blogStoryType,
+                    'resolve' => function() {
+                        return [
+                            'id' => 1,
+                            'title' => 'Example blog post',
+                            'authorId' => 1
+                        ];
+                    }
+                ]
+
+            ]
+        ]);
         $config = SchemaConfig::create()
-            ->setQuery($registry->get('Query'))
-            ->setTypeLoader(function($name) use ($registry) {
-                return $registry->get($name);
-            });
+            ->setQuery($queryType);
         $schema = new Schema($config);
         $server = new StandardServer([
             'schema' => $schema,

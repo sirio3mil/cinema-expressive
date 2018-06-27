@@ -11,6 +11,8 @@ namespace App\GraphQL\Type;
 
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\ResolveInfo;
+use GraphQL\Type\Definition\Type;
 
 class QueryType extends ObjectType
 {
@@ -18,7 +20,9 @@ class QueryType extends ObjectType
     {
         parent::__construct([
             'fields' => [
-                'lastStory' => $types->get('blogStory')
+                'lastStory' => [
+                    'type' => Type::string()
+                ]
             ]
         ]);
     }

@@ -22,7 +22,7 @@ class UserType extends ObjectType
                 'name' => Type::string(),
                 'id' => Type::int()
             ],
-            'resolve' => function(BlogStoryType $blogStory) {
+            'resolveField' => function(BlogStoryType $blogStory) {
                 $users = [
                     1 => [
                         'id' => 1,
