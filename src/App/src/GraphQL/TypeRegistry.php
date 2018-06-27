@@ -8,8 +8,6 @@
 
 namespace App\GraphQL;
 
-use App\GraphQL\Type\TestType;
-
 class TypeRegistry
 {
     public function get(string $name)
