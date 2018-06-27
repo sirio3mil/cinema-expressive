@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Type;
 
-
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
 
