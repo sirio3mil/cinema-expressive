@@ -18,7 +18,7 @@ class ReleaseDateType extends ObjectType
         parent::__construct([
             'fields' => [
                 'date' => Type::string(),
-                'details' => Type::string(),
+                'details' => Type::listOf(Type::string()),
                 'country' => Type::string()
             ]
         ]);
