@@ -12,6 +12,7 @@ namespace App\GraphQL\Type;
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
+use ImdbScraper\Mapper\CastMapper;
 
 class MovieType extends ObjectType
 {
@@ -33,7 +34,20 @@ class MovieType extends ObjectType
                 'genres' => Type::listOf(Type::string()),
                 'sounds' => Type::listOf(Type::string()),
                 'score' => Type::float(),
-                'votes' => Type::int()
+                'votes' => Type::int(),
+                'imdbNumber' => Type::int(),
+                'crew' => [
+                    'type' => $types->get('crew'),
+                    'resolve' => function (array $movie) {
+                        /** @var CastMapper $imdbScrapper */
+                        $imdbScrapper = (new CastMapper())->setImdbNumber($movie['imdbNumber'])->setContentFromUrl();
+                        return [
+                            'cast' => $imdbScrapper->getCast(),
+                            'writers' => $imdbScrapper->getWriters(),
+                            'directors' => $imdbScrapper->getDirectors()
+                        ];
+                    }
+                ],
             ]
         ]);
     }

@@ -54,7 +54,8 @@ class QueryType extends ObjectType
                             'genres' => $imdbScrapper->getGenres(),
                             'sounds' => $imdbScrapper->getSounds(),
                             'score' => $imdbScrapper->getScore(),
-                            'votes' => $imdbScrapper->getVotes()
+                            'votes' => $imdbScrapper->getVotes(),
+                            'imdbNumber' => $args['imdbNumber']
                         ];
                     }
                 ]
