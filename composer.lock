@@ -140,6 +140,54 @@
             "time": "2017-02-14T19:40:03+00:00"
         },
         {
+            "name": "devster/ubench",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/devster/ubench.git",
+                "reference": "255dd8d52f097918c5806f9214a8a1615ee394b5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/devster/ubench/zipball/255dd8d52f097918c5806f9214a8a1615ee394b5",
+                "reference": "255dd8d52f097918c5806f9214a8a1615ee394b5",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Ubench": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jeremy Perret",
+                    "email": "jeremy@devster.org"
+                }
+            ],
+            "description": "Micro PHP library for benchmarking",
+            "homepage": "https://github.com/devster/ubench",
+            "keywords": [
+                "bench",
+                "benchmark",
+                "library",
+                "micro"
+            ],
+            "time": "2017-11-02T16:41:47+00:00"
+        },
+        {
             "name": "fig/http-message-util",
             "version": "1.1.2",
             "source": {
@@ -506,15 +554,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sirio3mil/imdb-scraper.git",
-                "reference": "bea941500df48409e25ef38755d941de4dc2d2e7"
+                "reference": "95c5b2c6edded13dce9ea998cee8a18875f29fc4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sirio3mil/imdb-scraper/zipball/bea941500df48409e25ef38755d941de4dc2d2e7",
-                "reference": "bea941500df48409e25ef38755d941de4dc2d2e7",
+                "url": "https://api.github.com/repos/sirio3mil/imdb-scraper/zipball/95c5b2c6edded13dce9ea998cee8a18875f29fc4",
+                "reference": "95c5b2c6edded13dce9ea998cee8a18875f29fc4",
                 "shasum": ""
             },
             "require": {
+                "devster/ubench": "2.0.0",
                 "php-curl-class/php-curl-class": "@dev"
             },
             "require-dev": {
@@ -531,7 +580,7 @@
                 "source": "https://github.com/sirio3mil/imdb-scraper/tree/master",
                 "issues": "https://github.com/sirio3mil/imdb-scraper/issues"
             },
-            "time": "2018-06-15T21:30:01+00:00"
+            "time": "2018-07-17T16:20:59+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
