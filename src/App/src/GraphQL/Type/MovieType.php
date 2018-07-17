@@ -13,6 +13,7 @@ use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use ImdbScraper\Mapper\CastMapper;
+use ImdbScraper\Mapper\ReleaseMapper;
 
 class MovieType extends ObjectType
 {
@@ -45,6 +46,17 @@ class MovieType extends ObjectType
                             'cast' => $imdbScrapper->getCast(),
                             'writers' => $imdbScrapper->getWriters(),
                             'directors' => $imdbScrapper->getDirectors()
+                        ];
+                    }
+                ],
+                'release' => [
+                    'type' => $types->get('release'),
+                    'resolve' => function (array $movie) {
+                        /** @var ReleaseMapper $imdbScrapper */
+                        $imdbScrapper = (new ReleaseMapper())->setImdbNumber($movie['imdbNumber'])->setContentFromUrl();
+                        return [
+                            'titles' => $imdbScrapper->getAlsoKnownAs(),
+                            'dates' => $imdbScrapper->getReleaseDates()
                         ];
                     }
                 ],
