@@ -554,12 +554,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sirio3mil/imdb-scraper.git",
-                "reference": "95c5b2c6edded13dce9ea998cee8a18875f29fc4"
+                "reference": "69f0f7bbabcc2bb0110632e1356fc60396c62e8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sirio3mil/imdb-scraper/zipball/95c5b2c6edded13dce9ea998cee8a18875f29fc4",
-                "reference": "95c5b2c6edded13dce9ea998cee8a18875f29fc4",
+                "url": "https://api.github.com/repos/sirio3mil/imdb-scraper/zipball/69f0f7bbabcc2bb0110632e1356fc60396c62e8a",
+                "reference": "69f0f7bbabcc2bb0110632e1356fc60396c62e8a",
                 "shasum": ""
             },
             "require": {
@@ -580,7 +580,7 @@
                 "source": "https://github.com/sirio3mil/imdb-scraper/tree/master",
                 "issues": "https://github.com/sirio3mil/imdb-scraper/issues"
             },
-            "time": "2018-07-17T16:20:59+00:00"
+            "time": "2018-07-17T20:39:43+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",
