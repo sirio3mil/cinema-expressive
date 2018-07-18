@@ -19,25 +19,11 @@ class GraphQLHandlerFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
-        /*$cacheAdapter = $container->get(AbstractAdapter::class);*/
+        $config = $container->has('config') ? $container->get('config') : [];
+        $config = $config['zend-cache'] ?? [];
 
         /** @var Memcached $cacheStorageAdapter */
-        $cacheStorageAdapter = StorageFactory::factory([
-            'adapter' => [
-                'name' => 'memcached',
-                'options' => [
-                    'ttl' => 3600,
-                    'namespace' => 'cache_listener',
-                    'key_pattern' => null,
-                    'readable' => true,
-                    'writable' => true,
-                    'servers' => ['memcached'],
-                ],
-            ],
-            'plugins' => [
-                'exception_handler' => ['throw_exceptions' => false],
-            ],
-        ]);
+        $cacheStorageAdapter = StorageFactory::factory($config);
 
         return new GraphQLHandler($cacheStorageAdapter);
     }
