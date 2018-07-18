@@ -18,12 +18,12 @@ use ImdbScraper\Model\Release;
 
 class ReleaseType extends ObjectType
 {
-    public function __construct(TypeRegistry $types)
+    public function __construct(TypeRegistry $typeRegistry)
     {
         parent::__construct([
             'fields' => [
-                'dates' => Type::listOf($types->get('releaseDate')),
-                'titles' => Type::listOf($types->get('alternativeTitle'))
+                'dates' => Type::listOf($typeRegistry->get('releaseDate')),
+                'titles' => Type::listOf($typeRegistry->get('alternativeTitle'))
             ],
             'resolveField' => function($source, $args, $context, ResolveInfo $info) {
                 switch ($info->fieldName) {

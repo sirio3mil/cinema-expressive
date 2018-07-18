@@ -6,17 +6,13 @@
  * Time: 13:18
  */
 
-namespace App\Wrapper;
+namespace App\GraphQL\Wrapper;
 
 
-use ImdbScraper\Mapper\AbstractPageMapper;
 use ImdbScraper\Mapper\HomeMapper;
 
-class QueryWrapper
+class QueryWrapper extends AbstractWrapper
 {
-    
-    /** @var AbstractPageMapper $pageMapper */
-    protected $pageMapper;
     
     public function __construct()
     {
@@ -24,29 +20,13 @@ class QueryWrapper
     }
 
     /**
-     * @param $pageMapper
-     */
-    public function setPageMapper(AbstractPageMapper $pageMapper): void
-    {
-        $this->pageMapper = $pageMapper;
-    }
-
-    /**
-     * @return AbstractPageMapper
-     */
-    public function getPageMapper(): AbstractPageMapper
-    {
-        return $this->pageMapper;
-    }
-
-    /**
-     * @param int $imdbNumber
+     * @param array $args
      * @return array
      * @throws \Exception
      */
-    public function getData(int $imdbNumber): array
+    public function getData(array $args): array
     {
-        $this->pageMapper->setImdbNumber($imdbNumber)->setContentFromUrl();
+        $this->pageMapper->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
         return [
             'year' => $this->pageMapper->getYear(),
             'title' => $this->pageMapper->getTitle(),
@@ -63,7 +43,7 @@ class QueryWrapper
             'sounds' => $this->pageMapper->getSounds(),
             'score' => $this->pageMapper->getScore(),
             'votes' => $this->pageMapper->getVotes(),
-            'imdbNumber' => $imdbNumber
+            'imdbNumber' => $args['imdbNumber']
         ];
     }
 }

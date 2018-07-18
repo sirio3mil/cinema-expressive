@@ -8,36 +8,33 @@
 
 namespace App\GraphQL\Type;
 
+use App\GraphQL\Resolver\QueryResolver;
 use App\GraphQL\TypeRegistry;
-use App\Wrapper\QueryWrapper;
-use GraphQL\Type\Definition\ObjectType;
+use App\GraphQL\Wrapper\QueryWrapper;
 use GraphQL\Type\Definition\Type;
-use Zend\Cache\Pattern\ClassCache;
-use Zend\Cache\PatternFactory;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
 
-class QueryType extends ObjectType
+class QueryType extends AbstractType
 {
-    public function __construct(TypeRegistry $types, AbstractAdapter $cacheStorageAdapter)
+
+    public function __construct(TypeRegistry $typeRegistry, AbstractAdapter $cacheStorageAdapter)
     {
+
+        $this->typeRegistry = $typeRegistry;
+        $this->cacheStorageAdapter = $cacheStorageAdapter;
+        $this->wrapper = new QueryWrapper();
+
         parent::__construct([
             'fields' => [
                 'getMovie' => [
-                    'type' => $types->get('movie'),
-                    'args' => [
+                    'type'    => $this->typeRegistry->get('movie'),
+                    'args'    => [
                         'imdbNumber' => [
                             'type' => Type::int()
                         ]
                     ],
-                    'resolve' => function ($source, $args) use ($cacheStorageAdapter) {
-                        /** @var QueryWrapper $queryWrapper */
-                        $queryWrapper = new QueryWrapper();
-                        /** @var ClassCache $wrapper */
-                        $wrapper = PatternFactory::factory('object', [
-                            'object' => $queryWrapper,
-                            'storage' => $cacheStorageAdapter
-                        ]);
-                        return $wrapper->getData($args['imdbNumber']);
+                    'resolve' => function ($source, $args) {
+                        return QueryResolver::resolve($this, $args);
                     }
                 ]
             ]

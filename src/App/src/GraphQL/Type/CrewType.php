@@ -18,13 +18,13 @@ use ImdbScraper\Model\People;
 
 class CrewType extends ObjectType
 {
-    public function __construct(TypeRegistry $types)
+    public function __construct(TypeRegistry $typeRegistry)
     {
         parent::__construct([
             'fields' => [
-                'cast' => Type::listOf($types->get('cast')),
-                'writers' => Type::listOf($types->get('writer')),
-                'directors' => Type::listOf($types->get('director'))
+                'cast' => Type::listOf($typeRegistry->get('cast')),
+                'writers' => Type::listOf($typeRegistry->get('writer')),
+                'directors' => Type::listOf($typeRegistry->get('director'))
             ],
             'resolveField' => function($source, $args, $context, ResolveInfo $info) {
                 switch ($info->fieldName) {

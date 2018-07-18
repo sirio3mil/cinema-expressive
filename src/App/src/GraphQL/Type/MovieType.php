@@ -17,7 +17,7 @@ use ImdbScraper\Mapper\ReleaseMapper;
 
 class MovieType extends ObjectType
 {
-    public function __construct(TypeRegistry $types)
+    public function __construct(TypeRegistry $typeRegistry)
     {
         parent::__construct([
             'fields' => [
@@ -38,7 +38,7 @@ class MovieType extends ObjectType
                 'votes' => Type::int(),
                 'imdbNumber' => Type::int(),
                 'crew' => [
-                    'type' => $types->get('crew'),
+                    'type' => $typeRegistry->get('crew'),
                     'resolve' => function (array $movie) {
                         /** @var CastMapper $imdbScrapper */
                         $imdbScrapper = (new CastMapper())->setImdbNumber($movie['imdbNumber'])->setContentFromUrl();
@@ -50,7 +50,7 @@ class MovieType extends ObjectType
                     }
                 ],
                 'release' => [
-                    'type' => $types->get('release'),
+                    'type' => $typeRegistry->get('release'),
                     'resolve' => function (array $movie) {
                         /** @var ReleaseMapper $imdbScrapper */
                         $imdbScrapper = (new ReleaseMapper())->setImdbNumber($movie['imdbNumber'])->setContentFromUrl();
