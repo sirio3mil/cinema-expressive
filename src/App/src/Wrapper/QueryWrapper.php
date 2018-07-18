@@ -15,28 +15,28 @@ use ImdbScraper\Mapper\HomeMapper;
 class QueryWrapper
 {
     
-    /** @var AbstractPageMapper $scrapper */
-    protected $scrapper;
+    /** @var AbstractPageMapper $pageMapper */
+    protected $pageMapper;
     
     public function __construct()
     {
-        $this->setScrapper(new HomeMapper());
+        $this->setPageMapper(new HomeMapper());
     }
 
     /**
-     * @param $scrapper
+     * @param $pageMapper
      */
-    public function setScrapper(AbstractPageMapper $scrapper): void
+    public function setPageMapper(AbstractPageMapper $pageMapper): void
     {
-        $this->scrapper = $scrapper;
+        $this->pageMapper = $pageMapper;
     }
 
     /**
      * @return AbstractPageMapper
      */
-    public function getScrapper(): AbstractPageMapper
+    public function getPageMapper(): AbstractPageMapper
     {
-        return $this->scrapper;
+        return $this->pageMapper;
     }
 
     /**
@@ -46,23 +46,23 @@ class QueryWrapper
      */
     public function getData(int $imdbNumber): array
     {
-        $this->scrapper->setImdbNumber($imdbNumber)->setContentFromUrl();
+        $this->pageMapper->setImdbNumber($imdbNumber)->setContentFromUrl();
         return [
-            'year' => $this->scrapper->getYear(),
-            'title' => $this->scrapper->getTitle(),
-            'languages' => $this->scrapper->getLanguages(),
-            'duration' => $this->scrapper->getDuration(),
-            'color' => $this->scrapper->getColor(),
-            'recommendations' => $this->scrapper->getRecommendations(),
-            'countries' => $this->scrapper->getCountries(),
-            'tvShow' => $this->scrapper->getTvShow(),
-            'haveReleaseInfo' => $this->scrapper->haveReleaseInfo(),
-            'isTvShow' => $this->scrapper->isTvShow(),
-            'isEpisode' => $this->scrapper->isEpisode(),
-            'genres' => $this->scrapper->getGenres(),
-            'sounds' => $this->scrapper->getSounds(),
-            'score' => $this->scrapper->getScore(),
-            'votes' => $this->scrapper->getVotes(),
+            'year' => $this->pageMapper->getYear(),
+            'title' => $this->pageMapper->getTitle(),
+            'languages' => $this->pageMapper->getLanguages(),
+            'duration' => $this->pageMapper->getDuration(),
+            'color' => $this->pageMapper->getColor(),
+            'recommendations' => $this->pageMapper->getRecommendations(),
+            'countries' => $this->pageMapper->getCountries(),
+            'tvShow' => $this->pageMapper->getTvShow(),
+            'haveReleaseInfo' => $this->pageMapper->haveReleaseInfo(),
+            'isTvShow' => $this->pageMapper->isTvShow(),
+            'isEpisode' => $this->pageMapper->isEpisode(),
+            'genres' => $this->pageMapper->getGenres(),
+            'sounds' => $this->pageMapper->getSounds(),
+            'score' => $this->pageMapper->getScore(),
+            'votes' => $this->pageMapper->getVotes(),
             'imdbNumber' => $imdbNumber
         ];
     }

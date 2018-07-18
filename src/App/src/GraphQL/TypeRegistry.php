@@ -9,13 +9,23 @@
 namespace App\GraphQL;
 
 use GraphQL\Type\Definition\ObjectType;
+use Zend\Cache\Storage\Adapter\AbstractAdapter;
 
 class TypeRegistry
 {
+
+    /** @var AbstractAdapter $cacheStorageAdapter */
+    protected $cacheStorageAdapter;
+
+    public function __construct(AbstractAdapter $cacheStorageAdapter)
+    {
+        $this->cacheStorageAdapter = $cacheStorageAdapter;
+    }
+
     public function get(string $name): ObjectType
     {
         $className = self::getClassName($name);
-        return new $className($this);
+        return new $className($this, $this->cacheStorageAdapter);
     }
 
     protected static function getClassName(string $name): string

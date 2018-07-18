@@ -15,15 +15,24 @@ use GraphQL\Type\SchemaConfig;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use Zend\Diactoros\Response\JsonResponse;
 
 class GraphQLHandler implements RequestHandlerInterface
 {
+
+    /** @var TypeRegistry $typeRegistry */
+    protected $typeRegistry;
+
+    public function __construct(AbstractAdapter $cacheStorageAdapter)
+    {
+        $this->typeRegistry = new TypeRegistry($cacheStorageAdapter);
+    }
+
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $typeRegistry = new TypeRegistry();
         $config = SchemaConfig::create()
-            ->setQuery($typeRegistry->get('query'));
+            ->setQuery($this->typeRegistry->get('query'));
         $schema = new Schema($config);
         $server = new StandardServer([
             'schema' => $schema,
