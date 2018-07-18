@@ -19,7 +19,6 @@ class GraphQLHandlerFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
-        die('ola');
         /*$cacheAdapter = $container->get(AbstractAdapter::class);*/
 
         /** @var Memcached $cacheStorageAdapter */
