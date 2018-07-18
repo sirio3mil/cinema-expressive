@@ -11,7 +11,7 @@ namespace App\GraphQL\Type;
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
-use ImdbScraper\Mapper\HomeMapper;
+use Zend\Cache\PatternFactory;
 
 class QueryType extends ObjectType
 {
@@ -27,26 +27,12 @@ class QueryType extends ObjectType
                         ]
                     ],
                     'resolve' => function ($source, $args) {
-                        /** @var HomeMapper $imdbScrapper */
-                        $imdbScrapper = (new HomeMapper())->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
-                        return [
-                            'year' => $imdbScrapper->getYear(),
-                            'title' => $imdbScrapper->getTitle(),
-                            'languages' => $imdbScrapper->getLanguages(),
-                            'duration' => $imdbScrapper->getDuration(),
-                            'color' => $imdbScrapper->getColor(),
-                            'recommendations' => $imdbScrapper->getRecommendations(),
-                            'countries' => $imdbScrapper->getCountries(),
-                            'tvShow' => $imdbScrapper->getTvShow(),
-                            'haveReleaseInfo' => $imdbScrapper->haveReleaseInfo(),
-                            'isTvShow' => $imdbScrapper->isTvShow(),
-                            'isEpisode' => $imdbScrapper->isEpisode(),
-                            'genres' => $imdbScrapper->getGenres(),
-                            'sounds' => $imdbScrapper->getSounds(),
-                            'score' => $imdbScrapper->getScore(),
-                            'votes' => $imdbScrapper->getVotes(),
-                            'imdbNumber' => $args['imdbNumber']
-                        ];
+                        $wrapper = PatternFactory::factory('class', [
+                            'class'   => 'App\Wrapper\QueryWrapper',
+                            'storage' => 'memcached',
+                            'cache_output' => true
+                        ]);
+                        return $wrapper->call("getData", [$args['imdbNumber']]);
                     }
                 ]
             ]
