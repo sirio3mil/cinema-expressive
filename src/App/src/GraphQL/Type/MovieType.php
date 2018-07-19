@@ -9,15 +9,17 @@
 namespace App\GraphQL\Type;
 
 
+use App\GraphQL\Resolver\CachedQueryResolver;
 use App\GraphQL\TypeRegistry;
+use App\GraphQL\Wrapper\MovieCrewWrapper;
+use App\GraphQL\Wrapper\MovieReleaseWrapper;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
-use ImdbScraper\Mapper\CastMapper;
-use ImdbScraper\Mapper\ReleaseMapper;
+use Zend\Cache\Storage\Adapter\AbstractAdapter;
 
 class MovieType extends ObjectType
 {
-    public function __construct(TypeRegistry $typeRegistry)
+    public function __construct(TypeRegistry $typeRegistry, AbstractAdapter $cacheStorageAdapter)
     {
         parent::__construct([
             'fields' => [
@@ -39,25 +41,14 @@ class MovieType extends ObjectType
                 'imdbNumber' => Type::int(),
                 'crew' => [
                     'type' => $typeRegistry->get('crew'),
-                    'resolve' => function (array $movie) {
-                        /** @var CastMapper $imdbScrapper */
-                        $imdbScrapper = (new CastMapper())->setImdbNumber($movie['imdbNumber'])->setContentFromUrl();
-                        return [
-                            'cast' => $imdbScrapper->getCast(),
-                            'writers' => $imdbScrapper->getWriters(),
-                            'directors' => $imdbScrapper->getDirectors()
-                        ];
+                    'resolve' => function (array $source) use ($cacheStorageAdapter) {
+                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCrewWrapper(), $source);
                     }
                 ],
                 'release' => [
                     'type' => $typeRegistry->get('release'),
-                    'resolve' => function (array $movie) {
-                        /** @var ReleaseMapper $imdbScrapper */
-                        $imdbScrapper = (new ReleaseMapper())->setImdbNumber($movie['imdbNumber'])->setContentFromUrl();
-                        return [
-                            'titles' => $imdbScrapper->getAlsoKnownAs(),
-                            'dates' => $imdbScrapper->getReleaseDates()
-                        ];
+                    'resolve' => function (array $source) use ($cacheStorageAdapter) {
+                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieReleaseWrapper(), $source);
                     }
                 ],
             ]

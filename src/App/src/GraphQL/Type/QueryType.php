@@ -8,19 +8,18 @@
 
 namespace App\GraphQL\Type;
 
-use App\GraphQL\Resolver\QueryGetMovieResolver;
+use App\GraphQL\Resolver\CachedQueryResolver;
 use App\GraphQL\TypeRegistry;
 use App\GraphQL\Wrapper\QueryGetMovieWrapper;
+use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
 
-class QueryType extends AbstractType
+class QueryType extends ObjectType
 {
 
     public function __construct(TypeRegistry $typeRegistry, AbstractAdapter $cacheStorageAdapter)
     {
-
-        $this->cacheStorageAdapter = $cacheStorageAdapter;
 
         parent::__construct([
             'fields' => [
@@ -31,8 +30,8 @@ class QueryType extends AbstractType
                             'type' => Type::int()
                         ]
                     ],
-                    'resolve' => function ($source, $args) {
-                        return QueryGetMovieResolver::resolve($this, $args);
+                    'resolve' => function ($source, $args) use ($cacheStorageAdapter) {
+                        return CachedQueryResolver::resolve($cacheStorageAdapter, new QueryGetMovieWrapper(), $args);
                     }
                 ]
             ]

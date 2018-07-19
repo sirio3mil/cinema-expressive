@@ -35,6 +35,7 @@ abstract class AbstractWrapper
     /**
      * @param array $args
      * @return array
+     * @throws \Exception
      */
     public abstract function getData(array $args): array;
 }
