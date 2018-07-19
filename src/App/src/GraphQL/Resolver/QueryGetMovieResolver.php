@@ -10,17 +10,18 @@ namespace App\GraphQL\Resolver;
 
 
 use App\GraphQL\Type\AbstractType;
+use App\GraphQL\Wrapper\QueryGetMovieWrapper;
 use Zend\Cache\Pattern\ClassCache;
 use Zend\Cache\PatternFactory;
 
-class QueryResolver
+class QueryGetMovieResolver
 {
     public static function resolve(AbstractType $objectType, array $args)
     {
 
         /** @var ClassCache $wrapper */
         $wrapper = PatternFactory::factory('object', [
-            'object'  => $objectType->getWrapper(),
+            'object'  => new QueryGetMovieWrapper(),
             'storage' => $objectType->getCacheStorageAdapter()
         ]);
         return $wrapper->getData($args);
