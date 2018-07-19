@@ -23,6 +23,6 @@ class QueryResolver
             'object'  => $objectType->getWrapper(),
             'storage' => $objectType->getCacheStorageAdapter()
         ]);
-        return $wrapper->getData($args['imdbNumber']);
+        return $wrapper->getData($args);
     }
 }
