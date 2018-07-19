@@ -16,7 +16,7 @@ use GraphQL\Type\Definition\Type;
 use ImdbScraper\Model\CastPeople;
 use ImdbScraper\Model\People;
 
-class CrewType extends ObjectType
+class CreditsType extends ObjectType
 {
     public function __construct(TypeRegistry $typeRegistry)
     {

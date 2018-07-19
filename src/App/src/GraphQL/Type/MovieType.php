@@ -11,7 +11,7 @@ namespace App\GraphQL\Type;
 
 use App\GraphQL\Resolver\CachedQueryResolver;
 use App\GraphQL\TypeRegistry;
-use App\GraphQL\Wrapper\MovieCrewWrapper;
+use App\GraphQL\Wrapper\MovieCreditsWrapper;
 use App\GraphQL\Wrapper\MovieReleaseWrapper;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
@@ -39,10 +39,10 @@ class MovieType extends ObjectType
                 'score' => Type::float(),
                 'votes' => Type::int(),
                 'imdbNumber' => Type::int(),
-                'crew' => [
-                    'type' => $typeRegistry->get('crew'),
+                'credits' => [
+                    'type' => $typeRegistry->get('credits'),
                     'resolve' => function (array $source) use ($cacheStorageAdapter) {
-                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCrewWrapper(), $source);
+                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCreditsWrapper(), $source);
                     }
                 ],
                 'release' => [

@@ -11,7 +11,7 @@ namespace App\GraphQL\Wrapper;
 
 use ImdbScraper\Mapper\CastMapper;
 
-class MovieCrewWrapper extends AbstractWrapper
+class MovieCreditsWrapper extends AbstractWrapper
 {
 
     public function __construct()
