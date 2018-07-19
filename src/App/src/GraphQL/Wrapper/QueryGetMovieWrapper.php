@@ -43,6 +43,9 @@ class QueryGetMovieWrapper extends AbstractWrapper
             'sounds' => $this->pageMapper->getSounds(),
             'score' => $this->pageMapper->getScore(),
             'votes' => $this->pageMapper->getVotes(),
+            'episodeNumber' => $this->pageMapper->getEpisodeNumber(),
+            'seasonNumber' => $this->pageMapper->getSeasonNumber(),
+            'seasons' => $this->pageMapper->getSeasons(),
             'imdbNumber' => $args['imdbNumber']
         ];
     }

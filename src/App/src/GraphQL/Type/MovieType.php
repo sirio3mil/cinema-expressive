@@ -39,6 +39,9 @@ class MovieType extends ObjectType
                 'score' => Type::float(),
                 'votes' => Type::int(),
                 'imdbNumber' => Type::int(),
+                'episodeNumber' => Type::int(),
+                'seasonNumber' => Type::int(),
+                'seasons' => Type::int(),
                 'credits' => [
                     'type' => $typeRegistry->get('credits'),
                     'resolve' => function (array $source) use ($cacheStorageAdapter) {
