@@ -15,6 +15,7 @@ use App\GraphQL\Wrapper\MovieCreditsWrapper;
 use App\GraphQL\Wrapper\MovieReleaseWrapper;
 use App\GraphQL\Wrapper\MovieKeywordsWrapper;
 use App\GraphQL\Wrapper\MovieLocationsWrapper;
+use App\GraphQL\Wrapper\MovieCertificatesWrapper;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
@@ -66,6 +67,12 @@ class MovieType extends ObjectType
                     'type' => Type::listOf($typeRegistry->get('location')),
                     'resolve' => function (array $source) use ($cacheStorageAdapter) {
                         return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieLocationsWrapper(), $source);
+                    }
+                ],
+                'certificates' => [
+                    'type' => Type::listOf($typeRegistry->get('certification')),
+                    'resolve' => function (array $source) use ($cacheStorageAdapter) {
+                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCertificatesWrapper(), $source);
                     }
                 ],
             ]
