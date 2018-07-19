@@ -11,6 +11,7 @@ namespace App\GraphQL\Type;
 use App\GraphQL\Resolver\CachedQueryResolver;
 use App\GraphQL\TypeRegistry;
 use App\GraphQL\Wrapper\QueryGetMovieWrapper;
+use App\GraphQL\Wrapper\QueryGetEpisodeListWrapper;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
@@ -26,12 +27,20 @@ class QueryType extends ObjectType
                 'getMovie' => [
                     'type'    => $typeRegistry->get('movie'),
                     'args'    => [
-                        'imdbNumber' => [
-                            'type' => Type::int()
-                        ]
+                        'imdbNumber' => Type::int()
                     ],
                     'resolve' => function ($source, $args) use ($cacheStorageAdapter) {
                         return CachedQueryResolver::resolve($cacheStorageAdapter, new QueryGetMovieWrapper(), $args);
+                    }
+                ],
+                'getEpisodeList' => [
+                    'type'    => Type::listOf($typeRegistry->get('episode')),
+                    'args'    => [
+                        'imdbNumber' => Type::int(),
+                        'seasonNumber' => Type::int()
+                    ],
+                    'resolve' => function ($source, $args) use ($cacheStorageAdapter) {
+                        return CachedQueryResolver::resolve($cacheStorageAdapter, new QueryGetEpisodeListWrapper(), $args);
                     }
                 ]
             ]
