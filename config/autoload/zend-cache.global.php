@@ -13,7 +13,7 @@ return [
         'adapter' => [
             'name' => 'memcached',
             'options' => [
-                'ttl' => 3600,
+                'ttl' => 360000,
                 'namespace' => 'cache_listener',
                 'key_pattern' => null,
                 'readable' => true,
