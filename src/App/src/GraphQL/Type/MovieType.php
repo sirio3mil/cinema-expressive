@@ -9,20 +9,12 @@
 namespace App\GraphQL\Type;
 
 
-use App\GraphQL\Resolver\CachedQueryResolver;
-use App\GraphQL\TypeRegistry;
-use App\GraphQL\Wrapper\MovieCreditsWrapper;
-use App\GraphQL\Wrapper\MovieReleaseWrapper;
-use App\GraphQL\Wrapper\MovieKeywordsWrapper;
-use App\GraphQL\Wrapper\MovieLocationsWrapper;
-use App\GraphQL\Wrapper\MovieCertificatesWrapper;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
-use Zend\Cache\Storage\Adapter\AbstractAdapter;
 
 class MovieType extends ObjectType
 {
-    public function __construct(TypeRegistry $typeRegistry, AbstractAdapter $cacheStorageAdapter)
+    public function __construct()
     {
         parent::__construct([
             'fields' => [
@@ -45,36 +37,6 @@ class MovieType extends ObjectType
                 'episodeNumber' => Type::int(),
                 'seasonNumber' => Type::int(),
                 'seasons' => Type::int(),
-                'credits' => [
-                    'type' => $typeRegistry->get('credits'),
-                    'resolve' => function (array $source) use ($cacheStorageAdapter) {
-                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCreditsWrapper(), $source);
-                    }
-                ],
-                'release' => [
-                    'type' => $typeRegistry->get('release'),
-                    'resolve' => function (array $source) use ($cacheStorageAdapter) {
-                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieReleaseWrapper(), $source);
-                    }
-                ],
-                'keywords' => [
-                    'type' => $typeRegistry->get('keywords'),
-                    'resolve' => function (array $source) use ($cacheStorageAdapter) {
-                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieKeywordsWrapper(), $source);
-                    }
-                ],
-                'locations' => [
-                    'type' => Type::listOf($typeRegistry->get('location')),
-                    'resolve' => function (array $source) use ($cacheStorageAdapter) {
-                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieLocationsWrapper(), $source);
-                    }
-                ],
-                'certificates' => [
-                    'type' => Type::listOf($typeRegistry->get('certification')),
-                    'resolve' => function (array $source) use ($cacheStorageAdapter) {
-                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCertificatesWrapper(), $source);
-                    }
-                ],
             ]
         ]);
     }

@@ -13,7 +13,7 @@ use ImdbScraper\Iterator\EpisodeIterator;
 use ImdbScraper\Mapper\EpisodeListMapper;
 use ImdbScraper\Model\Episode;
 
-class QueryGetEpisodeListWrapper extends AbstractWrapper
+class EpisodeListWrapper extends AbstractWrapper
 {
 
     public function __construct()

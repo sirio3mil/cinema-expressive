@@ -11,7 +11,7 @@ namespace App\GraphQL\Wrapper;
 
 use ImdbScraper\Mapper\ReleaseMapper;
 
-class MovieReleaseWrapper extends AbstractWrapper
+class MovieReleasesWrapper extends AbstractWrapper
 {
 
     public function __construct()
