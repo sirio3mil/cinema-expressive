@@ -10,21 +10,17 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use GraphQL\Server\StandardServer;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Zend\Cache\Storage\Adapter\Memcached;
-use Zend\Cache\StorageFactory;
 
 class GraphQLHandlerFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
-        $config = $container->has('config') ? $container->get('config') : [];
-        $config = $config['zend-cache'] ?? [];
+        /** @var StandardServer $standardServer */
+        $standardServer = $container->get(StandardServer::class);
 
-        /** @var Memcached $cacheStorageAdapter */
-        $cacheStorageAdapter = StorageFactory::factory($config);
-
-        return new GraphQLHandler($cacheStorageAdapter);
+        return new GraphQLHandler($standardServer);
     }
 }

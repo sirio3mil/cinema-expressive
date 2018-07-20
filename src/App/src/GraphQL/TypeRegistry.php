@@ -9,17 +9,20 @@
 namespace App\GraphQL;
 
 use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Schema;
+use Psr\Container\ContainerInterface;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
+use Zend\Cache\Storage\Adapter\Memcached;
 
 class TypeRegistry
 {
 
-    /** @var AbstractAdapter $cacheStorageAdapter */
-    protected $cacheStorageAdapter;
+    /** @var ContainerInterface $container */
+    protected $container;
 
-    public function __construct(AbstractAdapter $cacheStorageAdapter)
+    public function __construct(ContainerInterface $container)
     {
-        $this->cacheStorageAdapter = $cacheStorageAdapter;
+        $this->container = $container;
     }
 
     /**
@@ -27,7 +30,12 @@ class TypeRegistry
      */
     public function getCacheStorageAdapter(): AbstractAdapter
     {
-        return $this->cacheStorageAdapter;
+        return $this->container->get(Memcached::class);
+    }
+
+    public function getSchema(): Schema
+    {
+        return $this->container->get(Schema::class);
     }
 
     public function get(string $name): ObjectType
