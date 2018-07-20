@@ -22,10 +22,18 @@ class TypeRegistry
         $this->cacheStorageAdapter = $cacheStorageAdapter;
     }
 
+    /**
+     * @return AbstractAdapter
+     */
+    public function getCacheStorageAdapter(): AbstractAdapter
+    {
+        return $this->cacheStorageAdapter;
+    }
+
     public function get(string $name): ObjectType
     {
         $className = self::getClassName($name);
-        return new $className($this, $this->cacheStorageAdapter);
+        return new $className($this);
     }
 
     protected static function getClassName(string $name): string

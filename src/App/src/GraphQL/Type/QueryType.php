@@ -24,8 +24,11 @@ use App\GraphQL\Wrapper\MovieCertificatesWrapper;
 class QueryType extends ObjectType
 {
 
-    public function __construct(TypeRegistry $typeRegistry, AbstractAdapter $cacheStorageAdapter)
+    public function __construct(TypeRegistry $typeRegistry)
     {
+
+        /** @var AbstractAdapter $cacheStorageAdapter */
+        $cacheStorageAdapter = $typeRegistry->getCacheStorageAdapter();
 
         parent::__construct([
             'fields' => [
