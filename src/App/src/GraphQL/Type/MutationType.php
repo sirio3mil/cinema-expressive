@@ -9,6 +9,7 @@
 namespace App\GraphQL\Type;
 
 
+use App\GraphQL\Resolver\CachedDocumentNodeResolver;
 use App\GraphQL\TypeRegistry;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;
@@ -34,10 +35,17 @@ class MutationType extends ObjectType
                         ]
                     ]),
                     'resolve' => function ($source, $args) use ($typeRegistry) {
+                        $source = CachedDocumentNodeResolver::resolve($typeRegistry->getCacheStorageAdapter(),
+                            'queries/graphql/fullMovie.graphql');
                         /** @var ExecutionResult $result */
                         $result = GraphQL::executeQuery(
                             $typeRegistry->getSchema(),
-                            '{movieDetails(imdbNumber: ' . $args['imdbNumber'] . '){title, imdbNumber}}'
+                            $source,
+                            null,
+                            null,
+                            [
+                                "imdbNumber" => $args['imdbNumber']
+                            ]
                         );
                         return $result->data['movieDetails'];
                     }

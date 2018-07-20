@@ -1,0 +1,72 @@
+query ($imdbNumber: Int!) {
+  movieDetails(imdbNumber: $imdbNumber) {
+    title
+    year
+    languages
+    duration
+    color
+    recommendations
+    countries
+    tvShow
+    isTvShow
+    isEpisode
+    haveReleaseInfo
+    genres
+    sounds
+    score
+    votes
+    episodeNumber
+    seasons
+    seasonNumber
+    imdbNumber
+  }
+  movieCredits(imdbNumber: $imdbNumber) {
+    cast {
+      fullName
+      imdbNumber
+      character
+      alias
+    }
+    writers {
+      fullName
+      imdbNumber
+    }
+    directors {
+      fullName
+      imdbNumber
+    }
+  }
+  movieReleases(imdbNumber: $imdbNumber) {
+    dates {
+      date
+      details
+      country
+    }
+    titles {
+      title
+      description
+      country
+    }
+  }
+  movieKeywords(imdbNumber: $imdbNumber) {
+    total
+    keywords {
+      keyword
+      url
+      imdbNumber
+      totalVotes
+      relevantVotes
+    }
+  }
+  movieLocations(imdbNumber: $imdbNumber) {
+    location
+    totalVotes
+    relevantVotes
+  }
+  movieCertifications(imdbNumber: $imdbNumber) {
+    certification
+    details
+    country
+    isoCountryCode
+  }
+}
