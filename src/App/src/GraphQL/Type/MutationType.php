@@ -36,7 +36,7 @@ class MutationType extends ObjectType
                     ]),
                     'resolve' => function ($source, $args) use ($typeRegistry) {
                         $source = CachedDocumentNodeResolver::resolve($typeRegistry->getCacheStorageAdapter(),
-                            'queries/graphql/fullMovie.graphql');
+                            'queries/graphql/FullMovie.graphql');
                         /** @var ExecutionResult $result */
                         $result = GraphQL::executeQuery(
                             $typeRegistry->getSchema(),
