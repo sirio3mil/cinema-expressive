@@ -33,9 +33,20 @@ class TypeRegistry
         return $this->container->get(Memcached::class);
     }
 
+    /**
+     * @return Schema
+     */
     public function getSchema(): Schema
     {
         return $this->container->get(Schema::class);
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public function getContainer(): ContainerInterface
+    {
+        return $this->container;
     }
 
     public function get(string $name): ObjectType
