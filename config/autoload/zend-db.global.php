@@ -6,7 +6,7 @@
  * Time: 9:16
  */
 return [
-    'db' => [
+    'zend-db' => [
         'mssql' => [
             'hostname' => "mssql",
             'username' => "sa",
@@ -25,7 +25,8 @@ return [
         'mongo' => [
             'hostname' => "mongo",
             'database' => "cinema",
-            'port' => 27017
+            'port' => 27017,
+            'dsn' => "mongodb://mongo:27017"
         ],
         'mysql' => [
             'hostname' => "mssql",

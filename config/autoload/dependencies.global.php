@@ -10,7 +10,8 @@ return [
         // Use 'aliases' to alias a service name to another service. The
         // key is the alias name, the value is the service to which it points.
         'aliases' => [
-            //App\Handler\Memcached::class => Zend\Cache\Storage\Adapter\Memcached::class,
+            App\Alias\MongoDBClient::class => MongoDB\Client::class,
+            App\Alias\MongoDBManager::class => MongoDB\Driver\Manager::class,
         ],
         // Use 'invokables' for constructor-less services, or services that do
         // not require arguments to the constructor. Map a service name to the
@@ -23,7 +24,9 @@ return [
             Zend\Cache\Storage\Adapter\Memcached::class => App\Factory\MemcachedFactory::class,
             GraphQL\Type\Schema::class => App\Factory\SchemaFactory::class,
             GraphQL\Server\StandardServer::class => App\Factory\StandardServerFactory::class,
-            App\GraphQL\TypeRegistry::class => App\Factory\TypeRegistryFactory::class
+            App\GraphQL\TypeRegistry::class => App\Factory\TypeRegistryFactory::class,
+            MongoDB\Client::class => \App\Factory\MongoDBClientFactory::class,
+            MongoDB\Driver\Manager::class => App\Factory\MongoDBManagerFactory::class
         ],
     ],
 ];

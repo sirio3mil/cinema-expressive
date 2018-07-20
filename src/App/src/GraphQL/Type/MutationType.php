@@ -11,10 +11,12 @@ namespace App\GraphQL\Type;
 
 use App\GraphQL\Resolver\CachedDocumentNodeResolver;
 use App\GraphQL\TypeRegistry;
+use App\Alias\MongoDBClient;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
+use MongoDB\Collection;
 
 class MutationType extends ObjectType
 {
@@ -47,6 +49,21 @@ class MutationType extends ObjectType
                                 "imdbNumber" => $args['imdbNumber']
                             ]
                         );
+                        $date = new \DateTime();
+                        /** @var Collection $collection */
+                        $typeRegistry->getContainer()
+                            ->get(MongoDBClient::class)
+                            ->cinema
+                            ->movies
+                            ->findOneAndReplace(
+                                [
+                                    "movieDetails.imdbNumber" => $args['imdbNumber']
+                                ],
+                                array_merge($result->data, ["updated" => $date]),
+                                [
+                                    "upsert" => true
+                                ]
+                            );
                         return $result->data['movieDetails'];
                     }
                 ]
