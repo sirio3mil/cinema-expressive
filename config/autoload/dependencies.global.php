@@ -12,6 +12,7 @@ return [
         'aliases' => [
             App\Alias\MongoDBClient::class => MongoDB\Client::class,
             App\Alias\MongoDBManager::class => MongoDB\Driver\Manager::class,
+            App\Alias\EntityManager::class => Doctrine\ORM\EntityManager::class,
         ],
         // Use 'invokables' for constructor-less services, or services that do
         // not require arguments to the constructor. Map a service name to the
@@ -26,7 +27,8 @@ return [
             GraphQL\Server\StandardServer::class => App\Factory\StandardServerFactory::class,
             App\GraphQL\TypeRegistry::class => App\Factory\TypeRegistryFactory::class,
             MongoDB\Client::class => \App\Factory\MongoDBClientFactory::class,
-            MongoDB\Driver\Manager::class => App\Factory\MongoDBManagerFactory::class
+            MongoDB\Driver\Manager::class => App\Factory\MongoDBManagerFactory::class,
+            Doctrine\ORM\EntityManager::class => App\Factory\EntityManagerFactory::class
         ],
     ],
 ];
