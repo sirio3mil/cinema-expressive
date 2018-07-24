@@ -4,8 +4,6 @@
   "type": "project",
   "homepage": "https://github.com/sirio3mil/cinema-expressive",
   "license": "BSD-3-Clause",
-  "minimum-stability" : "dev",
-  "prefer-stable": true,
   "keywords": [
     "skeleton",
     "middleware",
@@ -47,30 +45,30 @@
   },
   "require": {
     "php": "^7.1",
-    "doctrine/orm": "3.0.x-dev",
-    "graphaware/neo4j-php-client": "4.8.4",
-    "mongodb/mongodb": "1.4.1",
+    "doctrine/orm": "^2.6",
+    "graphaware/neo4j-php-client": "^4.8",
+    "mongodb/mongodb": "^1.4",
     "sirio3mil/imdb-scraper": "dev-master",
-    "webonyx/graphql-php": "^0.12.1",
+    "webonyx/graphql-php": "^0.12",
     "zendframework/zend-auradi-config": "^1.0",
     "zendframework/zend-cache": "^2.8",
-    "zendframework/zend-component-installer": "^2.1.1",
+    "zendframework/zend-component-installer": "^2.1",
     "zendframework/zend-config-aggregator": "^1.0",
-    "zendframework/zend-db": "2.9.3",
-    "zendframework/zend-diactoros": "^1.7.1",
-    "zendframework/zend-expressive": "^3.0.1",
+    "zendframework/zend-db": "^2.9",
+    "zendframework/zend-diactoros": "^1.7",
+    "zendframework/zend-expressive": "^3.0",
     "zendframework/zend-expressive-aurarouter": "^3.0",
     "zendframework/zend-expressive-helpers": "^5.0",
     "zendframework/zend-expressive-twigrenderer": "^2.0",
     "zendframework/zend-stdlib": "^3.1"
   },
   "require-dev": {
-    "phpunit/phpunit": "^7.0.1",
+    "phpunit/phpunit": "^7.0",
     "roave/security-advisories": "dev-master",
-    "squizlabs/php_codesniffer": "^2.9.1",
+    "squizlabs/php_codesniffer": "^2.9",
     "zendframework/zend-expressive-tooling": "^1.0",
     "zfcampus/zf-development-mode": "^3.1",
-    "filp/whoops": "^2.1.12"
+    "filp/whoops": "^2.1"
   },
   "autoload": {
     "psr-4": {
