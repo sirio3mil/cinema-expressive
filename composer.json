@@ -49,6 +49,7 @@
     "graphaware/neo4j-php-client": "^4.8",
     "mongodb/mongodb": "^1.4",
     "sirio3mil/imdb-scraper": "dev-master",
+    "symfony/yaml": "^4.1",
     "webonyx/graphql-php": "^0.12",
     "zendframework/zend-auradi-config": "^1.0",
     "zendframework/zend-cache": "^2.8",
