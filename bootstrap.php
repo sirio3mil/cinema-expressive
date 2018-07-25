@@ -19,7 +19,7 @@ $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/src/App/s
 // database configuration parameters
 $conn = array(
     'driver' => 'sqlsrv',
-    'host' => "mssql",
+    'host' => ".",
     'user' => "sa",
     'password' => "ms3CjP{R?1^A",
     'dbname' => "Film"
