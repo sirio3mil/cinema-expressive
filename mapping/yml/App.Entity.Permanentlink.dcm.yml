@@ -1,0 +1,22 @@
+App\Entity\Permanentlink:
+    type: entity
+    table: PermanentLink
+    id:
+        objectid:
+            type: guid
+            nullable: false
+            length: null
+            options:
+                fixed: false
+            id: true
+            column: objectId
+            generator:
+                strategy: IDENTITY
+    fields:
+        url:
+            type: string
+            nullable: false
+            length: 150
+            options:
+                fixed: false
+    lifecycleCallbacks: {  }

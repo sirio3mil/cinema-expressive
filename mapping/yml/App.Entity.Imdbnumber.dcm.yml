@@ -1,0 +1,43 @@
+App\Entity\Imdbnumber:
+    type: entity
+    table: ImdbNumber
+    indexes:
+        IDX_447F6AA335C2934A:
+            columns:
+                - rowTypeId
+    uniqueConstraints:
+        UK_ImdbNumber_RowType:
+            columns:
+                - objectId
+                - imdbNumber
+                - rowTypeId
+    id:
+        objectid:
+            type: guid
+            nullable: false
+            length: null
+            options:
+                fixed: false
+            id: true
+            column: objectId
+            generator:
+                strategy: IDENTITY
+    fields:
+        imdbnumber:
+            type: bigint
+            nullable: false
+            options:
+                unsigned: false
+            column: imdbNumber
+    manyToOne:
+        rowtypeid:
+            targetEntity: App\Entity\Rowtype
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                rowTypeId:
+                    referencedColumnName: rowTypeId
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

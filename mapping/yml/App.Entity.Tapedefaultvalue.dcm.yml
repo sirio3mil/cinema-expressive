@@ -1,0 +1,72 @@
+App\Entity\Tapedefaultvalue:
+    type: entity
+    table: TapeDefaultValue
+    indexes:
+        IDX_5523AA0F142B65CE:
+            columns:
+                - titleSearchValueId
+        IDX_5523AA0FDD224094:
+            columns:
+                - castPeopleId
+        IDX_5523AA0F1A8430E2:
+            columns:
+                - directorPeopleId
+        IDX_5523AA0FFBA2A6B4:
+            columns:
+                - countryId
+    id:
+        tapeid:
+            associationKey: true
+    oneToOne:
+        tapeid:
+            targetEntity: App\Entity\Tape
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tapeId:
+                    referencedColumnName: tapeId
+            orphanRemoval: false
+    manyToOne:
+        titlesearchvalueid:
+            targetEntity: App\Entity\Searchvalue
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                titleSearchValueId:
+                    referencedColumnName: searchValueId
+            orphanRemoval: false
+        castpeopleid:
+            targetEntity: App\Entity\People
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                castPeopleId:
+                    referencedColumnName: peopleId
+            orphanRemoval: false
+        directorpeopleid:
+            targetEntity: App\Entity\People
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                directorPeopleId:
+                    referencedColumnName: peopleId
+            orphanRemoval: false
+        countryid:
+            targetEntity: App\Entity\Country
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                countryId:
+                    referencedColumnName: countryId
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

@@ -1,0 +1,31 @@
+App\Entity\Tapepeoplerolecharacter:
+    type: entity
+    table: TapePeopleRoleCharacter
+    id:
+        tapepeopleroleid:
+            associationKey: true
+    fields:
+        character:
+            type: string
+            nullable: false
+            length: 300
+            options:
+                fixed: false
+        createdat:
+            type: datetime
+            nullable: false
+            options:
+                default: sysutcdatetime()
+            column: createdAt
+    oneToOne:
+        tapepeopleroleid:
+            targetEntity: App\Entity\Tapepeoplerole
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tapePeopleRoleId:
+                    referencedColumnName: tapePeopleRoleId
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

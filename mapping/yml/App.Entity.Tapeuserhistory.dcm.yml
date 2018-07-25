@@ -1,0 +1,54 @@
+App\Entity\Tapeuserhistory:
+    type: entity
+    table: TapeUserHistory
+    indexes:
+        IDX_519C0027F036C3F8:
+            columns:
+                - tapeUserId
+        IDX_519C0027A25F8006:
+            columns:
+                - tapeUserStatusId
+    uniqueConstraints:
+        UK_TapeUserStatusHistory:
+            columns:
+                - tapeUserId
+                - tapeUserStatusId
+    id:
+        tapeuserhistoryid:
+            type: bigint
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: tapeUserHistoryId
+            generator:
+                strategy: IDENTITY
+    fields:
+        createdat:
+            type: datetime
+            nullable: false
+            options:
+                default: sysutcdatetime()
+            column: createdAt
+    manyToOne:
+        tapeuserid:
+            targetEntity: App\Entity\Tapeuser
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tapeUserId:
+                    referencedColumnName: tapeUserId
+            orphanRemoval: false
+        tapeuserstatusid:
+            targetEntity: App\Entity\Tapeuserstatus
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tapeUserStatusId:
+                    referencedColumnName: tapeUserStatusId
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

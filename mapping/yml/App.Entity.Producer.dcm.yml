@@ -1,0 +1,45 @@
+App\Entity\Producer:
+    type: entity
+    table: Producer
+    indexes:
+        IDX_6E122B8AFBA2A6B4:
+            columns:
+                - countryId
+    id:
+        producerid:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: producerId
+            generator:
+                strategy: IDENTITY
+    fields:
+        name:
+            type: string
+            nullable: false
+            length: 100
+            options:
+                fixed: false
+    manyToOne:
+        countryid:
+            targetEntity: App\Entity\Country
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                countryId:
+                    referencedColumnName: countryId
+            orphanRemoval: false
+    manyToMany:
+        tapeid:
+            targetEntity: App\Entity\Tape
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: producerid
+            inversedBy: null
+            joinTable: null
+            orderBy: null
+    lifecycleCallbacks: {  }

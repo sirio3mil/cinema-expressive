@@ -1,0 +1,91 @@
+App\Entity\Tapedetail:
+    type: entity
+    table: TapeDetail
+    id:
+        tapeid:
+            associationKey: true
+    fields:
+        updatedat:
+            type: datetime
+            nullable: false
+            options:
+                default: getutcdate()
+            column: updatedAt
+        year:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+        duration:
+            type: smallint
+            nullable: true
+            options:
+                unsigned: false
+        color:
+            type: string
+            nullable: true
+            length: 20
+            options:
+                fixed: false
+                default: Color
+        sound:
+            type: string
+            nullable: true
+            length: 150
+            options:
+                fixed: false
+        havecover:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: haveCover
+        tvshow:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+            column: tvShow
+        votes:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '0'
+        score:
+            type: float
+            nullable: false
+            precision: 53
+            scale: 0
+            options:
+                default: '0'
+        adult:
+            type: boolean
+            nullable: false
+            options:
+                default: '0'
+        budget:
+            type: float
+            nullable: false
+            precision: 53
+            scale: 0
+            options:
+                default: '0'
+        currency:
+            type: integer
+            nullable: false
+            options:
+                unsigned: false
+                default: '1'
+    oneToOne:
+        tapeid:
+            targetEntity: App\Entity\Tape
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tapeId:
+                    referencedColumnName: tapeId
+            orphanRemoval: false
+    lifecycleCallbacks: {  }

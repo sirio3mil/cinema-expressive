@@ -1,0 +1,53 @@
+App\Entity\Premiere:
+    type: entity
+    table: Premiere
+    indexes:
+        IDX_5A8BFF59CB6448D3:
+            columns:
+                - tapeId
+        IDX_5A8BFF59FBA2A6B4:
+            columns:
+                - countryId
+    id:
+        premiereid:
+            type: bigint
+            nullable: false
+            options:
+                unsigned: false
+            id: true
+            column: premiereId
+            generator:
+                strategy: IDENTITY
+    fields:
+        date:
+            type: date
+            nullable: false
+        place:
+            type: string
+            nullable: false
+            length: 10
+            options:
+                fixed: false
+                default: Movie
+    manyToOne:
+        tapeid:
+            targetEntity: App\Entity\Tape
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                tapeId:
+                    referencedColumnName: tapeId
+            orphanRemoval: false
+        countryid:
+            targetEntity: App\Entity\Country
+            cascade: {  }
+            fetch: LAZY
+            mappedBy: null
+            inversedBy: null
+            joinColumns:
+                countryId:
+                    referencedColumnName: countryId
+            orphanRemoval: false
+    lifecycleCallbacks: {  }
