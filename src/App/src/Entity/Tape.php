@@ -16,23 +16,54 @@ class Tape
 {
     /**
      * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(
+     *     type="bigint",
+     *     name="tapeId",
+     *     nullable=false,
+     *     options={"unsigned":false}
+     * )
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $tapeid;
+    private $tapeId;
 
     /**
      * @var string
+     *
+     * @ORM\Column(
+     *     type="string",
+     *     length=150,
+     *     name="originalTitle",
+     *     nullable=false,
+     *     options={"fixed":false}
+     * )
      */
-    private $originaltitle;
+    private $originalTitle;
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(
+     *     type="datetime",
+     *     name="createdAt",
+     *     nullable=false,
+     *     options={"default":"sysutcdatetime()"}
+     * )
      */
-    private $createdat = 'sysutcdatetime()';
+    private $createdAt;
 
     /**
      * @var string
+     *
+     * @ORM\Column(
+     *     type="guid",
+     *     name="objectId",
+     *     nullable=false,
+     *     options={"fixed":false, "default":"newid()"}
+     * )
      */
-    private $objectid = 'newid()';
+    private $objectId;
 
     /**
      * @var Collection
@@ -87,21 +118,21 @@ class Tape
      *
      * @return int
      */
-    public function getTapeid()
+    public function getTapeId()
     {
-        return $this->tapeid;
+        return $this->tapeId;
     }
 
     /**
      * Set originaltitle.
      *
-     * @param string $originaltitle
+     * @param string $originalTitle
      *
      * @return Tape
      */
-    public function setOriginaltitle($originaltitle)
+    public function setOriginalTitle($originalTitle)
     {
-        $this->originaltitle = $originaltitle;
+        $this->originalTitle = $originalTitle;
     
         return $this;
     }
@@ -111,21 +142,21 @@ class Tape
      *
      * @return string
      */
-    public function getOriginaltitle()
+    public function getOriginalTitle()
     {
-        return $this->originaltitle;
+        return $this->originalTitle;
     }
 
     /**
      * Set createdat.
      *
-     * @param \DateTime $createdat
+     * @param \DateTime $createdAt
      *
      * @return Tape
      */
-    public function setCreatedat($createdat)
+    public function setCreatedAt($createdAt)
     {
-        $this->createdat = $createdat;
+        $this->createdAt = $createdAt;
     
         return $this;
     }
@@ -135,21 +166,21 @@ class Tape
      *
      * @return \DateTime
      */
-    public function getCreatedat()
+    public function getCreatedAt()
     {
-        return $this->createdat;
+        return $this->createdAt;
     }
 
     /**
      * Set objectid.
      *
-     * @param string $objectid
+     * @param string $objectId
      *
      * @return Tape
      */
-    public function setObjectid($objectid)
+    public function setObjectId($objectId)
     {
-        $this->objectid = $objectid;
+        $this->objectId = $objectId;
     
         return $this;
     }
@@ -159,9 +190,9 @@ class Tape
      *
      * @return string
      */
-    public function getObjectid()
+    public function getObjectId()
     {
-        return $this->objectid;
+        return $this->objectId;
     }
 
     /**
