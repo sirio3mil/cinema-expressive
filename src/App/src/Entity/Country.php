@@ -2,188 +2,158 @@
 
 namespace App\Entity;
 
-/**
- * Country
- */
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
 class Country
 {
     /**
      * @var int
      */
-    private $countryid;
+    private $countryId;
 
     /**
      * @var string
      */
-    private $officialname;
+    private $officialName;
 
     /**
      * @var string|null
      */
-    private $isocode;
+    private $isoCode;
 
     /**
      * @var \DateTime
      */
-    private $createdat = 'sysutcdatetime()';
+    private $createdAt;
 
     /**
-     * @var \App\Entity\Language
+     * @var Language
      */
-    private $languageid;
+    private $language;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
-    private $tapeid;
+    private $tapes;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->tapeid = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->tapes = new ArrayCollection();
     }
 
     /**
-     * Get countryid.
-     *
      * @return int
      */
-    public function getCountryid()
+    public function getCountryId(): int
     {
-        return $this->countryid;
+        return $this->countryId;
     }
 
     /**
-     * Set officialname.
-     *
-     * @param string $officialname
-     *
+     * @param string $officialName
      * @return Country
      */
-    public function setOfficialname($officialname)
+    public function setOfficialName(string $officialName): Country
     {
-        $this->officialname = $officialname;
+        $this->officialName = $officialName;
     
         return $this;
     }
 
     /**
-     * Get officialname.
-     *
      * @return string
      */
-    public function getOfficialname()
+    public function getOfficialName(): string
     {
-        return $this->officialname;
+        return $this->officialName;
     }
 
     /**
-     * Set isocode.
-     *
-     * @param string|null $isocode
-     *
+     * @param null|string $isoCode
      * @return Country
      */
-    public function setIsocode($isocode = null)
+    public function setIsoCode(?string $isoCode = null): Country
     {
-        $this->isocode = $isocode;
+        $this->isoCode = $isoCode;
     
         return $this;
     }
 
     /**
-     * Get isocode.
-     *
-     * @return string|null
+     * @return null|string
      */
-    public function getIsocode()
+    public function getIsoCode(): ?string
     {
-        return $this->isocode;
+        return $this->isoCode;
     }
 
     /**
-     * Set createdat.
-     *
-     * @param \DateTime $createdat
-     *
+     * @param \DateTime $createdAt
      * @return Country
      */
-    public function setCreatedat($createdat)
+    public function setCreatedAt(\DateTime $createdAt): Country
     {
-        $this->createdat = $createdat;
+        $this->createdAt = $createdAt;
     
         return $this;
     }
 
     /**
-     * Get createdat.
-     *
      * @return \DateTime
      */
-    public function getCreatedat()
+    public function getCreatedAt(): \DateTime
     {
-        return $this->createdat;
+        return $this->createdAt;
     }
 
     /**
-     * Set languageid.
-     *
-     * @param \App\Entity\Language|null $languageid
-     *
+     * @param Language|null $language
      * @return Country
      */
-    public function setLanguageid(\App\Entity\Language $languageid = null)
+    public function setLanguage(Language $language = null): Country
     {
-        $this->languageid = $languageid;
+        $this->language = $language;
     
         return $this;
     }
 
     /**
-     * Get languageid.
-     *
-     * @return \App\Entity\Language|null
+     * @return Language|null
      */
-    public function getLanguageid()
+    public function getLanguage(): ?Language
     {
-        return $this->languageid;
+        return $this->language;
     }
 
     /**
-     * Add tapeid.
-     *
-     * @param \App\Entity\Tape $tapeid
-     *
+     * @param Tape $tape
      * @return Country
      */
-    public function addTapeid(\App\Entity\Tape $tapeid)
+    public function addTape(Tape $tape): Country
     {
-        $this->tapeid[] = $tapeid;
+        $this->tapes[] = $tape;
     
         return $this;
     }
 
     /**
-     * Remove tapeid.
-     *
-     * @param \App\Entity\Tape $tapeid
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @param Tape $tape
+     * @return bool
      */
-    public function removeTapeid(\App\Entity\Tape $tapeid)
+    public function removeTape(Tape $tape): bool
     {
-        return $this->tapeid->removeElement($tapeid);
+        return $this->tapes->removeElement($tape);
     }
 
     /**
-     * Get tapeid.
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function getTapeid()
+    public function getTapes(): Collection
     {
-        return $this->tapeid;
+        return $this->tapes;
     }
 }
