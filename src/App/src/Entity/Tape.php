@@ -2,8 +2,14 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Annotation as ORM;
+
 /**
- * Tape
+ * Class Tape
+ * @package App\Entity
+ * @ORM\Entity
  */
 class Tape
 {
@@ -28,32 +34,37 @@ class Tape
     private $objectid = 'newid()';
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
+     * @ManyToMany(targetEntity="Country", inversedBy="tapes", fetch="EXTRA_LAZY")
+     * @JoinTable(name="TapeCountry",
+     *      joinColumns={@JoinColumn(name="tapeId", referencedColumnName="tapeId")},
+     *      inverseJoinColumns={@JoinColumn(name="countryId", referencedColumnName="countryId")}
+     *     )
      */
-    private $countryid;
+    private $countries;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $genreid;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $languageid;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $locationid;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $producerid;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
      */
     private $tagid;
 
@@ -62,12 +73,12 @@ class Tape
      */
     public function __construct()
     {
-        $this->countryid = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->genreid = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->languageid = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->locationid = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->producerid = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->tagid = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->countries = new ArrayCollection();
+        $this->genreid = new ArrayCollection();
+        $this->languageid = new ArrayCollection();
+        $this->locationid = new ArrayCollection();
+        $this->producerid = new ArrayCollection();
+        $this->tagid = new ArrayCollection();
     }
 
     /**
@@ -153,39 +164,31 @@ class Tape
     }
 
     /**
-     * Add countryid.
-     *
-     * @param \App\Entity\Country $countryid
-     *
+     * @param Country $country
      * @return Tape
      */
-    public function addCountryid(\App\Entity\Country $countryid)
+    public function addCountry(Country $country): Tape
     {
-        $this->countryid[] = $countryid;
+        $this->countries[] = $country;
     
         return $this;
     }
 
     /**
-     * Remove countryid.
-     *
-     * @param \App\Entity\Country $countryid
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @param Country $country
+     * @return bool
      */
-    public function removeCountryid(\App\Entity\Country $countryid)
+    public function removeCountry(Country $country): bool
     {
-        return $this->countryid->removeElement($countryid);
+        return $this->countries->removeElement($country);
     }
 
     /**
-     * Get countryid.
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function getCountryid()
+    public function getCountries(): Collection
     {
-        return $this->countryid;
+        return $this->countries;
     }
 
     /**

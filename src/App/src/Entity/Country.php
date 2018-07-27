@@ -4,7 +4,14 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Annotation as ORM;
 
+
+/**
+ * Class Country
+ * @package App\Entity
+ * @ORM\Entity
+ */
 class Country
 {
     /**
@@ -34,6 +41,7 @@ class Country
 
     /**
      * @var Collection
+     * @ORM\ManyToMany(targetEntity="Tape", mappedBy="countries", fetch="EXTRA_LAZY")
      */
     private $tapes;
 
