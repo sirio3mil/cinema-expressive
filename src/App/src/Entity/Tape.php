@@ -10,6 +10,7 @@ use Doctrine\ORM\Annotation as ORM;
  * Class Tape
  * @package App\Entity
  * @ORM\Entity
+ * @ORM\Table(name="Tape")
  */
 class Tape
 {
@@ -35,10 +36,10 @@ class Tape
 
     /**
      * @var Collection
-     * @ManyToMany(targetEntity="Country", inversedBy="tapes", fetch="EXTRA_LAZY")
-     * @JoinTable(name="TapeCountry",
-     *      joinColumns={@JoinColumn(name="tapeId", referencedColumnName="tapeId")},
-     *      inverseJoinColumns={@JoinColumn(name="countryId", referencedColumnName="countryId")}
+     * @ORM\ManyToMany(targetEntity="Country", inversedBy="tapes", fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="TapeCountry",
+     *      joinColumns={@ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="countryId", referencedColumnName="countryId")}
      *     )
      */
     private $countries;

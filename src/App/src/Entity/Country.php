@@ -11,43 +11,77 @@ use Doctrine\ORM\Annotation as ORM;
  * Class Country
  * @package App\Entity
  * @ORM\Entity
+ * @ORM\Table(name="Country")
  */
 class Country
 {
     /**
      * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(
+     *     type="integer",
+     *     name="countryId",
+     *     nullable=false,
+     *     options={"unsigned":false}
+     * )
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $countryId;
 
     /**
      * @var string
+     *
+     * @ORM\Column(
+     *     type="string",
+     *     length=50,
+     *     name="officialName",
+     *     nullable=false,
+     *     options={"fixed":false}
+     * )
      */
     private $officialName;
 
     /**
      * @var string|null
+     *
+     * @ORM\Column(
+     *     type="string",
+     *     length=2,
+     *     name="isoCode",
+     *     nullable=true,
+     *     options={"fixed":true}
+     * )
      */
     private $isoCode;
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(
+     *     type="datetime",
+     *     name="createdAt",
+     *     nullable=false,
+     *     options={"default":"sysutcdatetime()"}
+     * )
      */
     private $createdAt;
 
     /**
      * @var Language
+     *
+     * @ORM\ManyToOne(targetEntity="Language", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\JoinColumn(name="languageId", referencedColumnName="languageId")
      */
     private $language;
 
     /**
      * @var Collection
+     *
      * @ORM\ManyToMany(targetEntity="Tape", mappedBy="countries", fetch="EXTRA_LAZY")
      */
     private $tapes;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
         $this->tapes = new ArrayCollection();
