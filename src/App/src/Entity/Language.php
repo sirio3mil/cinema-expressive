@@ -2,57 +2,76 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Annotation as ORM;
+
 /**
- * Language
+ * Class Language
+ * @package App\Entity
+ * @ORM\Entity
+ * @ORM\Table(name="Language")
  */
-class Language
+class Language implements CinemaEntity
 {
+
+    use CreationDate;
+
     /**
      * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(
+     *     type="integer",
+     *     name="languageId",
+     *     nullable=false,
+     *     options={"unsigned":false}
+     * )
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $languageid;
+    private $languageId;
 
     /**
      * @var string
+     *
+     * @ORM\Column(
+     *     type="string",
+     *     length=25,
+     *     name="name",
+     *     nullable=false,
+     *     options={"fixed":false}
+     * )
      */
     private $name;
 
     /**
-     * @var \DateTime
+     * @var Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Tape", mappedBy="languages", fetch="EXTRA_LAZY")
      */
-    private $createdat = 'sysutcdatetime()';
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $tapeid;
+    private $tapes;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->tapeid = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->tapes = new ArrayCollection();
     }
 
     /**
-     * Get languageid.
-     *
      * @return int
      */
-    public function getLanguageid()
+    public function getLanguageId(): int
     {
-        return $this->languageid;
+        return $this->languageId;
     }
 
     /**
-     * Set name.
-     *
      * @param string $name
-     *
      * @return Language
      */
-    public function setName($name)
+    public function setName(string $name): Language
     {
         $this->name = $name;
     
@@ -60,72 +79,38 @@ class Language
     }
 
     /**
-     * Get name.
-     *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * Set createdat.
-     *
-     * @param \DateTime $createdat
-     *
+     * @param Tape $tape
      * @return Language
      */
-    public function setCreatedat($createdat)
+    public function addTape(Tape $tape): Language
     {
-        $this->createdat = $createdat;
+        $this->tapes[] = $tape;
     
         return $this;
     }
 
     /**
-     * Get createdat.
-     *
-     * @return \DateTime
+     * @param Tape $tape
+     * @return bool
      */
-    public function getCreatedat()
+    public function removeTape(Tape $tape): bool
     {
-        return $this->createdat;
+        return $this->tapes->removeElement($tape);
     }
 
     /**
-     * Add tapeid.
-     *
-     * @param \App\Entity\Tape $tapeid
-     *
-     * @return Language
+     * @return Collection
      */
-    public function addTapeid(\App\Entity\Tape $tapeid)
+    public function getTapes(): Collection
     {
-        $this->tapeid[] = $tapeid;
-    
-        return $this;
-    }
-
-    /**
-     * Remove tapeid.
-     *
-     * @param \App\Entity\Tape $tapeid
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeTapeid(\App\Entity\Tape $tapeid)
-    {
-        return $this->tapeid->removeElement($tapeid);
-    }
-
-    /**
-     * Get tapeid.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTapeid()
-    {
-        return $this->tapeid;
+        return $this->tapes;
     }
 }

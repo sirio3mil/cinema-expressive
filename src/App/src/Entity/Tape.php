@@ -78,8 +78,13 @@ class Tape implements CinemaEntity
 
     /**
      * @var Collection
+     * @ORM\ManyToMany(targetEntity="Language", inversedBy="tapes", fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="TapeLanguage",
+     *      joinColumns={@ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="languageId", referencedColumnName="languageId")}
+     *     )
      */
-    private $languageid;
+    private $languages;
 
     /**
      * @var Collection
@@ -103,7 +108,7 @@ class Tape implements CinemaEntity
     {
         $this->countries = new ArrayCollection();
         $this->genres = new ArrayCollection();
-        $this->languageid = new ArrayCollection();
+        $this->languages = new ArrayCollection();
         $this->locationid = new ArrayCollection();
         $this->producerid = new ArrayCollection();
         $this->tagid = new ArrayCollection();
@@ -212,39 +217,31 @@ class Tape implements CinemaEntity
     }
 
     /**
-     * Add languageid.
-     *
-     * @param \App\Entity\Language $languageid
-     *
+     * @param Language $language
      * @return Tape
      */
-    public function addLanguageid(\App\Entity\Language $languageid)
+    public function addLanguage(Language $language): Tape
     {
-        $this->languageid[] = $languageid;
+        $this->languages[] = $language;
     
         return $this;
     }
 
     /**
-     * Remove languageid.
-     *
-     * @param \App\Entity\Language $languageid
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @param Language $language
+     * @return bool
      */
-    public function removeLanguageid(\App\Entity\Language $languageid)
+    public function removeLanguage(Language $language): bool
     {
-        return $this->languageid->removeElement($languageid);
+        return $this->languages->removeElement($language);
     }
 
     /**
-     * Get languageid.
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function getLanguageid()
+    public function getLanguages(): Collection
     {
-        return $this->languageid;
+        return $this->languages;
     }
 
     /**
