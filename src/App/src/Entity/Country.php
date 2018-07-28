@@ -13,8 +13,11 @@ use Doctrine\ORM\Annotation as ORM;
  * @ORM\Entity
  * @ORM\Table(name="Country")
  */
-class Country
+class Country implements CinemaEntity
 {
+
+    use CreationDate;
+
     /**
      * @var int
      *
@@ -54,18 +57,6 @@ class Country
      * )
      */
     private $isoCode;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(
-     *     type="datetime",
-     *     name="createdAt",
-     *     nullable=false,
-     *     options={"default":"sysutcdatetime()"}
-     * )
-     */
-    private $createdAt;
 
     /**
      * @var Language
@@ -131,25 +122,6 @@ class Country
     public function getIsoCode(): ?string
     {
         return $this->isoCode;
-    }
-
-    /**
-     * @param \DateTime $createdAt
-     * @return Country
-     */
-    public function setCreatedAt(\DateTime $createdAt): Country
-    {
-        $this->createdAt = $createdAt;
-    
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt(): \DateTime
-    {
-        return $this->createdAt;
     }
 
     /**
