@@ -12,8 +12,11 @@ use Doctrine\ORM\Annotation as ORM;
  * @ORM\Entity
  * @ORM\Table(name="Tape")
  */
-class Tape
+class Tape implements CinemaEntity
 {
+
+    use CreationDate;
+
     /**
      * @var int
      *
@@ -42,18 +45,6 @@ class Tape
     private $originalTitle;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(
-     *     type="datetime",
-     *     name="createdAt",
-     *     nullable=false,
-     *     options={"default":"sysutcdatetime()"}
-     * )
-     */
-    private $createdAt;
-
-    /**
      * @var string
      *
      * @ORM\Column(
@@ -77,8 +68,13 @@ class Tape
 
     /**
      * @var Collection
+     * @ORM\ManyToMany(targetEntity="Genre", inversedBy="tapes", fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="TapeGenre",
+     *      joinColumns={@ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="genreId", referencedColumnName="genreId")}
+     *     )
      */
-    private $genreid;
+    private $genres;
 
     /**
      * @var Collection
@@ -106,7 +102,7 @@ class Tape
     public function __construct()
     {
         $this->countries = new ArrayCollection();
-        $this->genreid = new ArrayCollection();
+        $this->genres = new ArrayCollection();
         $this->languageid = new ArrayCollection();
         $this->locationid = new ArrayCollection();
         $this->producerid = new ArrayCollection();
@@ -114,23 +110,18 @@ class Tape
     }
 
     /**
-     * Get tapeid.
-     *
      * @return int
      */
-    public function getTapeId()
+    public function getTapeId(): int
     {
         return $this->tapeId;
     }
 
     /**
-     * Set originaltitle.
-     *
      * @param string $originalTitle
-     *
      * @return Tape
      */
-    public function setOriginalTitle($originalTitle)
+    public function setOriginalTitle(string $originalTitle): Tape
     {
         $this->originalTitle = $originalTitle;
     
@@ -138,47 +129,18 @@ class Tape
     }
 
     /**
-     * Get originaltitle.
-     *
      * @return string
      */
-    public function getOriginalTitle()
+    public function getOriginalTitle(): string
     {
         return $this->originalTitle;
     }
 
     /**
-     * Set createdat.
-     *
-     * @param \DateTime $createdAt
-     *
-     * @return Tape
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-    
-        return $this;
-    }
-
-    /**
-     * Get createdat.
-     *
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * Set objectid.
-     *
      * @param string $objectId
-     *
      * @return Tape
      */
-    public function setObjectId($objectId)
+    public function setObjectId(string $objectId): Tape
     {
         $this->objectId = $objectId;
     
@@ -186,11 +148,9 @@ class Tape
     }
 
     /**
-     * Get objectid.
-     *
      * @return string
      */
-    public function getObjectId()
+    public function getObjectId(): string
     {
         return $this->objectId;
     }
@@ -224,39 +184,31 @@ class Tape
     }
 
     /**
-     * Add genreid.
-     *
-     * @param \App\Entity\Genre $genreid
-     *
+     * @param Genre $genre
      * @return Tape
      */
-    public function addGenreid(\App\Entity\Genre $genreid)
+    public function addGenre(Genre $genre): Tape
     {
-        $this->genreid[] = $genreid;
+        $this->genres[] = $genre;
     
         return $this;
     }
 
     /**
-     * Remove genreid.
-     *
-     * @param \App\Entity\Genre $genreid
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @param Genre $genre
+     * @return bool
      */
-    public function removeGenreid(\App\Entity\Genre $genreid)
+    public function removeGenre(Genre $genre): bool
     {
-        return $this->genreid->removeElement($genreid);
+        return $this->genres->removeElement($genre);
     }
 
     /**
-     * Get genreid.
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function getGenreid()
+    public function getGenres(): Collection
     {
-        return $this->genreid;
+        return $this->genres;
     }
 
     /**
