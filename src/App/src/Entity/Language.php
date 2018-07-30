@@ -49,7 +49,7 @@ class Language implements CinemaEntity
      *
      * @ORM\ManyToMany(targetEntity="Tape", mappedBy="languages", fetch="EXTRA_LAZY")
      */
-    private $tapes;
+    protected $tapes;
 
     /**
      * Constructor

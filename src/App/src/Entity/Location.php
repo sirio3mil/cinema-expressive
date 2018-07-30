@@ -49,7 +49,7 @@ class Location implements CinemaEntity
      *
      * @ORM\ManyToMany(targetEntity="Tape", mappedBy="locations", fetch="EXTRA_LAZY")
      */
-    private $tapes;
+    protected $tapes;
 
     /**
      * Constructor

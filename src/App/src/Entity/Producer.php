@@ -2,57 +2,85 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Annotation as ORM;
+
+
 /**
- * Producer
+ * Class Producer
+ * @package App\Entity
+ * @ORM\Entity
+ * @ORM\Table(name="Producer")
  */
-class Producer
+class Producer implements CinemaEntity
 {
+
+    use TapeCollection;
+
     /**
      * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(
+     *     type="integer",
+     *     name="countryId",
+     *     nullable=false,
+     *     options={"unsigned":false}
+     * )
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $producerid;
+    private $producerId;
 
     /**
      * @var string
+     *
+     * @ORM\Column(
+     *     type="string",
+     *     length=100,
+     *     name="name",
+     *     nullable=false,
+     *     options={"fixed":false}
+     * )
      */
     private $name;
 
     /**
-     * @var \App\Entity\Country
+     * @var Country
+     *
+     * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\JoinColumn(name="countryId", referencedColumnName="countryId")
      */
-    private $countryid;
+    private $country;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Tape", mappedBy="producers", fetch="EXTRA_LAZY")
      */
-    private $tapeid;
+    protected $tapes;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->tapeid = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->tapes = new ArrayCollection();
     }
 
     /**
-     * Get producerid.
-     *
      * @return int
      */
-    public function getProducerid()
+    public function getProducerId(): int
     {
-        return $this->producerid;
+        return $this->producerId;
     }
 
     /**
-     * Set name.
-     *
      * @param string $name
-     *
      * @return Producer
      */
-    public function setName($name)
+    public function setName(string $name): Producer
     {
         $this->name = $name;
     
@@ -60,72 +88,29 @@ class Producer
     }
 
     /**
-     * Get name.
-     *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * Set countryid.
-     *
-     * @param \App\Entity\Country|null $countryid
-     *
+     * @param Country|null $country
      * @return Producer
      */
-    public function setCountryid(\App\Entity\Country $countryid = null)
+    public function setCountry(Country $country = null): Producer
     {
-        $this->countryid = $countryid;
+        $this->country = $country;
     
         return $this;
     }
 
     /**
-     * Get countryid.
-     *
-     * @return \App\Entity\Country|null
+     * @return Country|null
      */
-    public function getCountryid()
+    public function getCountry(): ?Country
     {
-        return $this->countryid;
-    }
-
-    /**
-     * Add tapeid.
-     *
-     * @param \App\Entity\Tape $tapeid
-     *
-     * @return Producer
-     */
-    public function addTapeid(\App\Entity\Tape $tapeid)
-    {
-        $this->tapeid[] = $tapeid;
-    
-        return $this;
-    }
-
-    /**
-     * Remove tapeid.
-     *
-     * @param \App\Entity\Tape $tapeid
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeTapeid(\App\Entity\Tape $tapeid)
-    {
-        return $this->tapeid->removeElement($tapeid);
-    }
-
-    /**
-     * Get tapeid.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTapeid()
-    {
-        return $this->tapeid;
+        return $this->country;
     }
 }

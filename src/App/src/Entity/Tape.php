@@ -86,8 +86,13 @@ class Tape implements CinemaEntity
 
     /**
      * @var Collection
+     * @ORM\ManyToMany(targetEntity="Producer", inversedBy="tapes", fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="TapeProducer",
+     *      joinColumns={@ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="producerId", referencedColumnName="producerId")}
+     *     )
      */
-    private $producerid;
+    private $producers;
 
     /**
      * @var Collection
@@ -103,7 +108,7 @@ class Tape implements CinemaEntity
         $this->genres = new ArrayCollection();
         $this->languages = new ArrayCollection();
         $this->locations = new ArrayCollection();
-        $this->producerid = new ArrayCollection();
+        $this->producers = new ArrayCollection();
         $this->tagid = new ArrayCollection();
     }
 
@@ -247,39 +252,31 @@ class Tape implements CinemaEntity
     }
 
     /**
-     * Add producerid.
-     *
-     * @param \App\Entity\Producer $producerid
-     *
+     * @param Producer $producer
      * @return Tape
      */
-    public function addProducerid(\App\Entity\Producer $producerid)
+    public function addProducer(Producer $producer): Tape
     {
-        $this->producerid[] = $producerid;
+        $this->producers[] = $producer;
     
         return $this;
     }
 
     /**
-     * Remove producerid.
-     *
-     * @param \App\Entity\Producer $producerid
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @param Producer $producer
+     * @return bool
      */
-    public function removeProducerid(\App\Entity\Producer $producerid)
+    public function removeProducer(Producer $producer): bool
     {
-        return $this->producerid->removeElement($producerid);
+        return $this->producers->removeElement($producer);
     }
 
     /**
-     * Get producerid.
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function getProducerid()
+    public function getProducers(): Collection
     {
-        return $this->producerid;
+        return $this->producers;
     }
 
     /**

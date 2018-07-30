@@ -49,7 +49,7 @@ class Genre implements CinemaEntity
      *
      * @ORM\ManyToMany(targetEntity="Tape", mappedBy="genres", fetch="EXTRA_LAZY")
      */
-    private $tapes;
+    protected $tapes;
 
     /**
      * Constructor

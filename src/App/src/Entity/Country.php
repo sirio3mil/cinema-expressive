@@ -71,7 +71,7 @@ class Country implements CinemaEntity
      *
      * @ORM\ManyToMany(targetEntity="Tape", mappedBy="countries", fetch="EXTRA_LAZY")
      */
-    private $tapes;
+    protected $tapes;
 
     public function __construct()
     {
