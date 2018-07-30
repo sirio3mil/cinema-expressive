@@ -2,40 +2,68 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Annotation as ORM;
+
+
 /**
- * Role
+ * Class Role
+ * @package App\Entity
+ * @ORM\Entity
+ * @ORM\Table(name="Role")
  */
 class Role
 {
     /**
      * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(
+     *     type="smallint",
+     *     name="roleId",
+     *     nullable=false,
+     *     options={"unsigned":false}
+     * )
      */
-    private $roleid;
+    private $roleId;
 
     /**
      * @var string
+     *
+     * @ORM\Column(
+     *     type="string",
+     *     length=50,
+     *     name="role",
+     *     nullable=false,
+     *     options={"fixed":false}
+     * )
      */
     private $role;
 
+    /**
+     * @param int $roleId
+     * @return Role
+     */
+    public function setRoleId(int $roleId): Role
+    {
+        $this->roleId = $roleId;
+
+        return $this;
+    }
+
 
     /**
-     * Get roleid.
-     *
      * @return int
      */
-    public function getRoleid()
+    public function getRoleId(): int
     {
-        return $this->roleid;
+        return $this->roleId;
     }
 
     /**
-     * Set role.
-     *
      * @param string $role
-     *
      * @return Role
      */
-    public function setRole($role)
+    public function setRole(string $role): Role
     {
         $this->role = $role;
     
@@ -43,11 +71,9 @@ class Role
     }
 
     /**
-     * Get role.
-     *
      * @return string
      */
-    public function getRole()
+    public function getRole(): string
     {
         return $this->role;
     }
