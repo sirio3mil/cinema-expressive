@@ -21,7 +21,7 @@ class PeopleAliasTape implements CinemaEntity
      * @ORM\Id
      * @ORM\Column(
      *     type="bigint",
-     *     name="peopleId",
+     *     name="peopleAliasTapeId",
      *     nullable=false,
      *     options={"unsigned":false}
      * )
