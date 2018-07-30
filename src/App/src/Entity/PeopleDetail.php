@@ -16,6 +16,15 @@ class PeopleDetail implements CinemaEntity
     use CreationDate;
 
     /**
+     * @var People
+     *
+     * @ORM\Id
+     * @ORM\OneToOne(targetEntity="People", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\JoinColumn(name="peopleId", referencedColumnName="peopleId")
+     */
+    private $people;
+
+    /**
      * @var string
      *
      * @ORM\Column(
@@ -147,14 +156,6 @@ class PeopleDetail implements CinemaEntity
      * )
      */
     private $updatedAt;
-
-    /**
-     * @var People
-     *
-     * @ORM\OneToOne(targetEntity="People", fetch="EXTRA_LAZY", orphanRemoval=false)
-     * @ORM\JoinColumn(name="peopleId", referencedColumnName="peopleId")
-     */
-    private $people;
 
     /**
      * @var Country

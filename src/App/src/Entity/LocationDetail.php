@@ -14,6 +14,15 @@ class LocationDetail implements CinemaEntity
 {
 
     /**
+     * @var Location
+     *
+     * @ORM\Id
+     * @ORM\OneToOne(targetEntity="Location", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\JoinColumn(name="locationId", referencedColumnName="locationId")
+     */
+    private $location;
+
+    /**
      * @var float
      *
      * @ORM\Column(
@@ -109,14 +118,6 @@ class LocationDetail implements CinemaEntity
      * )
      */
     private $geolocated = false;
-
-    /**
-     * @var Location
-     *
-     * @ORM\OneToOne(targetEntity="Location", fetch="EXTRA_LAZY", orphanRemoval=false)
-     * @ORM\JoinColumn(name="locationId", referencedColumnName="locationId")
-     */
-    private $location;
 
     /**
      * @var Country

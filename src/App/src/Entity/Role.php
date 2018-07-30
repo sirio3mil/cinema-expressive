@@ -11,7 +11,7 @@ use Doctrine\ORM\Annotation as ORM;
  * @ORM\Entity
  * @ORM\Table(name="Role")
  */
-class Role
+class Role implements CinemaEntity
 {
     /**
      * @var int
