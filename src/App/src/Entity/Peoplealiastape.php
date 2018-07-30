@@ -18,7 +18,7 @@ class Peoplealiastape
     private $createdat = 'sysutcdatetime()';
 
     /**
-     * @var \App\Entity\Peoplealias
+     * @var \App\Entity\PeopleAlias
      */
     private $peoplealiasid;
 
@@ -65,11 +65,11 @@ class Peoplealiastape
     /**
      * Set peoplealiasid.
      *
-     * @param \App\Entity\Peoplealias|null $peoplealiasid
+     * @param \App\Entity\PeopleAlias|null $peoplealiasid
      *
      * @return Peoplealiastape
      */
-    public function setPeoplealiasid(\App\Entity\Peoplealias $peoplealiasid = null)
+    public function setPeoplealiasid(\App\Entity\PeopleAlias $peoplealiasid = null)
     {
         $this->peoplealiasid = $peoplealiasid;
     
@@ -79,7 +79,7 @@ class Peoplealiastape
     /**
      * Get peoplealiasid.
      *
-     * @return \App\Entity\Peoplealias|null
+     * @return \App\Entity\PeopleAlias|null
      */
     public function getPeoplealiasid()
     {
