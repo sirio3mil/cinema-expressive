@@ -24,7 +24,7 @@ class Producer implements CinemaEntity
      * @ORM\Id
      * @ORM\Column(
      *     type="integer",
-     *     name="countryId",
+     *     name="producerId",
      *     nullable=false,
      *     options={"unsigned":false}
      * )

@@ -2,55 +2,84 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Annotation as ORM;
+
 /**
- * Premiere
+ * Class Premiere
+ * @package App\Entity
+ * @ORM\Entity
+ * @ORM\Table(name="Premiere")
  */
-class Premiere
+class Premiere implements CinemaEntity
 {
     /**
      * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(
+     *     type="integer",
+     *     name="premiereId",
+     *     nullable=false,
+     *     options={"unsigned":false}
+     * )
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $premiereid;
+    private $premiereId;
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(
+     *     type="date",
+     *     name="date",
+     *     nullable=false
+     * )
      */
     private $date;
 
     /**
      * @var string
-     */
-    private $place = 'Movie';
-
-    /**
-     * @var \App\Entity\Tape
-     */
-    private $tapeid;
-
-    /**
-     * @var \App\Entity\Country
-     */
-    private $countryid;
-
-
-    /**
-     * Get premiereid.
      *
+     * @ORM\Column(
+     *     type="string",
+     *     length=10,
+     *     name="place",
+     *     nullable=false,
+     *     options={"fixed":false,"default":"Movie"}
+     * )
+     */
+    private $place = "Movie";
+
+    /**
+     * @var Tape
+     *
+     * @ORM\ManyToOne(targetEntity="Tape", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
+     */
+    private $tape;
+
+    /**
+     * @var Country
+     *
+     * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\JoinColumn(name="countryId", referencedColumnName="countryId")
+     */
+    private $country;
+
+
+    /**
      * @return int
      */
-    public function getPremiereid()
+    public function getPremiereId(): int
     {
-        return $this->premiereid;
+        return $this->premiereId;
     }
 
     /**
-     * Set date.
-     *
      * @param \DateTime $date
-     *
      * @return Premiere
      */
-    public function setDate($date)
+    public function setDate(\DateTime $date): Premiere
     {
         $this->date = $date;
     
@@ -58,23 +87,18 @@ class Premiere
     }
 
     /**
-     * Get date.
-     *
      * @return \DateTime
      */
-    public function getDate()
+    public function getDate(): \DateTime
     {
         return $this->date;
     }
 
     /**
-     * Set place.
-     *
      * @param string $place
-     *
      * @return Premiere
      */
-    public function setPlace($place)
+    public function setPlace(string $place): Premiere
     {
         $this->place = $place;
     
@@ -82,60 +106,48 @@ class Premiere
     }
 
     /**
-     * Get place.
-     *
      * @return string
      */
-    public function getPlace()
+    public function getPlace(): string
     {
         return $this->place;
     }
 
     /**
-     * Set tapeid.
-     *
-     * @param \App\Entity\Tape|null $tapeid
-     *
+     * @param Tape $tape
      * @return Premiere
      */
-    public function setTapeid(\App\Entity\Tape $tapeid = null)
+    public function setTape(Tape $tape): Premiere
     {
-        $this->tapeid = $tapeid;
+        $this->tape = $tape;
     
         return $this;
     }
 
     /**
-     * Get tapeid.
-     *
-     * @return \App\Entity\Tape|null
+     * @return Tape
      */
-    public function getTapeid()
+    public function getTape(): Tape
     {
-        return $this->tapeid;
+        return $this->tape;
     }
 
     /**
-     * Set countryid.
-     *
-     * @param \App\Entity\Country|null $countryid
-     *
+     * @param Country $country
      * @return Premiere
      */
-    public function setCountryid(\App\Entity\Country $countryid = null)
+    public function setCountry(Country $country): Premiere
     {
-        $this->countryid = $countryid;
+        $this->country = $country;
     
         return $this;
     }
 
     /**
-     * Get countryid.
-     *
-     * @return \App\Entity\Country|null
+     * @return Country
      */
-    public function getCountryid()
+    public function getCountry(): Country
     {
-        return $this->countryid;
+        return $this->country;
     }
 }
