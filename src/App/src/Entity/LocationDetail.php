@@ -12,18 +12,6 @@ use Doctrine\ORM\Annotation as ORM;
  */
 class LocationDetail implements CinemaEntity
 {
-    /**
-     * @var int
-     *
-     * @ORM\Id
-     * @ORM\Column(
-     *     type="integer",
-     *     name="locationId",
-     *     nullable=false,
-     *     options={"unsigned":false}
-     * )
-     */
-    private $locationId;
 
     /**
      * @var float
@@ -123,6 +111,14 @@ class LocationDetail implements CinemaEntity
     private $geolocated = false;
 
     /**
+     * @var Location
+     *
+     * @ORM\OneToOne(targetEntity="Location", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\JoinColumn(name="locationId", referencedColumnName="locationId")
+     */
+    private $location;
+
+    /**
      * @var Country
      *
      * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY", orphanRemoval=false)
@@ -132,22 +128,22 @@ class LocationDetail implements CinemaEntity
 
 
     /**
-     * @param int $locationId
+     * @param Location $location
      * @return LocationDetail
      */
-    public function setLocationId(int $locationId): LocationDetail
+    public function setLocation(Location $location): LocationDetail
     {
-        $this->locationId = $locationId;
+        $this->location = $location;
 
         return $this;
     }
 
     /**
-     * @return int
+     * @return Location
      */
-    public function getLocationId(): int
+    public function getLocation(): Location
     {
-        return $this->locationId;
+        return $this->location;
     }
 
     /**
