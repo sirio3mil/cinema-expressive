@@ -17,7 +17,7 @@ class RowType
      *
      * @ORM\Id
      * @ORM\Column(
-     *     type="smallint",
+     *     type="tinyint",
      *     name="rowTypeId",
      *     nullable=false,
      *     options={"fixed":false}
