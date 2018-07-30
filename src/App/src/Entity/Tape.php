@@ -45,6 +45,18 @@ class Tape implements CinemaEntity
     private $originalTitle;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(
+     *     type="guid",
+     *     name="objectId",
+     *     nullable=false,
+     *     options={"fixed":false, "default":"newid()"}
+     * )
+     */
+    protected $objectId;
+
+    /**
      * @var Collection
      * @ORM\ManyToMany(targetEntity="Country", inversedBy="tapes", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(name="TapeCountry",

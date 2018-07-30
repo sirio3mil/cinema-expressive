@@ -20,8 +20,6 @@ App\Entity\Imdbnumber:
                 fixed: false
             id: true
             column: objectId
-            generator:
-                strategy: IDENTITY
     fields:
         imdbnumber:
             type: bigint
