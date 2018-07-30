@@ -2,111 +2,82 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Annotation as ORM;
+
 /**
- * People
+ * Class People
+ * @package App\Entity
+ * @ORM\Entity
+ * @ORM\Table(name="People")
  */
-class People
+class People implements CinemaEntity
 {
+
+    use CreationDate, UniqueObject;
+
     /**
      * @var int
-     */
-    private $peopleid;
-
-    /**
-     * @var string
-     */
-    private $fullname;
-
-    /**
-     * @var \DateTime
-     */
-    private $createdat = 'sysutcdatetime()';
-
-    /**
-     * @var string
-     */
-    private $objectid = 'newid()';
-
-
-    /**
-     * Get peopleid.
      *
+     * @ORM\Id
+     * @ORM\Column(
+     *     type="bigint",
+     *     name="peopleId",
+     *     nullable=false,
+     *     options={"unsigned":false}
+     * )
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $peopleId;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(
+     *     type="string",
+     *     length=100,
+     *     name="fullName",
+     *     nullable=false,
+     *     options={"fixed":false}
+     * )
+     */
+    private $fullName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(
+     *     type="guid",
+     *     name="objectId",
+     *     nullable=false,
+     *     options={"fixed":false, "default":"newid()"}
+     * )
+     */
+    protected $objectId;
+
+    /**
      * @return int
      */
-    public function getPeopleid()
+    public function getPeopleId(): int
     {
-        return $this->peopleid;
+        return $this->peopleId;
     }
 
     /**
-     * Set fullname.
-     *
-     * @param string $fullname
-     *
+     * @param string $fullName
      * @return People
      */
-    public function setFullname($fullname)
+    public function setFullName(string $fullName): People
     {
-        $this->fullname = $fullname;
+        $this->fullName = $fullName;
     
         return $this;
     }
 
     /**
-     * Get fullname.
-     *
      * @return string
      */
-    public function getFullname()
+    public function getFullName(): string
     {
-        return $this->fullname;
-    }
-
-    /**
-     * Set createdat.
-     *
-     * @param \DateTime $createdat
-     *
-     * @return People
-     */
-    public function setCreatedat($createdat)
-    {
-        $this->createdat = $createdat;
-    
-        return $this;
-    }
-
-    /**
-     * Get createdat.
-     *
-     * @return \DateTime
-     */
-    public function getCreatedat()
-    {
-        return $this->createdat;
-    }
-
-    /**
-     * Set objectid.
-     *
-     * @param string $objectid
-     *
-     * @return People
-     */
-    public function setObjectid($objectid)
-    {
-        $this->objectid = $objectid;
-    
-        return $this;
-    }
-
-    /**
-     * Get objectid.
-     *
-     * @return string
-     */
-    public function getObjectid()
-    {
-        return $this->objectid;
+        return $this->fullName;
     }
 }

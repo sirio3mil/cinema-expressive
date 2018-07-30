@@ -10,7 +10,7 @@ use Doctrine\ORM\Annotation as ORM;
  * @ORM\Entity
  * @ORM\Table(name="Location")
  */
-class LocationDetail
+class LocationDetail implements CinemaEntity
 {
     /**
      * @var int
