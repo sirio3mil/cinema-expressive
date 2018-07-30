@@ -16,7 +16,7 @@ use Doctrine\ORM\Annotation as ORM;
 class Country implements CinemaEntity
 {
 
-    use CreationDate;
+    use CreationDate, TapeCollection;
 
     /**
      * @var int
@@ -141,33 +141,5 @@ class Country implements CinemaEntity
     public function getLanguage(): ?Language
     {
         return $this->language;
-    }
-
-    /**
-     * @param Tape $tape
-     * @return Country
-     */
-    public function addTape(Tape $tape): Country
-    {
-        $this->tapes[] = $tape;
-    
-        return $this;
-    }
-
-    /**
-     * @param Tape $tape
-     * @return bool
-     */
-    public function removeTape(Tape $tape): bool
-    {
-        return $this->tapes->removeElement($tape);
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getTapes(): Collection
-    {
-        return $this->tapes;
     }
 }

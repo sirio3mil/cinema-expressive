@@ -15,7 +15,7 @@ use Doctrine\ORM\Annotation as ORM;
 class Tape implements CinemaEntity
 {
 
-    use CreationDate;
+    use CreationDate, UniqueObject;
 
     /**
      * @var int
@@ -43,18 +43,6 @@ class Tape implements CinemaEntity
      * )
      */
     private $originalTitle;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(
-     *     type="guid",
-     *     name="objectId",
-     *     nullable=false,
-     *     options={"fixed":false, "default":"newid()"}
-     * )
-     */
-    private $objectId;
 
     /**
      * @var Collection
@@ -88,8 +76,13 @@ class Tape implements CinemaEntity
 
     /**
      * @var Collection
+     * @ORM\ManyToMany(targetEntity="Location", inversedBy="tapes", fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="TapeLocation",
+     *      joinColumns={@ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="locationId", referencedColumnName="locationId")}
+     *     )
      */
-    private $locationid;
+    private $locations;
 
     /**
      * @var Collection
@@ -109,7 +102,7 @@ class Tape implements CinemaEntity
         $this->countries = new ArrayCollection();
         $this->genres = new ArrayCollection();
         $this->languages = new ArrayCollection();
-        $this->locationid = new ArrayCollection();
+        $this->locations = new ArrayCollection();
         $this->producerid = new ArrayCollection();
         $this->tagid = new ArrayCollection();
     }
@@ -139,25 +132,6 @@ class Tape implements CinemaEntity
     public function getOriginalTitle(): string
     {
         return $this->originalTitle;
-    }
-
-    /**
-     * @param string $objectId
-     * @return Tape
-     */
-    public function setObjectId(string $objectId): Tape
-    {
-        $this->objectId = $objectId;
-    
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getObjectId(): string
-    {
-        return $this->objectId;
     }
 
     /**
@@ -245,39 +219,31 @@ class Tape implements CinemaEntity
     }
 
     /**
-     * Add locationid.
-     *
-     * @param \App\Entity\Location $locationid
-     *
+     * @param Location $location
      * @return Tape
      */
-    public function addLocationid(\App\Entity\Location $locationid)
+    public function addLocation(Location $location): Tape
     {
-        $this->locationid[] = $locationid;
+        $this->locations[] = $location;
     
         return $this;
     }
 
     /**
-     * Remove locationid.
-     *
-     * @param \App\Entity\Location $locationid
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @param Location $location
+     * @return bool
      */
-    public function removeLocationid(\App\Entity\Location $locationid)
+    public function removeLocation(Location $location): bool
     {
-        return $this->locationid->removeElement($locationid);
+        return $this->locations->removeElement($location);
     }
 
     /**
-     * Get locationid.
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function getLocationid()
+    public function getLocations(): Collection
     {
-        return $this->locationid;
+        return $this->locations;
     }
 
     /**

@@ -2,57 +2,76 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Annotation as ORM;
+
 /**
- * Location
+ * Class Location
+ * @package App\Entity
+ * @ORM\Entity
+ * @ORM\Table(name="Location")
  */
-class Location
+class Location implements CinemaEntity
 {
+
+    use CreationDate, TapeCollection;
+
     /**
      * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(
+     *     type="integer",
+     *     name="locationId",
+     *     nullable=false,
+     *     options={"unsigned":false}
+     * )
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $locationid;
+    private $locationId;
 
     /**
      * @var string
+     *
+     * @ORM\Column(
+     *     type="string",
+     *     length=250,
+     *     name="place",
+     *     nullable=false,
+     *     options={"fixed":false}
+     * )
      */
     private $place;
 
     /**
-     * @var \DateTime
+     * @var Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Tape", mappedBy="locations", fetch="EXTRA_LAZY")
      */
-    private $createdat = 'sysutcdatetime()';
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $tapeid;
+    private $tapes;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->tapeid = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->tapes = new ArrayCollection();
     }
 
     /**
-     * Get locationid.
-     *
      * @return int
      */
-    public function getLocationid()
+    public function getLocationId(): int
     {
-        return $this->locationid;
+        return $this->locationId;
     }
 
     /**
-     * Set place.
-     *
      * @param string $place
-     *
      * @return Location
      */
-    public function setPlace($place)
+    public function setPlace(string $place): Location
     {
         $this->place = $place;
     
@@ -60,72 +79,10 @@ class Location
     }
 
     /**
-     * Get place.
-     *
      * @return string
      */
-    public function getPlace()
+    public function getPlace(): string
     {
         return $this->place;
-    }
-
-    /**
-     * Set createdat.
-     *
-     * @param \DateTime $createdat
-     *
-     * @return Location
-     */
-    public function setCreatedat($createdat)
-    {
-        $this->createdat = $createdat;
-    
-        return $this;
-    }
-
-    /**
-     * Get createdat.
-     *
-     * @return \DateTime
-     */
-    public function getCreatedat()
-    {
-        return $this->createdat;
-    }
-
-    /**
-     * Add tapeid.
-     *
-     * @param \App\Entity\Tape $tapeid
-     *
-     * @return Location
-     */
-    public function addTapeid(\App\Entity\Tape $tapeid)
-    {
-        $this->tapeid[] = $tapeid;
-    
-        return $this;
-    }
-
-    /**
-     * Remove tapeid.
-     *
-     * @param \App\Entity\Tape $tapeid
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeTapeid(\App\Entity\Tape $tapeid)
-    {
-        return $this->tapeid->removeElement($tapeid);
-    }
-
-    /**
-     * Get tapeid.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTapeid()
-    {
-        return $this->tapeid;
     }
 }
