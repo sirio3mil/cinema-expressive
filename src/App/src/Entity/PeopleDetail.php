@@ -12,6 +12,9 @@ use Doctrine\ORM\Annotation as ORM;
  */
 class PeopleDetail implements CinemaEntity
 {
+
+    use CreationDate;
+
     /**
      * @var string
      *
