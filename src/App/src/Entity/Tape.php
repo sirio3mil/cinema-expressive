@@ -96,8 +96,13 @@ class Tape implements CinemaEntity
 
     /**
      * @var Collection
+     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="tapes", fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="TapeTag",
+     *      joinColumns={@ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="tagId", referencedColumnName="tagId")}
+     *     )
      */
-    private $tagid;
+    private $tags;
 
     /**
      * Constructor
@@ -109,7 +114,7 @@ class Tape implements CinemaEntity
         $this->languages = new ArrayCollection();
         $this->locations = new ArrayCollection();
         $this->producers = new ArrayCollection();
-        $this->tagid = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
     /**
@@ -280,38 +285,30 @@ class Tape implements CinemaEntity
     }
 
     /**
-     * Add tagid.
-     *
-     * @param \App\Entity\Tag $tagid
-     *
+     * @param Tag $tag
      * @return Tape
      */
-    public function addTagid(\App\Entity\Tag $tagid)
+    public function addTag(Tag $tag): Tape
     {
-        $this->tagid[] = $tagid;
+        $this->tags[] = $tag;
     
         return $this;
     }
 
     /**
-     * Remove tagid.
-     *
-     * @param \App\Entity\Tag $tagid
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @param Tag $tag
+     * @return bool
      */
-    public function removeTagid(\App\Entity\Tag $tagid)
+    public function removeTag(Tag $tag): bool
     {
-        return $this->tagid->removeElement($tagid);
+        return $this->tags->removeElement($tag);
     }
 
     /**
-     * Get tagid.
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
-    public function getTagid()
+    public function getTags(): Collection
     {
-        return $this->tagid;
+        return $this->tags;
     }
 }

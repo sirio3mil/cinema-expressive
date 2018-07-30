@@ -2,52 +2,78 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Annotation as ORM;
+use ImdbScraper\Model\Keyword;
+
+
 /**
- * Tag
+ * Class Tag
+ * @package App\Entity
+ * @ORM\Entity
+ * @ORM\Table(name="Tag")
  */
-class Tag
+class Tag implements CinemaEntity
 {
+
+    use TapeCollection;
+
     /**
      * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(
+     *     type="bigint",
+     *     name="tagId",
+     *     nullable=false,
+     *     options={"unsigned":false}
+     * )
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $tagid;
+    private $tagId;
 
     /**
      * @var string
+     *
+     * @ORM\Column(
+     *     type="string",
+     *     length=150,
+     *     name="keyword",
+     *     nullable=false,
+     *     options={"fixed":false}
+     * )
      */
     private $keyword;
 
     /**
-     * @var \Doctrine\Common\Collections\Collection
+     * @var Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Tape", mappedBy="tags", fetch="EXTRA_LAZY")
      */
-    private $tapeid;
+    protected $tapes;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->tapeid = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->tapes = new ArrayCollection();
     }
 
     /**
-     * Get tagid.
-     *
      * @return int
      */
-    public function getTagid()
+    public function getTagId(): int
     {
-        return $this->tagid;
+        return $this->tagId;
     }
 
     /**
-     * Set keyword.
-     *
      * @param string $keyword
-     *
-     * @return Tag
+     * @return Keyword
      */
-    public function setKeyword($keyword)
+    public function setKeyword(string $keyword): Keyword
     {
         $this->keyword = $keyword;
     
@@ -55,48 +81,10 @@ class Tag
     }
 
     /**
-     * Get keyword.
-     *
      * @return string
      */
-    public function getKeyword()
+    public function getKeyword(): string
     {
         return $this->keyword;
-    }
-
-    /**
-     * Add tapeid.
-     *
-     * @param \App\Entity\Tape $tapeid
-     *
-     * @return Tag
-     */
-    public function addTapeid(\App\Entity\Tape $tapeid)
-    {
-        $this->tapeid[] = $tapeid;
-    
-        return $this;
-    }
-
-    /**
-     * Remove tapeid.
-     *
-     * @param \App\Entity\Tape $tapeid
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeTapeid(\App\Entity\Tape $tapeid)
-    {
-        return $this->tapeid->removeElement($tapeid);
-    }
-
-    /**
-     * Get tapeid.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTapeid()
-    {
-        return $this->tapeid;
     }
 }
