@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Annotation as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class TapeUser
@@ -32,7 +32,7 @@ class TapeUser implements CinemaEntity
     /**
      * @var Tape
      *
-     * @ORM\ManyToOne(targetEntity="Tape", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\ManyToOne(targetEntity="Tape", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
      */
     private $tape;
@@ -40,7 +40,7 @@ class TapeUser implements CinemaEntity
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="User", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\ManyToOne(targetEntity="User", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="userId", referencedColumnName="userId")
      */
     private $user;

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Annotation as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class TapeTitle
@@ -55,7 +55,7 @@ class TapeTitle implements CinemaEntity
     /**
      * @var Tape
      *
-     * @ORM\ManyToOne(targetEntity="Tape", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\ManyToOne(targetEntity="Tape", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
      */
     private $tape;
@@ -63,7 +63,7 @@ class TapeTitle implements CinemaEntity
     /**
      * @var Country
      *
-     * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="countryId", referencedColumnName="countryId")
      */
     private $countryId;
@@ -71,7 +71,7 @@ class TapeTitle implements CinemaEntity
     /**
      * @var Language
      *
-     * @ORM\ManyToOne(targetEntity="Language", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\ManyToOne(targetEntity="Language", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="languageId", referencedColumnName="languageId")
      */
     private $languageId;

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Annotation as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class TapePeopleRoleCharacter
@@ -19,7 +19,7 @@ class TapePeopleRoleCharacter implements CinemaEntity
      * @var TapePeopleRole
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="TapePeopleRole", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\OneToOne(targetEntity="TapePeopleRole", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapePeopleRoleId", referencedColumnName="tapePeopleRoleId")
      */
     private $tapePeopleRole;

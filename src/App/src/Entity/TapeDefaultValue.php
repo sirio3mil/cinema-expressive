@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Annotation as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class TapeDefaultValue
@@ -16,7 +16,7 @@ class TapeDefaultValue implements CinemaEntity
      * @var Tape
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Tape", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\OneToOne(targetEntity="Tape", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
      */
     private $tape;
@@ -24,7 +24,7 @@ class TapeDefaultValue implements CinemaEntity
     /**
      * @var SearchValue
      *
-     * @ORM\ManyToOne(targetEntity="SearchValue", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\ManyToOne(targetEntity="SearchValue", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="searchValueId", referencedColumnName="searchValueId")
      */
     private $defaultTitle;
@@ -32,7 +32,7 @@ class TapeDefaultValue implements CinemaEntity
     /**
      * @var People
      *
-     * @ORM\ManyToOne(targetEntity="People", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\ManyToOne(targetEntity="People", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="castPeopleId", referencedColumnName="peopleId")
      */
     private $defaultCast;
@@ -40,7 +40,7 @@ class TapeDefaultValue implements CinemaEntity
     /**
      * @var People
      *
-     * @ORM\ManyToOne(targetEntity="People", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\ManyToOne(targetEntity="People", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="directorPeopleId", referencedColumnName="peopleId")
      */
     private $defaultDirector;
@@ -48,7 +48,7 @@ class TapeDefaultValue implements CinemaEntity
     /**
      * @var Country
      *
-     * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="countryId", referencedColumnName="countryId")
      */
     private $defaultCountry;

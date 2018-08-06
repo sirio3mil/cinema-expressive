@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Annotation as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class TvShow
@@ -19,7 +19,7 @@ class TvShowChapter implements CinemaEntity
      * @var Tape
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Tape", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\OneToOne(targetEntity="Tape", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
      */
     private $tape;
@@ -27,7 +27,7 @@ class TvShowChapter implements CinemaEntity
     /**
      * @@var TvShow
      *
-     * @ORM\ManyToOne(targetEntity="TvShow", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\ManyToOne(targetEntity="TvShow", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tvShowTapeId", referencedColumnName="tapeId")
      */
     private $tvShow;

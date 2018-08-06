@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Annotation as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class UserDetail
@@ -17,7 +17,7 @@ class UserDetail implements CinemaEntity
      * @var User
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="User", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\OneToOne(targetEntity="User", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="userId", referencedColumnName="userId")
      */
     private $user;

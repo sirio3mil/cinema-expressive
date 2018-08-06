@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Annotation as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class ImdbNumber
@@ -43,7 +43,7 @@ class ImdbNumber implements CinemaEntity
     /**
      * @var RowType
      *
-     * @ORM\ManyToOne(targetEntity="RowType", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\ManyToOne(targetEntity="RowType", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="rowTypeId", referencedColumnName="rowTypeId")
      */
     private $rowType;

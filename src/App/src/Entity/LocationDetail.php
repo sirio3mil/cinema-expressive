@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Annotation as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class Location
@@ -17,7 +17,7 @@ class LocationDetail implements CinemaEntity
      * @var Location
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Location", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\OneToOne(targetEntity="Location", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="locationId", referencedColumnName="locationId")
      */
     private $location;
@@ -122,7 +122,7 @@ class LocationDetail implements CinemaEntity
     /**
      * @var Country
      *
-     * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="countryId", referencedColumnName="countryId")
      */
     private $country;

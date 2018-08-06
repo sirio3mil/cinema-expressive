@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\ORM\Annotation as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Class PeopleAlias
@@ -42,7 +42,7 @@ class PeopleAlias
     /**
      * @var People
      *
-     * @ORM\ManyToOne(targetEntity="People", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\ManyToOne(targetEntity="People", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="peopleId", referencedColumnName="peopleId")
      */
     private $people;

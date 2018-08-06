@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Annotation as ORM;
+use Doctrine\ORM\Mapping as ORM;
 
 
 /**
@@ -61,7 +61,7 @@ class Country implements CinemaEntity
     /**
      * @var Language
      *
-     * @ORM\ManyToOne(targetEntity="Language", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\ManyToOne(targetEntity="Language", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="languageId", referencedColumnName="languageId")
      */
     private $language;
