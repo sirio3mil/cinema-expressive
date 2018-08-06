@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Annotation as ORM;
+
 /**
  * Class TapeUserStatus
  * @package App\Entity
@@ -16,7 +18,7 @@ class TapeUserStatus implements CinemaEntity
      * @ORM\Id
      * @ORM\Column(
      *     type="smallint",
-     *     name="tapeUserHistoryId",
+     *     name="tapeUserStatusId",
      *     nullable=false,
      *     options={"unsigned":false}
      * )
