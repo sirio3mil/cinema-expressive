@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Annotation as ORM;
 
 /**
- * Class PeopleDetail
+ * Class TapePeopleRoleCharacter
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Table(name="TapePeopleRoleCharacter")

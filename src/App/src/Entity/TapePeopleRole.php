@@ -5,7 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Annotation as ORM;
 
 /**
- * Class PeopleDetail
+ * Class TapePeopleRole
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Table(name="TapePeopleRole")
@@ -21,7 +21,7 @@ class TapePeopleRole implements CinemaEntity
      * @ORM\Id
      * @ORM\Column(
      *     type="bigint",
-     *     name="tapeId",
+     *     name="tapePeopleRoleId",
      *     nullable=false,
      *     options={"unsigned":false}
      * )
