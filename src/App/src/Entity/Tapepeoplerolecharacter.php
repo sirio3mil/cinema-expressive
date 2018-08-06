@@ -18,7 +18,7 @@ class Tapepeoplerolecharacter
     private $createdat = 'sysutcdatetime()';
 
     /**
-     * @var \App\Entity\Tapepeoplerole
+     * @var \App\Entity\TapePeopleRole
      */
     private $tapepeopleroleid;
 
@@ -74,11 +74,11 @@ class Tapepeoplerolecharacter
     /**
      * Set tapepeopleroleid.
      *
-     * @param \App\Entity\Tapepeoplerole $tapepeopleroleid
+     * @param \App\Entity\TapePeopleRole $tapepeopleroleid
      *
      * @return Tapepeoplerolecharacter
      */
-    public function setTapepeopleroleid(\App\Entity\Tapepeoplerole $tapepeopleroleid)
+    public function setTapepeopleroleid(\App\Entity\TapePeopleRole $tapepeopleroleid)
     {
         $this->tapepeopleroleid = $tapepeopleroleid;
     
@@ -88,7 +88,7 @@ class Tapepeoplerolecharacter
     /**
      * Get tapepeopleroleid.
      *
-     * @return \App\Entity\Tapepeoplerole
+     * @return \App\Entity\TapePeopleRole
      */
     public function getTapepeopleroleid()
     {
