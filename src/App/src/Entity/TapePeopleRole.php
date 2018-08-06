@@ -31,16 +31,25 @@ class TapePeopleRole implements CinemaEntity
 
     /**
      * @var Tape
+     *
+     * @ORM\ManyToOne(targetEntity="Tape", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
      */
     private $tape;
 
     /**
      * @var People
+     *
+     * @ORM\ManyToOne(targetEntity="People", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\JoinColumn(name="peopleId", referencedColumnName="peopleId")
      */
     private $people;
 
     /**
      * @var Role
+     *
+     * @ORM\ManyToOne(targetEntity="Role", fetch="EXTRA_LAZY", orphanRemoval=false)
+     * @ORM\JoinColumn(name="roleId", referencedColumnName="roleId")
      */
     private $role;
 
