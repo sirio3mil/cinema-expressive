@@ -13,7 +13,7 @@ use Doctrine\ORM\Annotation as ORM;
 class PeopleDetail implements CinemaEntity
 {
 
-    use CreationDate;
+    use CreationDate, Ranking, Upgradeable;
 
     /**
      * @var People
@@ -110,30 +110,6 @@ class PeopleDetail implements CinemaEntity
     private $height;
 
     /**
-     * @var int
-     *
-     * @ORM\Column(
-     *     type="bigint",
-     *     name="votes",
-     *     nullable=false,
-     *     options={"unsigned":false,"default":0}
-     * )
-     */
-    private $votes = 0;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(
-     *     type="int",
-     *     name="score",
-     *     nullable=false,
-     *     options={"unsigned":false,"default":0}
-     * )
-     */
-    private $score = 0;
-
-    /**
      * @var bool
      *
      * @ORM\Column(
@@ -144,18 +120,6 @@ class PeopleDetail implements CinemaEntity
      * )
      */
     private $skip = false;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(
-     *     type="datetime",
-     *     name="updatedAt",
-     *     nullable=false,
-     *     options={"default":"sysutcdatetime()"}
-     * )
-     */
-    private $updatedAt;
 
     /**
      * @var Country
@@ -300,44 +264,6 @@ class PeopleDetail implements CinemaEntity
     }
 
     /**
-     * @param int $votes
-     * @return PeopleDetail
-     */
-    public function setVotes(int $votes): PeopleDetail
-    {
-        $this->votes = $votes;
-    
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getVotes(): int
-    {
-        return $this->votes;
-    }
-
-    /**
-     * @param int $score
-     * @return PeopleDetail
-     */
-    public function setScore(int $score): PeopleDetail
-    {
-        $this->score = $score;
-    
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getScore(): int
-    {
-        return $this->score;
-    }
-
-    /**
      * @param bool $skip
      * @return PeopleDetail
      */
@@ -354,25 +280,6 @@ class PeopleDetail implements CinemaEntity
     public function getSkip(): bool
     {
         return $this->skip;
-    }
-
-    /**
-     * @param \DateTime $updatedAt
-     * @return PeopleDetail
-     */
-    public function setUpdatedAt(\DateTime $updatedAt): PeopleDetail
-    {
-        $this->updatedAt = $updatedAt;
-    
-        return $this;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getUpdatedAt(): \DateTime
-    {
-        return $this->updatedAt;
     }
 
     /**
