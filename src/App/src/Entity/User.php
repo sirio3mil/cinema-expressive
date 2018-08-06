@@ -2,65 +2,99 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Annotation as ORM;
+
 /**
- * User
+ * Class User
+ * @package App\Entity
+ * @ORM\Entity
+ * @ORM\Table(name="User")
  */
-class User
+class User implements CinemaEntity
 {
+
+    use CreationDate, Upgradeable;
+
     /**
      * @var int
+     *
+     * @ORM\Id
+     * @ORM\Column(
+     *     type="bigint",
+     *     name="userId",
+     *     nullable=false,
+     *     options={"unsigned":false}
+     * )
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $userid;
+    private $userId;
 
     /**
      * @var string
+     *
+     * @ORM\Column(
+     *     type="string",
+     *     length=255,
+     *     name="name",
+     *     nullable=false,
+     *     options={"fixed":false}
+     * )
      */
     private $name;
 
     /**
      * @var string
+     *
+     * @ORM\Column(
+     *     type="string",
+     *     length=255,
+     *     name="email",
+     *     nullable=false,
+     *     options={"fixed":false}
+     * )
      */
     private $email;
 
     /**
      * @var string
+     *
+     * @ORM\Column(
+     *     type="string",
+     *     length=255,
+     *     name="password",
+     *     nullable=false,
+     *     options={"fixed":false}
+     * )
      */
     private $password;
 
     /**
-     * @var string|null
-     */
-    private $remembertoken;
-
-    /**
-     * @var \DateTime
-     */
-    private $createdat = 'sysutcdatetime()';
-
-    /**
-     * @var \DateTime|null
-     */
-    private $updatedat;
-
-
-    /**
-     * Get userid.
+     * @var string
      *
+     * @ORM\Column(
+     *     type="string",
+     *     length=100,
+     *     name="rememberToken",
+     *     nullable=true,
+     *     options={"fixed":false}
+     * )
+     */
+    private $rememberToken;
+
+
+    /**
      * @return int
      */
-    public function getUserid()
+    public function getUserId(): int
     {
-        return $this->userid;
+        return $this->userId;
     }
 
     /**
-     * Set name.
-     *
      * @param string $name
-     *
      * @return User
      */
-    public function setName($name)
+    public function setName(string $name): User
     {
         $this->name = $name;
     
@@ -68,23 +102,18 @@ class User
     }
 
     /**
-     * Get name.
-     *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * Set email.
-     *
      * @param string $email
-     *
      * @return User
      */
-    public function setEmail($email)
+    public function setEmail(string $email): User
     {
         $this->email = $email;
     
@@ -92,23 +121,18 @@ class User
     }
 
     /**
-     * Get email.
-     *
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
     /**
-     * Set password.
-     *
      * @param string $password
-     *
      * @return User
      */
-    public function setPassword($password)
+    public function setPassword(string $password): User
     {
         $this->password = $password;
     
@@ -116,84 +140,29 @@ class User
     }
 
     /**
-     * Get password.
-     *
      * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
 
     /**
-     * Set remembertoken.
-     *
-     * @param string|null $remembertoken
-     *
+     * @param null|string $rememberToken
      * @return User
      */
-    public function setRemembertoken($remembertoken = null)
+    public function setRememberToken(?string $rememberToken): User
     {
-        $this->remembertoken = $remembertoken;
+        $this->rememberToken = $rememberToken;
     
         return $this;
     }
 
     /**
-     * Get remembertoken.
-     *
-     * @return string|null
+     * @return string
      */
-    public function getRemembertoken()
+    public function getRememberToken(): string
     {
-        return $this->remembertoken;
-    }
-
-    /**
-     * Set createdat.
-     *
-     * @param \DateTime $createdat
-     *
-     * @return User
-     */
-    public function setCreatedat($createdat)
-    {
-        $this->createdat = $createdat;
-    
-        return $this;
-    }
-
-    /**
-     * Get createdat.
-     *
-     * @return \DateTime
-     */
-    public function getCreatedat()
-    {
-        return $this->createdat;
-    }
-
-    /**
-     * Set updatedat.
-     *
-     * @param \DateTime|null $updatedat
-     *
-     * @return User
-     */
-    public function setUpdatedat($updatedat = null)
-    {
-        $this->updatedat = $updatedat;
-    
-        return $this;
-    }
-
-    /**
-     * Get updatedat.
-     *
-     * @return \DateTime|null
-     */
-    public function getUpdatedat()
-    {
-        return $this->updatedat;
+        return $this->rememberToken;
     }
 }
