@@ -86,7 +86,7 @@ class QueryType extends ObjectType
                         return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCertificatesWrapper(), $args);
                     }
                 ],
-                'episodeList' => [
+                'imdbEpisodeList' => [
                     'type'    => Type::listOf($typeRegistry->get('episode')),
                     'args'    => [
                         'imdbNumber' => Type::nonNull(Type::int()),
