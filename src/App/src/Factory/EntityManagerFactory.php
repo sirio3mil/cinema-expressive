@@ -8,7 +8,6 @@
 
 namespace App\Factory;
 
-
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerInterface;
@@ -34,7 +33,7 @@ class EntityManagerFactory
             'host'     => $config['hostname']
         ];
 
-        $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
+        $config = Setup::createAnnotationMetadataConfiguration($paths,$isDevMode, null, null, false);
 
         return EntityManager::create($dbParams, $config);
     }
