@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\UuidInterface;
 
 /**
  * Class PermanentLink
@@ -14,21 +13,7 @@ use Ramsey\Uuid\UuidInterface;
 class PermanentLink implements CinemaEntity
 {
 
-    use UniqueObject;
-
-    /**
-     * @var UuidInterface
-     *
-     * @ORM\Id
-     * @ORM\Column(
-     *     type="uuid",
-     *     name="objectId",
-     *     nullable=false,
-     *     unique=true,
-     *     options={"fixed":false}
-     * )
-     */
-    private $objectId;
+    use UniqueObjectPrimary;
 
     /**
      * @var string

@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\UuidInterface;
 
 /**
  * Class People
@@ -15,7 +14,7 @@ use Ramsey\Uuid\UuidInterface;
 class People implements CinemaEntity
 {
 
-    use CreationDate, UniqueObject;
+    use CreationDate, UniqueObjectGenerated;
 
     /**
      * @var int
@@ -43,19 +42,6 @@ class People implements CinemaEntity
      * )
      */
     private $fullName;
-
-    /**
-     * @var UuidInterface
-     *
-     * @ORM\Column(
-     *     type="uuid",
-     *     name="objectId",
-     *     nullable=false,
-     *     unique=true,
-     *     options={"fixed":false, "default":"newid()"}
-     * )
-     */
-    protected $objectId;
 
     /**
      * @return int

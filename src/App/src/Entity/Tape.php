@@ -5,7 +5,6 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\UuidInterface;
 
 /**
  * Class Tape
@@ -17,7 +16,7 @@ use Ramsey\Uuid\UuidInterface;
 class Tape implements CinemaEntity
 {
 
-    use CreationDate, UniqueObject;
+    use CreationDate, UniqueObjectGenerated;
 
     /**
      * @var int
@@ -45,19 +44,6 @@ class Tape implements CinemaEntity
      * )
      */
     private $originalTitle;
-
-    /**
-     * @var UuidInterface
-     *
-     * @ORM\Column(
-     *     type="uuid",
-     *     name="objectId",
-     *     nullable=false,
-     *     unique=true,
-     *     options={"fixed":false, "default":"newid()"}
-     * )
-     */
-    protected $objectId;
 
     /**
      * @var Collection
