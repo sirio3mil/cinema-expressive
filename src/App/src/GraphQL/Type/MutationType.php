@@ -57,14 +57,14 @@ class MutationType extends ObjectType
                             ->movies
                             ->findOneAndReplace(
                                 [
-                                    "movieDetails.imdbNumber" => $args['imdbNumber']
+                                    "imdbMovieDetails.imdbNumber" => $args['imdbNumber']
                                 ],
                                 array_merge($result->data, ["updated" => $date]),
                                 [
                                     "upsert" => true
                                 ]
                             );
-                        return $result->data['movieDetails'];
+                        return $result->data['imdbMovieDetails'];
                     }
                 ]
             ]
