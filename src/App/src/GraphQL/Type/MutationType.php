@@ -84,7 +84,6 @@ class MutationType extends ObjectType
                             $tape = new Tape();
                             $tape->setOriginalTitle($result->data['imdbMovieDetails']['title']);
                             $entityManager->persist($tape);
-                            $entityManager->flush();
                             $imdbNumber = new ImdbNumber();
                             $imdbNumber->setImdbNumber($args['imdbNumber']);
                             $imdbNumber->setObjectId($tape->getObjectId());

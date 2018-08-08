@@ -9,13 +9,16 @@
 namespace App\Entity;
 
 
+use Ramsey\Uuid\UuidInterface;
+use Ramsey\Uuid\Uuid;
+
 trait UniqueObject
 {
     /**
-     * @param string $objectId
+     * @param UuidInterface $objectId
      * @return CinemaEntity
      */
-    public function setObjectId(string $objectId): CinemaEntity
+    public function setObjectId(UuidInterface $objectId): CinemaEntity
     {
         $this->objectId = $objectId;
 
@@ -23,10 +26,18 @@ trait UniqueObject
     }
 
     /**
-     * @return string
+     * @return UuidInterface
      */
-    public function getObjectId(): string
+    public function getObjectId(): UuidInterface
     {
         return $this->objectId;
+    }
+
+    /** @ORM\PrePersist */
+    public function generateObjectId()
+    {
+        if(is_null($this->objectId)) {
+            $this->objectId = Uuid::uuid4();
+        }
     }
 }

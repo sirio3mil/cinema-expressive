@@ -10,6 +10,7 @@ namespace App\Factory;
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
+use Doctrine\DBAL\Types\Type;
 use Psr\Container\ContainerInterface;
 
 class EntityManagerFactory
@@ -32,6 +33,8 @@ class EntityManagerFactory
             'dbname'   => $config['database'],
             'host'     => $config['hostname']
         ];
+
+        Type::addType('uuid', 'Ramsey\Uuid\Doctrine\UuidType');
 
         $config = Setup::createAnnotationMetadataConfiguration($paths,$isDevMode, null, null, false);
 

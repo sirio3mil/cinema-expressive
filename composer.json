@@ -48,6 +48,8 @@
     "doctrine/orm": "^2.6",
     "graphaware/neo4j-php-client": "^4.8",
     "mongodb/mongodb": "^1.4",
+    "moontoast/math": "^1.1",
+    "ramsey/uuid-doctrine": "^1.4",
     "sirio3mil/imdb-scraper": "dev-master",
     "symfony/yaml": "^4.1",
     "webonyx/graphql-php": "^0.12",

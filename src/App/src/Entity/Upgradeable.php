@@ -41,4 +41,10 @@ trait Upgradeable
     {
         return $this->updatedAt;
     }
+
+    /** @ORM\PrePersist */
+    public function generateUpgradeDate()
+    {
+        $this->updatedAt = DateGenerator::getUtcDateTime();
+    }
 }

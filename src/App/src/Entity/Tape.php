@@ -5,12 +5,14 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * Class Tape
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Table(name="Tape")
+ * @ORM\HasLifecycleCallbacks
  */
 class Tape implements CinemaEntity
 {
@@ -45,12 +47,13 @@ class Tape implements CinemaEntity
     private $originalTitle;
 
     /**
-     * @var string
+     * @var UuidInterface
      *
      * @ORM\Column(
-     *     type="guid",
+     *     type="uuid",
      *     name="objectId",
      *     nullable=false,
+     *     unique=true,
      *     options={"fixed":false, "default":"newid()"}
      * )
      */

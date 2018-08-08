@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * Class ImdbNumber
@@ -16,13 +17,14 @@ class ImdbNumber implements CinemaEntity
     use UniqueObject;
 
     /**
-     * @var string
+     * @var UuidInterface
      *
      * @ORM\Id
      * @ORM\Column(
-     *     type="guid",
+     *     type="uuid",
      *     name="objectId",
      *     nullable=false,
+     *     unique=true,
      *     options={"fixed":false}
      * )
      */
