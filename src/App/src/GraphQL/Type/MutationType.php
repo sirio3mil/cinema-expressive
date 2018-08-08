@@ -25,7 +25,7 @@ class MutationType extends ObjectType
 
         parent::__construct([
             'fields' => [
-                'importMovie' => [
+                'importImdbMMovie' => [
                     'args' => [
                         'imdbNumber' => Type::nonNull(Type::int())
                     ],

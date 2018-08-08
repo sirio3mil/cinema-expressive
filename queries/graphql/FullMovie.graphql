@@ -1,5 +1,5 @@
 query ($imdbNumber: Int!) {
-  movieDetails(imdbNumber: $imdbNumber) {
+  imdbMovieDetails(imdbNumber: $imdbNumber) {
     title
     year
     languages
@@ -20,7 +20,7 @@ query ($imdbNumber: Int!) {
     seasonNumber
     imdbNumber
   }
-  movieCredits(imdbNumber: $imdbNumber) {
+  imdbMovieCredits(imdbNumber: $imdbNumber) {
     cast {
       fullName
       imdbNumber
@@ -36,7 +36,7 @@ query ($imdbNumber: Int!) {
       imdbNumber
     }
   }
-  movieReleases(imdbNumber: $imdbNumber) {
+  imdbMovieReleases(imdbNumber: $imdbNumber) {
     dates {
       date
       details
@@ -48,7 +48,7 @@ query ($imdbNumber: Int!) {
       country
     }
   }
-  movieKeywords(imdbNumber: $imdbNumber) {
+  imdbMovieKeywords(imdbNumber: $imdbNumber) {
     total
     keywords {
       keyword
@@ -58,12 +58,12 @@ query ($imdbNumber: Int!) {
       relevantVotes
     }
   }
-  movieLocations(imdbNumber: $imdbNumber) {
+  imdbMovieLocations(imdbNumber: $imdbNumber) {
     location
     totalVotes
     relevantVotes
   }
-  movieCertifications(imdbNumber: $imdbNumber) {
+  imdbMovieCertifications(imdbNumber: $imdbNumber) {
     certification
     details
     country

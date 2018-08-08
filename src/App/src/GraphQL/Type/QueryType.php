@@ -32,7 +32,7 @@ class QueryType extends ObjectType
 
         parent::__construct([
             'fields' => [
-                'movieDetails' => [
+                'imdbMovieDetails' => [
                     'type'    => $typeRegistry->get('movie'),
                     'args'    => [
                         'imdbNumber' => Type::nonNull(Type::int()),
@@ -41,7 +41,7 @@ class QueryType extends ObjectType
                         return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieDetailsWrapper(), $args);
                     }
                 ],
-                'movieCredits' => [
+                'imdbMovieCredits' => [
                     'type' => $typeRegistry->get('credits'),
                     'args'    => [
                         'imdbNumber' => Type::nonNull(Type::int()),
@@ -50,7 +50,7 @@ class QueryType extends ObjectType
                         return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCreditsWrapper(), $args);
                     }
                 ],
-                'movieReleases' => [
+                'imdbMovieReleases' => [
                     'type' => $typeRegistry->get('release'),
                     'args'    => [
                         'imdbNumber' => Type::nonNull(Type::int()),
@@ -59,7 +59,7 @@ class QueryType extends ObjectType
                         return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieReleasesWrapper(), $args);
                     }
                 ],
-                'movieKeywords' => [
+                'imdbMovieKeywords' => [
                     'type' => $typeRegistry->get('keywords'),
                     'args'    => [
                         'imdbNumber' => Type::nonNull(Type::int()),
@@ -68,7 +68,7 @@ class QueryType extends ObjectType
                         return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieKeywordsWrapper(), $args);
                     }
                 ],
-                'movieLocations' => [
+                'imdbMovieLocations' => [
                     'type' => Type::listOf($typeRegistry->get('location')),
                     'args'    => [
                         'imdbNumber' => Type::nonNull(Type::int()),
@@ -77,7 +77,7 @@ class QueryType extends ObjectType
                         return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieLocationsWrapper(), $args);
                     }
                 ],
-                'movieCertifications' => [
+                'imdbMovieCertifications' => [
                     'type' => Type::listOf($typeRegistry->get('certification')),
                     'args'    => [
                         'imdbNumber' => Type::nonNull(Type::int()),
