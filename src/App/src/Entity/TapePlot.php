@@ -13,14 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TapePlot implements CinemaEntity
 {
 
-    /**
-     * @var Tape
-     *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Tape", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
-     */
-    private $tape;
+    use TapeRelatedPrimary;
 
     /**
      * @var string
@@ -53,24 +46,5 @@ class TapePlot implements CinemaEntity
     public function getPlot(): string
     {
         return $this->plot;
-    }
-
-    /**
-     * @param Tape $tape
-     * @return TapePlot
-     */
-    public function setTape(Tape $tape): TapePlot
-    {
-        $this->tape = $tape;
-    
-        return $this;
-    }
-
-    /**
-     * @return Tape
-     */
-    public function getTape(): Tape
-    {
-        return $this->tape;
     }
 }

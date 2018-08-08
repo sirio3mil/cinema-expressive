@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TapeTitle implements CinemaEntity
 {
+
+    use TapeRelatedColumn, CountryRelated;
+
     /**
      * @var int
      *
@@ -53,28 +56,12 @@ class TapeTitle implements CinemaEntity
     private $observations;
 
     /**
-     * @var Tape
-     *
-     * @ORM\ManyToOne(targetEntity="Tape", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
-     */
-    private $tape;
-
-    /**
-     * @var Country
-     *
-     * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="countryId", referencedColumnName="countryId")
-     */
-    private $countryId;
-
-    /**
      * @var Language
      *
      * @ORM\ManyToOne(targetEntity="Language", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="languageId", referencedColumnName="languageId")
      */
-    private $languageId;
+    private $language;
 
 
     /**
@@ -124,50 +111,12 @@ class TapeTitle implements CinemaEntity
     }
 
     /**
-     * @param Tape $tape
+     * @param Language|null $language
      * @return TapeTitle
      */
-    public function setTape(Tape $tape): TapeTitle
+    public function setLanguage(?Language $language): TapeTitle
     {
-        $this->tape = $tape;
-    
-        return $this;
-    }
-
-    /**
-     * @return Tape
-     */
-    public function getTape(): Tape
-    {
-        return $this->tape;
-    }
-
-    /**
-     * @param Country|null $countryId
-     * @return TapeTitle
-     */
-    public function setCountryId(?Country $countryId): TapeTitle
-    {
-        $this->countryId = $countryId;
-    
-        return $this;
-    }
-
-    /**
-     * @return Country|null
-     */
-    public function getCountryId(): ?Country
-    {
-        return $this->countryId;
-    }
-
-    /**
-     * @param Language|null $languageId
-     * @return TapeTitle
-     */
-    public function setLanguageId(?Language $languageId): TapeTitle
-    {
-        $this->languageId = $languageId;
+        $this->language = $language;
     
         return $this;
     }
@@ -175,8 +124,8 @@ class TapeTitle implements CinemaEntity
     /**
      * @return Language|null
      */
-    public function getLanguageId(): ?Language
+    public function getLanguage(): ?Language
     {
-        return $this->languageId;
+        return $this->language;
     }
 }

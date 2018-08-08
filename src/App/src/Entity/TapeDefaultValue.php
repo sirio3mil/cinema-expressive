@@ -12,14 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TapeDefaultValue implements CinemaEntity
 {
-    /**
-     * @var Tape
-     *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Tape", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
-     */
-    private $tape;
+
+    use TapeRelatedPrimary, CountryRelated;
 
     /**
      * @var SearchValue
@@ -27,7 +21,7 @@ class TapeDefaultValue implements CinemaEntity
      * @ORM\ManyToOne(targetEntity="SearchValue", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="searchValueId", referencedColumnName="searchValueId")
      */
-    private $defaultTitle;
+    private $title;
 
     /**
      * @var People
@@ -35,7 +29,7 @@ class TapeDefaultValue implements CinemaEntity
      * @ORM\ManyToOne(targetEntity="People", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="castPeopleId", referencedColumnName="peopleId")
      */
-    private $defaultCast;
+    private $cast;
 
     /**
      * @var People
@@ -43,43 +37,15 @@ class TapeDefaultValue implements CinemaEntity
      * @ORM\ManyToOne(targetEntity="People", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="directorPeopleId", referencedColumnName="peopleId")
      */
-    private $defaultDirector;
+    private $director;
 
     /**
-     * @var Country
-     *
-     * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="countryId", referencedColumnName="countryId")
-     */
-    private $defaultCountry;
-
-
-    /**
-     * @param Tape $tape
+     * @param SearchValue $title
      * @return TapeDefaultValue
      */
-    public function setTape(Tape $tape): TapeDefaultValue
+    public function setTitle(SearchValue $title): TapeDefaultValue
     {
-        $this->tape = $tape;
-    
-        return $this;
-    }
-
-    /**
-     * @return Tape
-     */
-    public function getTape(): Tape
-    {
-        return $this->tape;
-    }
-
-    /**
-     * @param SearchValue $defaultTitle
-     * @return TapeDefaultValue
-     */
-    public function setDefaultTitle(SearchValue $defaultTitle): TapeDefaultValue
-    {
-        $this->defaultTitle = $defaultTitle;
+        $this->title = $title;
     
         return $this;
     }
@@ -87,18 +53,18 @@ class TapeDefaultValue implements CinemaEntity
     /**
      * @return SearchValue
      */
-    public function getDefaultTitle(): SearchValue
+    public function getTitle(): SearchValue
     {
-        return $this->defaultTitle;
+        return $this->title;
     }
 
     /**
-     * @param People|null $defaultCast
+     * @param People|null $cast
      * @return TapeDefaultValue
      */
-    public function setDefaultCast(?People $defaultCast): TapeDefaultValue
+    public function setCast(?People $cast): TapeDefaultValue
     {
-        $this->defaultCast = $defaultCast;
+        $this->cast = $cast;
     
         return $this;
     }
@@ -106,18 +72,18 @@ class TapeDefaultValue implements CinemaEntity
     /**
      * @return People|null
      */
-    public function getDefaultCast(): ?People
+    public function getCast(): ?People
     {
-        return $this->defaultCast;
+        return $this->cast;
     }
 
     /**
-     * @param People|null $defaultDirector
+     * @param People|null $director
      * @return TapeDefaultValue
      */
-    public function setDefaultDirector(?People $defaultDirector): TapeDefaultValue
+    public function setDirector(?People $director): TapeDefaultValue
     {
-        $this->defaultDirector = $defaultDirector;
+        $this->director = $director;
     
         return $this;
     }
@@ -125,27 +91,8 @@ class TapeDefaultValue implements CinemaEntity
     /**
      * @return People|null
      */
-    public function getDefaultDirector(): ?People
+    public function getDirector(): ?People
     {
-        return $this->defaultDirector;
-    }
-
-    /**
-     * @param Country|null $defaultCountry
-     * @return TapeDefaultValue
-     */
-    public function setDefaultCountry(?Country $defaultCountry): TapeDefaultValue
-    {
-        $this->defaultCountry = $defaultCountry;
-    
-        return $this;
-    }
-
-    /**
-     * @return Country|null
-     */
-    public function getDefaultCountry(): ?Country
-    {
-        return $this->defaultCountry;
+        return $this->director;
     }
 }

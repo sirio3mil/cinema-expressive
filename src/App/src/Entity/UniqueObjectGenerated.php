@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\UuidInterface;
 use Ramsey\Uuid\Uuid;
 

@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Premiere implements CinemaEntity
 {
+
+    use TapeRelatedColumn, CountryRelated;
+
     /**
      * @var int
      *
@@ -49,22 +52,6 @@ class Premiere implements CinemaEntity
      * )
      */
     private $place = "Movie";
-
-    /**
-     * @var Tape
-     *
-     * @ORM\ManyToOne(targetEntity="Tape", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
-     */
-    private $tape;
-
-    /**
-     * @var Country
-     *
-     * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="countryId", referencedColumnName="countryId")
-     */
-    private $country;
 
 
     /**
@@ -111,43 +98,5 @@ class Premiere implements CinemaEntity
     public function getPlace(): string
     {
         return $this->place;
-    }
-
-    /**
-     * @param Tape $tape
-     * @return Premiere
-     */
-    public function setTape(Tape $tape): Premiere
-    {
-        $this->tape = $tape;
-    
-        return $this;
-    }
-
-    /**
-     * @return Tape
-     */
-    public function getTape(): Tape
-    {
-        return $this->tape;
-    }
-
-    /**
-     * @param Country $country
-     * @return Premiere
-     */
-    public function setCountry(Country $country): Premiere
-    {
-        $this->country = $country;
-    
-        return $this;
-    }
-
-    /**
-     * @return Country
-     */
-    public function getCountry(): Country
-    {
-        return $this->country;
     }
 }

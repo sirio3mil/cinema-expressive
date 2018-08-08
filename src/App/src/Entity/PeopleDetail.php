@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PeopleDetail implements CinemaEntity
 {
 
-    use CreationDate, Ranking, Upgradeable;
+    use CreationDate, Ranking, Upgradeable, CountryRelated;
 
     /**
      * @var People
@@ -121,14 +121,6 @@ class PeopleDetail implements CinemaEntity
      * )
      */
     private $skip = false;
-
-    /**
-     * @var Country
-     *
-     * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="countryId", referencedColumnName="countryId")
-     */
-    private $country;
 
 
     /**
@@ -300,24 +292,5 @@ class PeopleDetail implements CinemaEntity
     public function getPeople(): People
     {
         return $this->people;
-    }
-
-    /**
-     * @param Country|null $country
-     * @return PeopleDetail
-     */
-    public function setCountry(?Country $country): PeopleDetail
-    {
-        $this->country = $country;
-    
-        return $this;
-    }
-
-    /**
-     * @return Country|null
-     */
-    public function getCountry(): ?Country
-    {
-        return $this->country;
     }
 }

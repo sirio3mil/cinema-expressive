@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 class LocationDetail implements CinemaEntity
 {
 
+    use CountryRelated;
+
     /**
      * @var Location
      *
@@ -118,14 +120,6 @@ class LocationDetail implements CinemaEntity
      * )
      */
     private $geolocated = false;
-
-    /**
-     * @var Country
-     *
-     * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="countryId", referencedColumnName="countryId")
-     */
-    private $country;
 
 
     /**
@@ -297,24 +291,5 @@ class LocationDetail implements CinemaEntity
     public function getGeolocated(): bool
     {
         return $this->geolocated;
-    }
-
-    /**
-     * @param Country|null $country
-     * @return LocationDetail
-     */
-    public function setCountry(?Country $country): LocationDetail
-    {
-        $this->country = $country;
-    
-        return $this;
-    }
-
-    /**
-     * @return Country|null
-     */
-    public function getCountry(): ?Country
-    {
-        return $this->country;
     }
 }

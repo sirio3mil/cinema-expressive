@@ -14,16 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TvShow implements CinemaEntity
 {
 
-    use CreationDate;
-
-    /**
-     * @var Tape
-     *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Tape", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
-     */
-    private $tape;
+    use CreationDate, TapeRelatedPrimary;
 
     /**
      * @var bool
@@ -55,24 +46,5 @@ class TvShow implements CinemaEntity
     public function getFinished(): bool
     {
         return $this->finished;
-    }
-
-    /**
-     * @param Tape $tape
-     * @return TvShow
-     */
-    public function setTape(Tape $tape): TvShow
-    {
-        $this->tape = $tape;
-    
-        return $this;
-    }
-
-    /**
-     * @return Tape
-     */
-    public function getTape(): Tape
-    {
-        return $this->tape;
     }
 }

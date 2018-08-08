@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PeopleAliasTape implements CinemaEntity
 {
 
-    use CreationDate;
+    use CreationDate, TapeRelatedColumn;
 
     /**
      * @var int
@@ -37,15 +37,6 @@ class PeopleAliasTape implements CinemaEntity
      * @ORM\JoinColumn(name="peopleAliasId", referencedColumnName="peopleAliasId")
      */
     private $peopleAlias;
-
-    /**
-     * @var Tape
-     *
-     * @ORM\ManyToOne(targetEntity="Tape", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
-     */
-    private $tape;
-
 
     /**
      * @return int
@@ -72,24 +63,5 @@ class PeopleAliasTape implements CinemaEntity
     public function getPeopleAlias(): PeopleAlias
     {
         return $this->peopleAlias;
-    }
-
-    /**
-     * @param Tape $tape
-     * @return PeopleAliasTape
-     */
-    public function setTape(Tape $tape):PeopleAliasTape
-    {
-        $this->tape = $tape;
-    
-        return $this;
-    }
-
-    /**
-     * @return Tape
-     */
-    public function getTape(): Tape
-    {
-        return $this->tape;
     }
 }

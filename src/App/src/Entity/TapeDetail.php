@@ -14,16 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TapeDetail implements CinemaEntity
 {
 
-    use CreationDate, Ranking, Upgradeable;
-
-    /**
-     * @var Tape
-     *
-     * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Tape", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
-     */
-    private $tape;
+    use CreationDate, Ranking, Upgradeable, TapeRelatedPrimary;
 
     /**
      * @var int
@@ -305,24 +296,5 @@ class TapeDetail implements CinemaEntity
     public function getCurrency(): int
     {
         return $this->currency;
-    }
-
-    /**
-     * @param Tape $tape
-     * @return TapeDetail
-     */
-    public function setTape(Tape $tape): TapeDetail
-    {
-        $this->tape = $tape;
-    
-        return $this;
-    }
-
-    /**
-     * @return Tape
-     */
-    public function getTape(): Tape
-    {
-        return $this->tape;
     }
 }

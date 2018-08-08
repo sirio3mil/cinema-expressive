@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Producer implements CinemaEntity
 {
 
-    use TapeCollection;
+    use TapeCollection, CountryRelated;
 
     /**
      * @var int
@@ -44,14 +44,6 @@ class Producer implements CinemaEntity
      * )
      */
     private $name;
-
-    /**
-     * @var Country
-     *
-     * @ORM\ManyToOne(targetEntity="Country", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="countryId", referencedColumnName="countryId")
-     */
-    private $country;
 
     /**
      * @var Collection
@@ -93,24 +85,5 @@ class Producer implements CinemaEntity
     public function getName(): string
     {
         return $this->name;
-    }
-
-    /**
-     * @param Country|null $country
-     * @return Producer
-     */
-    public function setCountry(Country $country = null): Producer
-    {
-        $this->country = $country;
-    
-        return $this;
-    }
-
-    /**
-     * @return Country|null
-     */
-    public function getCountry(): ?Country
-    {
-        return $this->country;
     }
 }
