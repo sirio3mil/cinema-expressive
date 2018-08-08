@@ -8,14 +8,17 @@
 
 namespace App\GraphQL\Type;
 
-
+use App\Entity\ImdbNumber;
+use App\Entity\Tape;
 use App\GraphQL\Resolver\CachedDocumentNodeResolver;
 use App\GraphQL\TypeRegistry;
 use App\Alias\MongoDBClient;
+use Doctrine\ORM\EntityManager;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
+use Interop\Container\ContainerInterface;
 use MongoDB\Collection;
 
 class MutationType extends ObjectType
@@ -30,7 +33,7 @@ class MutationType extends ObjectType
                         'imdbNumber' => Type::nonNull(Type::int())
                     ],
                     'type' => new ObjectType([
-                        'name' => 'CreateReviewOutput',
+                        'name' => 'ImportImdbMovieOutput',
                         'fields' => [
                             'title' => Type::string(),
                             'imdbNumber' => Type::int()
@@ -50,9 +53,10 @@ class MutationType extends ObjectType
                             ]
                         );
                         $date = new \DateTime();
+                        /** @var ContainerInterface $container */
+                        $container = $typeRegistry->getContainer();
                         /** @var Collection $collection */
-                        $typeRegistry->getContainer()
-                            ->get(MongoDBClient::class)
+                        $container->get(MongoDBClient::class)
                             ->cinema
                             ->movies
                             ->findOneAndReplace(
@@ -64,7 +68,33 @@ class MutationType extends ObjectType
                                     "upsert" => true
                                 ]
                             );
-                        return $result->data['imdbMovieDetails'];
+                        /** @var EntityManager $entityManager */
+                        $entityManager = $container->get(EntityManager::class);
+                        /** @var ImdbNumber $imdbNumber */
+                        $imdbNumber = $entityManager->getRepository(ImdbNumber::class)->findOneBy([
+                            "imdbNumber" => $args['imdbNumber']
+                        ]);
+                        if($imdbNumber){
+                            /** @var Tape $tape */
+                            $tape = $entityManager->getRepository(Tape::class)->findOneBy([
+                                "objectId" => $imdbNumber->getObjectId()
+                            ]);
+                        }
+                        else{
+                            $tape = new Tape();
+                            $tape->setOriginalTitle($result->data['imdbMovieDetails']['title']);
+                            $entityManager->persist($tape);
+                            $entityManager->flush();
+                            $imdbNumber = new ImdbNumber();
+                            $imdbNumber->setImdbNumber($args['imdbNumber']);
+                            $imdbNumber->setObjectId($tape->getObjectId());
+                            $entityManager->persist($imdbNumber);
+                            $entityManager->flush();
+                        }
+                        return [
+                            "title" => $tape->getOriginalTitle(),
+                            "imdbNumber" => $imdbNumber->getImdbNumber()
+                        ];
                     }
                 ]
             ]

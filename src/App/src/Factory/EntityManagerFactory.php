@@ -28,8 +28,8 @@ class EntityManagerFactory
         $dbParams = [
             'driver'   => $config['driver'],
             'user'     => $config['username'],
-            'password' => $config['database'],
-            'dbname'   => $config['username'],
+            'password' => $config['password'],
+            'dbname'   => $config['database'],
             'host'     => $config['hostname']
         ];
 
