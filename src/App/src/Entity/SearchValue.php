@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * Class SearchValue
@@ -30,12 +31,13 @@ class SearchValue implements CinemaEntity
     private $searchValueId;
 
     /**
-     * @var string
+     * @var UuidInterface
      *
      * @ORM\Column(
-     *     type="guid",
+     *     type="uuid",
      *     name="objectId",
      *     nullable=false,
+     *     unique=true,
      *     options={"fixed":false}
      * )
      */

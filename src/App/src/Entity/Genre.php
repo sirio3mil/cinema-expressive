@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Table(name="Genre")
+ * @ORM\HasLifecycleCallbacks
  */
 class Genre implements CinemaEntity
 {

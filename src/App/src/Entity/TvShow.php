@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Table(name="TvShow")
+ * @ORM\HasLifecycleCallbacks
  */
 class TvShow implements CinemaEntity
 {

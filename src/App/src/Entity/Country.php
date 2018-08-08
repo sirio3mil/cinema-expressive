@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Table(name="Country")
+ * @ORM\HasLifecycleCallbacks
  */
 class Country implements CinemaEntity
 {

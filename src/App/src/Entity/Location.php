@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Table(name="Location")
+ * @ORM\HasLifecycleCallbacks
  */
 class Location implements CinemaEntity
 {

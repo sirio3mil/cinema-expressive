@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * Class People
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Table(name="People")
+ * @ORM\HasLifecycleCallbacks
  */
 class People implements CinemaEntity
 {
@@ -43,12 +45,13 @@ class People implements CinemaEntity
     private $fullName;
 
     /**
-     * @var string
+     * @var UuidInterface
      *
      * @ORM\Column(
-     *     type="guid",
+     *     type="uuid",
      *     name="objectId",
      *     nullable=false,
+     *     unique=true,
      *     options={"fixed":false, "default":"newid()"}
      * )
      */
