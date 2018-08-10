@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class SearchValue implements CinemaEntity
 {
 
-    use UniqueObject;
+    use ObjectRelated;
 
     /**
      * @var int
@@ -41,6 +41,14 @@ class SearchValue implements CinemaEntity
      * )
      */
     private $searchParam;
+
+    /**
+     * @var Object
+     *
+     * @ORM\ManyToOne(targetEntity="Object", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="objectId", referencedColumnName="objectId")
+     */
+    protected $object;
 
 
     /**

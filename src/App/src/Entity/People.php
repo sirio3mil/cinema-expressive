@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class People implements CinemaEntity
 {
 
-    use CreationDate, UniqueObjectGenerated;
+    use CreationDate, ObjectRelatedColumn;
 
     /**
      * @var int

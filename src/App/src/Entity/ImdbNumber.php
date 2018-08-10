@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class ImdbNumber implements CinemaEntity
 {
 
-    use UniqueObjectPrimary;
+    use ObjectRelatedPrimary;
 
     /**
      * @var int
@@ -26,14 +26,6 @@ class ImdbNumber implements CinemaEntity
      * )
      */
     private $imdbNumber;
-
-    /**
-     * @var RowType
-     *
-     * @ORM\ManyToOne(targetEntity="RowType", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="rowTypeId", referencedColumnName="rowTypeId")
-     */
-    private $rowType;
 
     /**
      * @param int $imdbNumber
@@ -52,24 +44,5 @@ class ImdbNumber implements CinemaEntity
     public function getImdbNumber(): int
     {
         return $this->imdbNumber;
-    }
-
-    /**
-     * @param RowType $rowType
-     * @return ImdbNumber
-     */
-    public function setRowType(RowType $rowType): ImdbNumber
-    {
-        $this->rowType = $rowType;
-    
-        return $this;
-    }
-
-    /**
-     * @return RowType
-     */
-    public function getRowType(): RowType
-    {
-        return $this->rowType;
     }
 }

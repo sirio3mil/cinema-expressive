@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PermanentLink implements CinemaEntity
 {
 
-    use UniqueObjectPrimary;
+    use ObjectRelatedPrimary;
 
     /**
      * @var string

@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Tape implements CinemaEntity
 {
 
-    use CreationDate, UniqueObjectGenerated;
+    use CreationDate, ObjectRelatedColumn;
 
     /**
      * @var int
