@@ -16,7 +16,7 @@ trait ObjectRelated
      * @param Object $object
      * @return CinemaEntity
      */
-    public function setObjectId(Object $object): CinemaEntity
+    public function setObject(Object $object): CinemaEntity
     {
         $this->object = $object;
 
@@ -26,7 +26,7 @@ trait ObjectRelated
     /**
      * @return Object
      */
-    public function getObjectId(): Object
+    public function getObject(): Object
     {
         return $this->object;
     }

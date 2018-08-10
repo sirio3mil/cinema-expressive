@@ -12,6 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class RowType
 {
+
+    public const ROW_TYPE_TAPE = 4;
+
+    public const ROW_TYPE_PEOPLE = 3;
+
     /**
      * @var int
      *

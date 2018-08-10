@@ -9,6 +9,8 @@
 namespace App\GraphQL\Type;
 
 use App\Entity\ImdbNumber;
+use App\Entity\Object;
+use App\Entity\RowType;
 use App\Entity\Tape;
 use App\GraphQL\Resolver\CachedDocumentNodeResolver;
 use App\GraphQL\TypeRegistry;
@@ -77,16 +79,20 @@ class MutationType extends ObjectType
                         if($imdbNumber){
                             /** @var Tape $tape */
                             $tape = $entityManager->getRepository(Tape::class)->findOneBy([
-                                "objectId" => $imdbNumber->getObjectId()
+                                "object" => $imdbNumber->getObject()
                             ]);
                         }
                         else{
+                            $object = new Object();
+                            $object->setRowType(RowType::ROW_TYPE_TAPE);
+                            $entityManager->persist($object);
                             $tape = new Tape();
                             $tape->setOriginalTitle($result->data['imdbMovieDetails']['title']);
+                            $tape->setObject($object);
                             $entityManager->persist($tape);
                             $imdbNumber = new ImdbNumber();
                             $imdbNumber->setImdbNumber($args['imdbNumber']);
-                            $imdbNumber->setObjectId($tape->getObjectId());
+                            $imdbNumber->setObject($tape->getObject());
                             $entityManager->persist($imdbNumber);
                             $entityManager->flush();
                         }
