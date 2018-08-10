@@ -43,9 +43,9 @@ class SearchValue implements CinemaEntity
     private $searchParam;
 
     /**
-     * @var Object
+     * @var GlobalUniqueObject
      *
-     * @ORM\ManyToOne(targetEntity="Object", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="GlobalUniqueObject", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="objectId", referencedColumnName="objectId")
      */
     protected $object;

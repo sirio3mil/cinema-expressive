@@ -9,13 +9,14 @@
 namespace App\GraphQL\Type;
 
 use App\Entity\ImdbNumber;
-use App\Entity\Object;
+use App\Entity\GlobalUniqueObject;
 use App\Entity\RowType;
 use App\Entity\Tape;
 use App\GraphQL\Resolver\CachedDocumentNodeResolver;
 use App\GraphQL\TypeRegistry;
 use App\Alias\MongoDBClient;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;
 use GraphQL\Type\Definition\ObjectType;
@@ -72,10 +73,18 @@ class MutationType extends ObjectType
                             );
                         /** @var EntityManager $entityManager */
                         $entityManager = $container->get(EntityManager::class);
-                        /** @var ImdbNumber $imdbNumber */
-                        $imdbNumber = $entityManager->getRepository(ImdbNumber::class)->findOneBy([
-                            "imdbNumber" => $args['imdbNumber']
+                        /** @var RowType $rowType */
+                        $rowType = $entityManager->getRepository(RowType::class)->findOneBy([
+                            "rowTypeId" => RowType::ROW_TYPE_TAPE
                         ]);
+                        /** @var Query $query */
+                        $query = $entityManager->createQuery('SELECT i FROM App\Entity\ImdbNumber i JOIN i.object o WHERE i.imdbNumber = :imdbNumber AND o.rowType = :rowType');
+                        $query->setParameters([
+                            'imdbNumber' => $args['imdbNumber'],
+                            'rowType' => $rowType
+                        ]);
+                        /** @var ImdbNumber $imdbNumber */
+                        $imdbNumber = $query->getOneOrNullResult();
                         if($imdbNumber){
                             /** @var Tape $tape */
                             $tape = $entityManager->getRepository(Tape::class)->findOneBy([
@@ -83,8 +92,8 @@ class MutationType extends ObjectType
                             ]);
                         }
                         else{
-                            $object = new Object();
-                            $object->setRowType(RowType::ROW_TYPE_TAPE);
+                            $object = new GlobalUniqueObject();
+                            $object->setRowType($rowType);
                             $entityManager->persist($object);
                             $tape = new Tape();
                             $tape->setOriginalTitle($result->data['imdbMovieDetails']['title']);

@@ -13,10 +13,10 @@ trait ObjectRelated
 {
 
     /**
-     * @param Object $object
+     * @param GlobalUniqueObject $object
      * @return CinemaEntity
      */
-    public function setObject(Object $object): CinemaEntity
+    public function setObject(GlobalUniqueObject $object): CinemaEntity
     {
         $this->object = $object;
 
@@ -24,9 +24,9 @@ trait ObjectRelated
     }
 
     /**
-     * @return Object
+     * @return GlobalUniqueObject
      */
-    public function getObject(): Object
+    public function getObject(): GlobalUniqueObject
     {
         return $this->object;
     }

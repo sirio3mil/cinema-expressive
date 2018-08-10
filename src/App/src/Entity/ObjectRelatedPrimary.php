@@ -15,10 +15,10 @@ trait ObjectRelatedPrimary
     use ObjectRelated;
 
     /**
-     * @var Object
+     * @var GlobalUniqueObject
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Object", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="GlobalUniqueObject", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="objectId", referencedColumnName="objectId")
      */
     protected $object;

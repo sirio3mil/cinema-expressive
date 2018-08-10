@@ -17,7 +17,7 @@ use Ramsey\Uuid\UuidInterface;
  * @ORM\Entity
  * @ORM\Table(name="Object")
  */
-class Object implements CinemaEntity
+class GlobalUniqueObject implements CinemaEntity
 {
 
     /**
@@ -55,9 +55,9 @@ class Object implements CinemaEntity
 
     /**
      * @param RowType $rowType
-     * @return ImdbNumber
+     * @return GlobalUniqueObject
      */
-    public function setRowType(RowType $rowType): ImdbNumber
+    public function setRowType(RowType $rowType): GlobalUniqueObject
     {
         $this->rowType = $rowType;
 
