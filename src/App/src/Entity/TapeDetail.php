@@ -59,7 +59,7 @@ class TapeDetail implements CinemaEntity
      * @ORM\Column(
      *     type="string",
      *     length=150,
-     *     name="color",
+     *     name="sound",
      *     nullable=true,
      *     options={"fixed":false}
      * )
@@ -118,10 +118,10 @@ class TapeDetail implements CinemaEntity
      * @var int
      *
      * @ORM\Column(
-     *     type="int",
+     *     type="integer",
      *     name="currency",
      *     nullable=false,
-     *     options={"unsigned":false,default:1}
+     *     options={"unsigned":false,"default":1}
      * )
      */
     private $currency;
@@ -296,5 +296,25 @@ class TapeDetail implements CinemaEntity
     public function getCurrency(): int
     {
         return $this->currency;
+    }
+
+    /** @ORM\PrePersist */
+    public function generateDefaultValues()
+    {
+        if(is_null($this->currency)) {
+            $this->currency = 1;
+        }
+        if(is_null($this->haveCover)) {
+            $this->haveCover = 0;
+        }
+        if(is_null($this->tvShow)) {
+            $this->tvShow = 0;
+        }
+        if(is_null($this->adult)) {
+            $this->adult = 0;
+        }
+        if(is_null($this->budget)) {
+            $this->budget = 0;
+        }
     }
 }

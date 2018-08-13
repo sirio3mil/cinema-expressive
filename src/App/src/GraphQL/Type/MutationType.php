@@ -12,6 +12,7 @@ use App\Entity\ImdbNumber;
 use App\Entity\GlobalUniqueObject;
 use App\Entity\RowType;
 use App\Entity\Tape;
+use App\Entity\TapeDetail;
 use App\GraphQL\Resolver\CachedDocumentNodeResolver;
 use App\GraphQL\TypeRegistry;
 use App\Alias\MongoDBClient;
@@ -96,15 +97,32 @@ class MutationType extends ObjectType
                             $object->setRowType($rowType);
                             $entityManager->persist($object);
                             $tape = new Tape();
-                            $tape->setOriginalTitle($result->data['imdbMovieDetails']['title']);
                             $tape->setObject($object);
-                            $entityManager->persist($tape);
                             $imdbNumber = new ImdbNumber();
                             $imdbNumber->setImdbNumber($args['imdbNumber']);
                             $imdbNumber->setObject($tape->getObject());
                             $entityManager->persist($imdbNumber);
-                            $entityManager->flush();
                         }
+                        $tape->setOriginalTitle($result->data['imdbMovieDetails']['title']);
+                        $entityManager->persist($tape);
+                        /** @var TapeDetail $tapeDetail */
+                        $tapeDetail = $entityManager->getRepository(TapeDetail::class)->findOneBy([
+                            "tape" => $tape
+                        ]);
+                        if(!$tapeDetail){
+                            $tapeDetail = new TapeDetail();
+                            $tapeDetail->setTape($tape);
+                        }
+                        $tapeDetail->setDuration($result->data['imdbMovieDetails']['duration']);
+                        $tapeDetail->setYear($result->data['imdbMovieDetails']['year']);
+                        $tapeDetail->setScore($result->data['imdbMovieDetails']['score']);
+                        $tapeDetail->setVotes($result->data['imdbMovieDetails']['votes']);
+                        $tapeDetail->setColor($result->data['imdbMovieDetails']['color']);
+                        $sounds = ($result->data['imdbMovieDetails']['sounds']) ? implode("," ,$result->data['imdbMovieDetails']['sounds']) : null;
+                        $tapeDetail->setSound($sounds);
+                        $tapeDetail->setTvShow($result->data['imdbMovieDetails']['isTvShow']);
+                        $entityManager->persist($tapeDetail);
+                        $entityManager->flush();
                         return [
                             "title" => $tape->getOriginalTitle(),
                             "imdbNumber" => $imdbNumber->getImdbNumber()

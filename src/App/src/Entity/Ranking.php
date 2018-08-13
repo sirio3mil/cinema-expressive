@@ -28,7 +28,7 @@ trait Ranking
      * @var int
      *
      * @ORM\Column(
-     *     type="int",
+     *     type="float",
      *     name="score",
      *     nullable=false,
      *     options={"unsigned":false,"default":0}
@@ -56,10 +56,10 @@ trait Ranking
     }
 
     /**
-     * @param int $score
+     * @param float $score
      * @return CinemaEntity
      */
-    public function setScore(int $score): CinemaEntity
+    public function setScore(float $score): CinemaEntity
     {
         $this->score = $score;
 
@@ -67,9 +67,9 @@ trait Ranking
     }
 
     /**
-     * @return int
+     * @return float
      */
-    public function getScore(): int
+    public function getScore(): float
     {
         return $this->score;
     }
