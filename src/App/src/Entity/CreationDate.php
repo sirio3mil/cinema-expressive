@@ -47,6 +47,8 @@ trait CreationDate
     /** @ORM\PrePersist */
     public function generateCreationDate()
     {
-        $this->createdAt = DateGenerator::getUtcDateTime();
+        if(is_null($this->createdAt)) {
+            $this->createdAt = DateGenerator::getUtcDateTime();
+        }
     }
 }
