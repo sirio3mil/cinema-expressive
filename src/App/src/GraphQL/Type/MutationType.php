@@ -11,6 +11,7 @@ namespace App\GraphQL\Type;
 use App\Entity\ImdbNumber;
 use App\Entity\GlobalUniqueObject;
 use App\Entity\RowType;
+use App\Entity\Sound;
 use App\Entity\Tape;
 use App\Entity\TapeDetail;
 use App\GraphQL\Resolver\CachedDocumentNodeResolver;
@@ -118,8 +119,19 @@ class MutationType extends ObjectType
                         $tapeDetail->setScore($result->data['imdbMovieDetails']['score']);
                         $tapeDetail->setVotes($result->data['imdbMovieDetails']['votes']);
                         $tapeDetail->setColor($result->data['imdbMovieDetails']['color']);
-                        $sounds = ($result->data['imdbMovieDetails']['sounds']) ? implode("," ,$result->data['imdbMovieDetails']['sounds']) : null;
-                        $tapeDetail->setSound($sounds);
+                        /** @var Sound[] $sounds */
+                        $sounds = $tape->getSounds();
+                        if($result->data['imdbMovieDetails']['sounds']){
+                            foreach ($result->data['imdbMovieDetails']['sounds'] as $description){
+                                /** @var Sound $sound */
+                                $sound = $entityManager->getRepository(Sound::class)->findOneBy([
+                                    "description" => $description
+                                ]);
+                                if(!in_array($sound, $sounds)){
+                                    $tape->addSound($sound);
+                                }
+                            }
+                        }
                         $tapeDetail->setTvShow($result->data['imdbMovieDetails']['isTvShow']);
                         $entityManager->persist($tapeDetail);
                         $entityManager->flush();
