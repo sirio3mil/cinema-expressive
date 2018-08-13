@@ -8,8 +8,10 @@
 
 namespace App\GraphQL\Type;
 
+use App\Entity\Genre;
 use App\Entity\ImdbNumber;
 use App\Entity\GlobalUniqueObject;
+use App\Entity\Language;
 use App\Entity\RowType;
 use App\Entity\Sound;
 use App\Entity\Tape;
@@ -17,6 +19,7 @@ use App\Entity\TapeDetail;
 use App\GraphQL\Resolver\CachedDocumentNodeResolver;
 use App\GraphQL\TypeRegistry;
 use App\Alias\MongoDBClient;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use GraphQL\Executor\ExecutionResult;
@@ -119,16 +122,42 @@ class MutationType extends ObjectType
                         $tapeDetail->setScore($result->data['imdbMovieDetails']['score']);
                         $tapeDetail->setVotes($result->data['imdbMovieDetails']['votes']);
                         $tapeDetail->setColor($result->data['imdbMovieDetails']['color']);
-                        /** @var Sound[] $sounds */
+                        /** @var ArrayCollection $sounds */
                         $sounds = $tape->getSounds();
                         if($result->data['imdbMovieDetails']['sounds']){
-                            foreach ($result->data['imdbMovieDetails']['sounds'] as $description){
+                            foreach ($result->data['imdbMovieDetails']['sounds'] as $text){
                                 /** @var Sound $sound */
                                 $sound = $entityManager->getRepository(Sound::class)->findOneBy([
-                                    "description" => $description
+                                    "description" => $text
                                 ]);
-                                if(!in_array($sound, $sounds)){
+                                if($sound && !$sounds->contains($sound)){
                                     $tape->addSound($sound);
+                                }
+                            }
+                        }
+                        /** @var ArrayCollection $genres */
+                        $genres = $tape->getGenres();
+                        if($result->data['imdbMovieDetails']['genres']){
+                            foreach ($result->data['imdbMovieDetails']['genres'] as $text){
+                                /** @var Genre $genre */
+                                $genre = $entityManager->getRepository(Genre::class)->findOneBy([
+                                    "name" => $text
+                                ]);
+                                if($genre && !$genres->contains($genre)){
+                                    $tape->addGenre($genre);
+                                }
+                            }
+                        }
+                        /** @var ArrayCollection $genres */
+                        $languages = $tape->getLanguages();
+                        if($result->data['imdbMovieDetails']['languages']){
+                            foreach ($result->data['imdbMovieDetails']['languages'] as $text){
+                                /** @var Language $language */
+                                $language = $entityManager->getRepository(Language::class)->findOneBy([
+                                    "name" => $text
+                                ]);
+                                if($language && !$languages->contains($language)){
+                                    $tape->addLanguage($language);
                                 }
                             }
                         }
