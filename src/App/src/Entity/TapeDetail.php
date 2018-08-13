@@ -54,19 +54,6 @@ class TapeDetail implements CinemaEntity
     private $color;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(
-     *     type="string",
-     *     length=150,
-     *     name="sound",
-     *     nullable=true,
-     *     options={"fixed":false}
-     * )
-     */
-    private $sound;
-
-    /**
      * @var bool
      *
      * @ORM\Column(
@@ -182,25 +169,6 @@ class TapeDetail implements CinemaEntity
     public function getColor(): ?string
     {
         return $this->color;
-    }
-
-    /**
-     * @param null|string $sound
-     * @return TapeDetail
-     */
-    public function setSound(?string $sound): TapeDetail
-    {
-        $this->sound = $sound;
-    
-        return $this;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getSound(): ?string
-    {
-        return $this->sound;
     }
 
     /**

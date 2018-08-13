@@ -57,6 +57,16 @@ class Tape implements CinemaEntity
 
     /**
      * @var Collection
+     * @ORM\ManyToMany(targetEntity="Sound", inversedBy="tapes", fetch="EXTRA_LAZY")
+     * @ORM\JoinTable(name="TapeSound",
+     *      joinColumns={@ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="soundId", referencedColumnName="soundId")}
+     *     )
+     */
+    private $sounds;
+
+    /**
+     * @var Collection
      * @ORM\ManyToMany(targetEntity="Genre", inversedBy="tapes", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(name="TapeGenre",
      *      joinColumns={@ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")},
@@ -116,6 +126,7 @@ class Tape implements CinemaEntity
         $this->locations = new ArrayCollection();
         $this->producers = new ArrayCollection();
         $this->tags = new ArrayCollection();
+        $this->sounds = new ArrayCollection();
     }
 
     /**
@@ -311,5 +322,33 @@ class Tape implements CinemaEntity
     public function getTags(): Collection
     {
         return $this->tags;
+    }
+
+    /**
+     * @param Sound $sound
+     * @return Tape
+     */
+    public function addSound(Sound $sound): Tape
+    {
+        $this->sounds[] = $sound;
+
+        return $this;
+    }
+
+    /**
+     * @param Sound $sound
+     * @return bool
+     */
+    public function removeSound(Sound $sound): bool
+    {
+        return $this->sounds->removeElement($sound);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getSounds(): Collection
+    {
+        return $this->sounds;
     }
 }
