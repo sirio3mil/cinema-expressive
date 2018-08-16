@@ -18,7 +18,7 @@ class PeopleAlias
      * @ORM\Id
      * @ORM\Column(
      *     type="bigint",
-     *     name="peopleId",
+     *     name="peopleAliasId",
      *     nullable=false,
      *     options={"unsigned":false}
      * )
