@@ -17,6 +17,7 @@ use App\Entity\People;
 use App\Entity\PeopleAlias;
 use App\Entity\PeopleAliasTape;
 use App\Entity\Premiere;
+use App\Entity\PremiereDetail;
 use App\Entity\Role;
 use App\Entity\RowType;
 use App\Entity\Sound;
@@ -24,6 +25,7 @@ use App\Entity\Tape;
 use App\Entity\TapeDetail;
 use App\Entity\TapePeopleRole;
 use App\Entity\TapePeopleRoleCharacter;
+use App\Entity\TapeTitle;
 use App\Entity\TvShow;
 use App\Entity\TvShowChapter;
 use App\GraphQL\Resolver\CachedDocumentNodeResolver;
@@ -48,13 +50,13 @@ class MutationType extends ObjectType
         parent::__construct([
             'fields' => [
                 'importImdbMovie' => [
-                    'args' => [
+                    'args'    => [
                         'imdbNumber' => Type::nonNull(Type::int())
                     ],
-                    'type' => new ObjectType([
-                        'name' => 'ImportImdbMovieOutput',
+                    'type'    => new ObjectType([
+                        'name'   => 'ImportImdbMovieOutput',
                         'fields' => [
-                            'title' => Type::string(),
+                            'title'      => Type::string(),
                             'imdbNumber' => Type::int()
                         ]
                     ]),
@@ -97,7 +99,7 @@ class MutationType extends ObjectType
                         $query = $entityManager->createQuery('SELECT i FROM App\Entity\ImdbNumber i JOIN i.object o WHERE i.imdbNumber = :imdbNumber AND o.rowType = :rowType');
                         $query->setParameters([
                             'imdbNumber' => $args['imdbNumber'],
-                            'rowType' => $tapeRowType
+                            'rowType'    => $tapeRowType
                         ]);
                         /** @var ImdbNumber $imdbNumber */
                         $imdbNumber = $query->getOneOrNullResult();
@@ -211,7 +213,7 @@ class MutationType extends ObjectType
                                 $query = $entityManager->createQuery('SELECT i FROM App\Entity\ImdbNumber i JOIN i.object o WHERE i.imdbNumber = :imdbNumber AND o.rowType = :rowType');
                                 $query->setParameters([
                                     'imdbNumber' => $gqQueryResult->data['imdbMovieDetails']['tvShow'],
-                                    'rowType' => $tapeRowType
+                                    'rowType'    => $tapeRowType
                                 ]);
                                 /** @var ImdbNumber $tvShowImdbNumber */
                                 $tvShowImdbNumber = $query->getSingleResult();
@@ -257,7 +259,7 @@ class MutationType extends ObjectType
                         /** @var array $result */
                         $dqlQueryResult = $query->getResult();
                         $cast = [];
-                        foreach ($dqlQueryResult as $row){
+                        foreach ($dqlQueryResult as $row) {
                             $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
                         }
                         if ($gqQueryResult->data['imdbMovieCredits']['cast']) {
@@ -270,7 +272,7 @@ class MutationType extends ObjectType
                                     $tapePeopleRole = $cast[$person['imdbNumber']];
                                     $people = $tapePeopleRole->getPeople();
                                 }
-                                if(!$people) {
+                                if (!$people) {
                                     /** @var Query $query */
                                     $query = $entityManager->createQuery('
                                         SELECT p 
@@ -305,13 +307,13 @@ class MutationType extends ObjectType
                                     $entityManager->persist($tapePeopleRole);
                                 }
                                 $entityManager->flush();
-                                if(!empty($person['alias'])) {
+                                if (!empty($person['alias'])) {
                                     /** @var PeopleAlias $peopleAlias */
                                     $peopleAlias = $entityManager->getRepository(PeopleAlias::class)->findOneBy([
                                         "people" => $people,
-                                        "alias" => $person['alias']
+                                        "alias"  => $person['alias']
                                     ]);
-                                    if(!$peopleAlias){
+                                    if (!$peopleAlias) {
                                         $peopleAlias = new PeopleAlias();
                                         $peopleAlias->setPeople($people);
                                         $peopleAlias->setAlias($person['alias']);
@@ -321,9 +323,9 @@ class MutationType extends ObjectType
                                     /** @var PeopleAliasTape $peopleAliasTape */
                                     $peopleAliasTape = $entityManager->getRepository(PeopleAliasTape::class)->findOneBy([
                                         "peopleAlias" => $peopleAlias,
-                                        "tape" => $tape
+                                        "tape"        => $tape
                                     ]);
-                                    if(!$peopleAliasTape){
+                                    if (!$peopleAliasTape) {
                                         $peopleAliasTape = new PeopleAliasTape();
                                         $peopleAliasTape->setTape($tape);
                                         $peopleAliasTape->setPeopleAlias($peopleAlias);
@@ -331,12 +333,12 @@ class MutationType extends ObjectType
                                         $entityManager->flush();
                                     }
                                 }
-                                if(!empty($person['character'])) {
+                                if (!empty($person['character'])) {
                                     /** @var TapePeopleRoleCharacter $peopleAliasTape */
                                     $tapePeopleRoleCharacter = $entityManager->getRepository(TapePeopleRoleCharacter::class)->findOneBy([
                                         "tapePeopleRole" => $tapePeopleRole
                                     ]);
-                                    if(!$tapePeopleRoleCharacter){
+                                    if (!$tapePeopleRoleCharacter) {
                                         $tapePeopleRoleCharacter = new TapePeopleRoleCharacter();
                                         $tapePeopleRoleCharacter->setTapePeopleRole($tapePeopleRole);
                                     }
@@ -368,7 +370,7 @@ class MutationType extends ObjectType
                         /** @var array $result */
                         $dqlQueryResult = $query->getResult();
                         $cast = [];
-                        foreach ($dqlQueryResult as $row){
+                        foreach ($dqlQueryResult as $row) {
                             $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
                         }
                         if ($gqQueryResult->data['imdbMovieCredits']['directors']) {
@@ -381,7 +383,7 @@ class MutationType extends ObjectType
                                     $tapePeopleRole = $cast[$person['imdbNumber']];
                                     $people = $tapePeopleRole->getPeople();
                                 }
-                                if(!$people) {
+                                if (!$people) {
                                     /** @var Query $query */
                                     $query = $entityManager->createQuery('
                                         SELECT p 
@@ -440,7 +442,7 @@ class MutationType extends ObjectType
                         /** @var array $result */
                         $dqlQueryResult = $query->getResult();
                         $cast = [];
-                        foreach ($dqlQueryResult as $row){
+                        foreach ($dqlQueryResult as $row) {
                             $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
                         }
                         if ($gqQueryResult->data['imdbMovieCredits']['writers']) {
@@ -453,7 +455,7 @@ class MutationType extends ObjectType
                                     $tapePeopleRole = $cast[$person['imdbNumber']];
                                     $people = $tapePeopleRole->getPeople();
                                 }
-                                if(!$people) {
+                                if (!$people) {
                                     /** @var Query $query */
                                     $query = $entityManager->createQuery('
                                         SELECT p 
@@ -493,29 +495,79 @@ class MutationType extends ObjectType
                         if ($gqQueryResult->data['imdbMovieReleases']['dates']) {
                             foreach ($gqQueryResult->data['imdbMovieReleases']['dates'] as $data) {
                                 /** @var Country $country */
-                                $country = $entityManager->getRepository(Country::class)->findOneBy([
-                                    'officialName' => $data['country']
-                                ]);
+                                if ($data['country']) {
+                                    $country = $entityManager->getRepository(Country::class)->findOneBy([
+                                        'officialName' => $data['country']
+                                    ]);
+                                } else {
+                                    $country = null;
+                                }
                                 $date = \DateTime::createFromFormat("Y-m-d", $data['date']);
                                 /** @var Premiere $premiere */
                                 $premiere = $entityManager->getRepository(Premiere::class)->findOneBy([
-                                    'tape' => $tape,
-                                    'date' => $date,
+                                    'tape'    => $tape,
+                                    'date'    => $date,
                                     'country' => $country
                                 ]);
-                                if(!$premiere){
+                                if (!$premiere) {
                                     $premiere = new Premiere();
                                     $premiere->setTape($tape);
                                     $premiere->setDate($date);
                                     $premiere->setCountry($country);
                                     $entityManager->persist($premiere);
+                                    $entityManager->flush();
+                                }
+                                if ($data['details']) {
+                                    foreach ($data['details'] as $detail) {
+                                        /** @var PremiereDetail $premiereDetail */
+                                        $premiereDetail = $entityManager->getRepository(PremiereDetail::class)->findOneBy([
+                                            'premiere'    => $premiere,
+                                            'observation' => $detail
+                                        ]);
+                                        if (!$premiereDetail) {
+                                            $premiereDetail = new PremiereDetail();
+                                            $premiereDetail->setPremiere($premiere);
+                                            $premiereDetail->setObservation($detail);
+                                            $entityManager->persist($premiereDetail);
+                                            $entityManager->flush();
+                                        }
+                                    }
                                 }
                             }
-                            $entityManager->flush();
+                        }
+                        if ($gqQueryResult->data['imdbMovieReleases']['titles']) {
+                            foreach ($gqQueryResult->data['imdbMovieReleases']['titles'] as $data) {
+                                /** @var Country $country */
+                                if ($data['country']) {
+                                    $country = $entityManager->getRepository(Country::class)->findOneBy([
+                                        'officialName' => $data['country']
+                                    ]);
+                                } else {
+                                    $country = null;
+                                }
+                                /** @var TapeTitle $tapeTitle */
+                                $tapeTitle = $entityManager->getRepository(TapeTitle::class)->findOneBy([
+                                    'tape'    => $tape,
+                                    'title'   => $data['title'],
+                                    'country' => $country
+                                ]);
+                                if (!$tapeTitle) {
+                                    $tapeTitle = new TapeTitle();
+                                    $tapeTitle->setTape($tape);
+                                    $tapeTitle->setCountry($country);
+                                    $tapeTitle->setTitle($data['title']);
+                                    if ($country) {
+                                        $tapeTitle->setLanguage($country->getLanguage());
+                                    }
+                                }
+                                $tapeTitle->setObservations($data['description']);
+                                $entityManager->persist($tapeTitle);
+                                $entityManager->flush();
+                            }
                         }
                         return [
-                            "title" => $tape->getOriginalTitle(),
-                            "imdbNumber" => $imdbNumber->getImdbNumber()
+                            "title"      => $tape->getOriginalTitle(),
+                            "imdbNumber" => $args['imdbNumber']
                         ];
                     }
                 ]
