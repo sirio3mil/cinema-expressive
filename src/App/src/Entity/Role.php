@@ -13,6 +13,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Role implements CinemaEntity
 {
+
+    public const ROLE_CAST = 3;
+
+    public const ROLE_WRITER = 2;
+
+    public const ROLE_DIRECTOR = 1;
+
     /**
      * @var int
      *
