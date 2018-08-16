@@ -45,12 +45,16 @@ class CreditsType extends ObjectType
                     case 'writers':
                         $data = [];
                         if($source['writers']){
+                            $imdbNumbers = [];
                             /** @var People $person */
                             foreach ($source['writers'] as $person) {
-                                $data[] = [
-                                    'fullName' => $person->getFullName(),
-                                    'imdbNumber' => $person->getImdbNumber()
-                                ];
+                                if(!in_array($person->getImdbNumber(), $imdbNumbers)) {
+                                    $data[] = [
+                                        'fullName' => $person->getFullName(),
+                                        'imdbNumber' => $person->getImdbNumber()
+                                    ];
+                                    $imdbNumbers[] = $person->getImdbNumber();
+                                }
                             }
                         }
                         return $data;
