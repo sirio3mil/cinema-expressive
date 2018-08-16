@@ -297,7 +297,6 @@ class MutationType extends ObjectType
                                     $entityManager->persist($imdbNumber);
                                 }
                                 if (!$tapePeopleRole) {
-                                    $created[] = $person['imdbNumber'];
                                     $tapePeopleRole = new TapePeopleRole();
                                     $tapePeopleRole->setTape($tape);
                                     $tapePeopleRole->setRole($castRole);
@@ -344,6 +343,150 @@ class MutationType extends ObjectType
                                     $entityManager->persist($tapePeopleRoleCharacter);
                                     $entityManager->flush();
                                 }
+                            }
+                        }
+                        /** @var Role $directorRole */
+                        $directorRole = $entityManager->getRepository(Role::class)->findOneBy([
+                            "roleId" => ROLE::ROLE_DIRECTOR
+                        ]);
+                        /** @var Query $query */
+                        $query = $entityManager->createQuery('
+                            SELECT r tapePeopleRole
+                              ,i.imdbNumber
+                            FROM App\Entity\TapePeopleRole r
+                            JOIN r.people p
+                            JOIN App\Entity\ImdbNumber i 
+                              WITH i.object = p.object
+                            WHERE r.role = :role 
+                              AND r.tape = :tape
+                        ');
+                        $query->setParameters([
+                            'role' => $directorRole,
+                            'tape' => $tape
+                        ]);
+                        /** @var array $result */
+                        $dqlQueryResult = $query->getResult();
+                        $cast = [];
+                        foreach ($dqlQueryResult as $row){
+                            $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
+                        }
+                        if ($gqQueryResult->data['imdbMovieCredits']['directors']) {
+                            foreach ($gqQueryResult->data['imdbMovieCredits']['directors'] as $person) {
+                                /** @var TapePeopleRole $tapePeopleRole */
+                                $tapePeopleRole = null;
+                                /** @var People $people */
+                                $people = null;
+                                if (array_key_exists($person['imdbNumber'], $cast)) {
+                                    $tapePeopleRole = $cast[$person['imdbNumber']];
+                                    $people = $tapePeopleRole->getPeople();
+                                }
+                                if(!$people) {
+                                    /** @var Query $query */
+                                    $query = $entityManager->createQuery('
+                                        SELECT p 
+                                        FROM App\Entity\People p 
+                                        JOIN App\Entity\ImdbNumber i 
+                                          WITH i.object = p.object 
+                                        WHERE i.imdbNumber = :imdbNumber
+                                    ');
+                                    $query->setParameters([
+                                        'imdbNumber' => $person['imdbNumber']
+                                    ]);
+                                    $people = $query->getOneOrNullResult();
+                                }
+                                if (!$people) {
+                                    $object = new GlobalUniqueObject();
+                                    $object->setRowType($peopleRowType);
+                                    $entityManager->persist($object);
+                                    $people = new People();
+                                    $people->setObject($object);
+                                    $people->setFullName($person['fullName']);
+                                    $entityManager->persist($people);
+                                    $imdbNumber = new ImdbNumber();
+                                    $imdbNumber->setImdbNumber($person['imdbNumber']);
+                                    $imdbNumber->setObject($object);
+                                    $entityManager->persist($imdbNumber);
+                                }
+                                if (!$tapePeopleRole) {
+                                    $tapePeopleRole = new TapePeopleRole();
+                                    $tapePeopleRole->setTape($tape);
+                                    $tapePeopleRole->setRole($directorRole);
+                                    $tapePeopleRole->setPeople($people);
+                                    $entityManager->persist($tapePeopleRole);
+                                }
+                                $entityManager->flush();
+                            }
+                        }
+                        /** @var Role $writerRole */
+                        $writerRole = $entityManager->getRepository(Role::class)->findOneBy([
+                            "roleId" => ROLE::ROLE_WRITER
+                        ]);
+                        /** @var Query $query */
+                        $query = $entityManager->createQuery('
+                            SELECT r tapePeopleRole
+                              ,i.imdbNumber
+                            FROM App\Entity\TapePeopleRole r
+                            JOIN r.people p
+                            JOIN App\Entity\ImdbNumber i 
+                              WITH i.object = p.object
+                            WHERE r.role = :role 
+                              AND r.tape = :tape
+                        ');
+                        $query->setParameters([
+                            'role' => $writerRole,
+                            'tape' => $tape
+                        ]);
+                        /** @var array $result */
+                        $dqlQueryResult = $query->getResult();
+                        $cast = [];
+                        foreach ($dqlQueryResult as $row){
+                            $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
+                        }
+                        if ($gqQueryResult->data['imdbMovieCredits']['writers']) {
+                            foreach ($gqQueryResult->data['imdbMovieCredits']['writers'] as $person) {
+                                /** @var TapePeopleRole $tapePeopleRole */
+                                $tapePeopleRole = null;
+                                /** @var People $people */
+                                $people = null;
+                                if (array_key_exists($person['imdbNumber'], $cast)) {
+                                    $tapePeopleRole = $cast[$person['imdbNumber']];
+                                    $people = $tapePeopleRole->getPeople();
+                                }
+                                if(!$people) {
+                                    /** @var Query $query */
+                                    $query = $entityManager->createQuery('
+                                        SELECT p 
+                                        FROM App\Entity\People p 
+                                        JOIN App\Entity\ImdbNumber i 
+                                          WITH i.object = p.object 
+                                        WHERE i.imdbNumber = :imdbNumber
+                                    ');
+                                    $query->setParameters([
+                                        'imdbNumber' => $person['imdbNumber']
+                                    ]);
+                                    $people = $query->getOneOrNullResult();
+                                }
+                                if (!$people) {
+                                    $object = new GlobalUniqueObject();
+                                    $object->setRowType($peopleRowType);
+                                    $entityManager->persist($object);
+                                    $people = new People();
+                                    $people->setObject($object);
+                                    $people->setFullName($person['fullName']);
+                                    $entityManager->persist($people);
+                                    $imdbNumber = new ImdbNumber();
+                                    $imdbNumber->setImdbNumber($person['imdbNumber']);
+                                    $imdbNumber->setObject($object);
+                                    $entityManager->persist($imdbNumber);
+                                }
+                                if (!$tapePeopleRole) {
+                                    $tapePeopleRole = new TapePeopleRole();
+                                    $tapePeopleRole->setTape($tape);
+                                    $tapePeopleRole->setRole($writerRole);
+                                    $tapePeopleRole->setPeople($people);
+                                    $entityManager->persist($tapePeopleRole);
+                                }
+                                $entityManager->flush();
                             }
                         }
                         return [
