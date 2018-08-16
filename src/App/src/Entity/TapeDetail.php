@@ -70,12 +70,12 @@ class TapeDetail implements CinemaEntity
      *
      * @ORM\Column(
      *     type="boolean",
-     *     name="tvShow",
+     *     name="isTvShow",
      *     nullable=false,
      *     options={"default":0}
      * )
      */
-    private $tvShow;
+    private $isTvShow;
 
     /**
      * @var bool
@@ -191,12 +191,12 @@ class TapeDetail implements CinemaEntity
     }
 
     /**
-     * @param bool $tvShow
+     * @param bool $isTvShow
      * @return TapeDetail
      */
-    public function setTvShow(bool $tvShow): TapeDetail
+    public function setIsTvShow(bool $isTvShow): TapeDetail
     {
-        $this->tvShow = $tvShow;
+        $this->isTvShow = $isTvShow;
     
         return $this;
     }
@@ -204,9 +204,9 @@ class TapeDetail implements CinemaEntity
     /**
      * @return bool
      */
-    public function getTvShow()
+    public function getIsTvShow()
     {
-        return $this->tvShow;
+        return $this->isTvShow;
     }
 
     /**
@@ -275,8 +275,8 @@ class TapeDetail implements CinemaEntity
         if(is_null($this->haveCover)) {
             $this->haveCover = 0;
         }
-        if(is_null($this->tvShow)) {
-            $this->tvShow = 0;
+        if(is_null($this->isTvShow)) {
+            $this->isTvShow = 0;
         }
         if(is_null($this->adult)) {
             $this->adult = 0;
