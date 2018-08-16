@@ -22,7 +22,7 @@ class EntityManagerFactory
         $config = $config['mssql'] ?? [];
 
         $paths = [
-            __DIR__. "/src/App/src/Entity"
+            __DIR__ . "/src/App/src/Entity"
         ];
         $isDevMode = true;
 
@@ -31,12 +31,13 @@ class EntityManagerFactory
             'user'     => $config['username'],
             'password' => $config['password'],
             'dbname'   => $config['database'],
-            'host'     => $config['hostname']
+            'host'     => $config['hostname'],
+            'charset'  => $config['charset']
         ];
 
         Type::addType('uuid', 'Ramsey\Uuid\Doctrine\UuidType');
 
-        $config = Setup::createAnnotationMetadataConfiguration($paths,$isDevMode, null, null, false);
+        $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, null, null, false);
 
         return EntityManager::create($dbParams, $config);
     }
