@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Table(name="Premiere")
+ * @ORM\HasLifecycleCallbacks
  */
 class Premiere implements CinemaEntity
 {
@@ -51,7 +52,7 @@ class Premiere implements CinemaEntity
      *     options={"fixed":false,"default":"Movie"}
      * )
      */
-    private $place = "Movie";
+    private $place;
 
 
     /**
@@ -98,5 +99,13 @@ class Premiere implements CinemaEntity
     public function getPlace(): string
     {
         return $this->place;
+    }
+
+    /** @ORM\PrePersist */
+    public function generatePlace()
+    {
+        if(is_null($this->place)) {
+            $this->place = "Movie";
+        }
     }
 }
