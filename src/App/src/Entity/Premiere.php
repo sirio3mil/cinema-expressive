@@ -14,14 +14,14 @@ use Doctrine\ORM\Mapping as ORM;
 class Premiere implements CinemaEntity
 {
 
-    use TapeRelatedColumn, CountryRelated;
+    use TapeRelatedColumn, CountryRelated, CreationDate;
 
     /**
      * @var int
      *
      * @ORM\Id
      * @ORM\Column(
-     *     type="integer",
+     *     type="bigint",
      *     name="premiereId",
      *     nullable=false,
      *     options={"unsigned":false}
