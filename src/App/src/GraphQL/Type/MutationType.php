@@ -16,6 +16,7 @@ use App\Entity\Language;
 use App\Entity\People;
 use App\Entity\PeopleAlias;
 use App\Entity\PeopleAliasTape;
+use App\Entity\Premiere;
 use App\Entity\Role;
 use App\Entity\RowType;
 use App\Entity\Sound;
@@ -488,6 +489,29 @@ class MutationType extends ObjectType
                                 }
                                 $entityManager->flush();
                             }
+                        }
+                        if ($gqQueryResult->data['imdbMovieReleases']['dates']) {
+                            foreach ($gqQueryResult->data['imdbMovieReleases']['dates'] as $data) {
+                                /** @var Country $country */
+                                $country = $entityManager->getRepository(Country::class)->findOneBy([
+                                    'officialName' => $data['country']
+                                ]);
+                                $date = \DateTime::createFromFormat("Y-m-d", $data['date']);
+                                /** @var Premiere $premiere */
+                                $premiere = $entityManager->getRepository(Premiere::class)->findOneBy([
+                                    'tape' => $tape,
+                                    'date' => $date,
+                                    'country' => $country
+                                ]);
+                                if(!$premiere){
+                                    $premiere = new Premiere();
+                                    $premiere->setTape($tape);
+                                    $premiere->setDate($date);
+                                    $premiere->setCountry($country);
+                                    $entityManager->persist($premiere);
+                                }
+                            }
+                            $entityManager->flush();
                         }
                         return [
                             "title" => $tape->getOriginalTitle(),
