@@ -46,7 +46,7 @@ class CreditsType extends ObjectType
                         $data = [];
                         if($source['writers']){
                             /** @var People $person */
-                            foreach ($source['cast'] as $person) {
+                            foreach ($source['writers'] as $person) {
                                 $data[] = [
                                     'fullName' => $person->getFullName(),
                                     'imdbNumber' => $person->getImdbNumber()
@@ -58,7 +58,7 @@ class CreditsType extends ObjectType
                         $data = [];
                         if($source['directors']){
                             /** @var People $person */
-                            foreach ($source['cast'] as $person) {
+                            foreach ($source['directors'] as $person) {
                                 $data[] = [
                                     'fullName' => $person->getFullName(),
                                     'imdbNumber' => $person->getImdbNumber()
