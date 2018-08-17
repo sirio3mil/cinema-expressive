@@ -24,6 +24,7 @@ use App\Entity\RowType;
 use App\Entity\Sound;
 use App\Entity\Tag;
 use App\Entity\Tape;
+use App\Entity\TapeCertification;
 use App\Entity\TapeDetail;
 use App\Entity\TapePeopleRole;
 use App\Entity\TapePeopleRoleCharacter;
@@ -600,6 +601,27 @@ class MutationType extends ObjectType
                                 }
                                 $tapeTitle->setObservations($data['description']);
                                 $entityManager->persist($tapeTitle);
+                                $entityManager->flush();
+                            }
+                        }
+                        if ($gqQueryResult->data['imdbMovieCertifications']) {
+                            foreach ($gqQueryResult->data['imdbMovieCertifications'] as $data) {
+                                /** @var Country $country */
+                                $country = $entityManager->getRepository(Country::class)->findOneBy([
+                                    'officialName' => $data['country']
+                                ]);
+                                /** @var TapeCertification $tapeCertification */
+                                $tapeCertification = $entityManager->getRepository(TapeCertification::class)->findOneBy([
+                                    'tape' => $tape,
+                                    'country' => $country
+                                ]);
+                                if (!$tapeCertification) {
+                                    $tapeCertification = new TapeCertification();
+                                    $tapeCertification->setTape($tape);
+                                    $tapeCertification->setCountry($country);
+                                }
+                                $tapeCertification->setCertification($data['certification']);
+                                $entityManager->persist($tapeCertification);
                                 $entityManager->flush();
                             }
                         }
