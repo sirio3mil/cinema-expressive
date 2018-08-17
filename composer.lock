@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3b1c7dc34807f1942750a561173285e",
+    "content-hash": "86038466170849ab5847306663e372e1",
     "packages": [
         {
             "name": "aura/di",
@@ -2645,12 +2645,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sirio3mil/imdb-scraper.git",
-                "reference": "3e3b5a4059fb251bb824a767a4b2793552f0135a"
+                "reference": "26d51d84c5eadc3f24e7c2257067d87a93aee28a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sirio3mil/imdb-scraper/zipball/3e3b5a4059fb251bb824a767a4b2793552f0135a",
-                "reference": "3e3b5a4059fb251bb824a767a4b2793552f0135a",
+                "url": "https://api.github.com/repos/sirio3mil/imdb-scraper/zipball/26d51d84c5eadc3f24e7c2257067d87a93aee28a",
+                "reference": "26d51d84c5eadc3f24e7c2257067d87a93aee28a",
                 "shasum": ""
             },
             "require": {
@@ -2671,7 +2671,7 @@
                 "source": "https://github.com/sirio3mil/imdb-scraper/tree/master",
                 "issues": "https://github.com/sirio3mil/imdb-scraper/issues"
             },
-            "time": "2018-07-19T15:14:50+00:00"
+            "time": "2018-08-16T20:28:01+00:00"
         },
         {
             "name": "symfony/console",
