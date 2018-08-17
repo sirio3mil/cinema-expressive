@@ -5,7 +5,6 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use ImdbScraper\Model\Keyword;
 
 
 /**
@@ -72,9 +71,9 @@ class Tag implements CinemaEntity
 
     /**
      * @param string $keyword
-     * @return Keyword
+     * @return Tag
      */
-    public function setKeyword(string $keyword): Keyword
+    public function setKeyword(string $keyword): Tag
     {
         $this->keyword = $keyword;
     
