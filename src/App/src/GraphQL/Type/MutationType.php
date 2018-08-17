@@ -13,6 +13,7 @@ use App\Entity\Genre;
 use App\Entity\ImdbNumber;
 use App\Entity\GlobalUniqueObject;
 use App\Entity\Language;
+use App\Entity\Location;
 use App\Entity\People;
 use App\Entity\PeopleAlias;
 use App\Entity\PeopleAliasTape;
@@ -208,6 +209,24 @@ class MutationType extends ObjectType
                                 }
                                 if ($tag && !$tags->contains($tag)) {
                                     $tape->addTag($tag);
+                                }
+                            }
+                        }
+                        if ($gqQueryResult->data['imdbMovieLocations']) {
+                            /** @var ArrayCollection $locations */
+                            $locations = $tape->getLocations();
+                            foreach ($gqQueryResult->data['imdbMovieLocations'] as $data) {
+                                /** @var Location $location */
+                                $location = $entityManager->getRepository(Location::class)->findOneBy([
+                                    'place' => $data['location']
+                                ]);
+                                if (!$location) {
+                                    $location = new Location();
+                                    $location->setPlace($data['location']);
+                                    $entityManager->persist($location);
+                                }
+                                if ($locations && !$locations->contains($location)) {
+                                    $tape->addLocation($location);
                                 }
                             }
                         }
