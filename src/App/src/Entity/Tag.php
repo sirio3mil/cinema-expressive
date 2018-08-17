@@ -13,11 +13,12 @@ use ImdbScraper\Model\Keyword;
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Table(name="Tag")
+ * @ORM\HasLifecycleCallbacks
  */
 class Tag implements CinemaEntity
 {
 
-    use TapeCollection;
+    use TapeCollection, CreationDate;
 
     /**
      * @var int
