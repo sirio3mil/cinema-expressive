@@ -21,6 +21,7 @@ use App\Entity\Premiere;
 use App\Entity\PremiereDetail;
 use App\Entity\Role;
 use App\Entity\RowType;
+use App\Entity\SearchValue;
 use App\Entity\Sound;
 use App\Entity\Tag;
 use App\Entity\Tape;
@@ -128,6 +129,17 @@ class MutationType extends ObjectType
                         }
                         $tape->setOriginalTitle($gqQueryResult->data['imdbMovieDetails']['title']);
                         $entityManager->persist($tape);
+                        /** @var SearchValue $searchValue */
+                        $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
+                            'object' => $tape->getObject(),
+                            'searchParam' => $gqQueryResult->data['imdbMovieDetails']['title']
+                        ]);
+                        if(!$searchValue){
+                            $searchValue = new SearchValue();
+                            $searchValue->setObject($tape->getObject());
+                            $searchValue->setSearchParam($gqQueryResult->data['imdbMovieDetails']['title']);
+                            $entityManager->persist($searchValue);
+                        }
                         /** @var TapeDetail $tapeDetail */
                         $tapeDetail = $entityManager->getRepository(TapeDetail::class)->findOneBy([
                             "tape" => $tape
@@ -338,6 +350,17 @@ class MutationType extends ObjectType
                                     $imdbNumber->setObject($object);
                                     $entityManager->persist($imdbNumber);
                                 }
+                                /** @var SearchValue $searchValue */
+                                $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
+                                    'object' => $people->getObject(),
+                                    'searchParam' => $person['fullName']
+                                ]);
+                                if(!$searchValue){
+                                    $searchValue = new SearchValue();
+                                    $searchValue->setObject($people->getObject());
+                                    $searchValue->setSearchParam($person['fullName']);
+                                    $entityManager->persist($searchValue);
+                                }
                                 if (!$tapePeopleRole) {
                                     $tapePeopleRole = new TapePeopleRole();
                                     $tapePeopleRole->setTape($tape);
@@ -358,6 +381,17 @@ class MutationType extends ObjectType
                                         $peopleAlias->setAlias($person['alias']);
                                         $entityManager->persist($peopleAlias);
                                         $entityManager->flush();
+                                    }
+                                    /** @var SearchValue $searchValue */
+                                    $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
+                                        'object' => $people->getObject(),
+                                        'searchParam' => $person['alias']
+                                    ]);
+                                    if(!$searchValue){
+                                        $searchValue = new SearchValue();
+                                        $searchValue->setObject($people->getObject());
+                                        $searchValue->setSearchParam($person['alias']);
+                                        $entityManager->persist($searchValue);
                                     }
                                     /** @var PeopleAliasTape $peopleAliasTape */
                                     $peopleAliasTape = $entityManager->getRepository(PeopleAliasTape::class)->findOneBy([
@@ -449,6 +483,17 @@ class MutationType extends ObjectType
                                     $imdbNumber->setObject($object);
                                     $entityManager->persist($imdbNumber);
                                 }
+                                /** @var SearchValue $searchValue */
+                                $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
+                                    'object' => $people->getObject(),
+                                    'searchParam' => $person['fullName']
+                                ]);
+                                if(!$searchValue){
+                                    $searchValue = new SearchValue();
+                                    $searchValue->setObject($people->getObject());
+                                    $searchValue->setSearchParam($person['fullName']);
+                                    $entityManager->persist($searchValue);
+                                }
                                 if (!$tapePeopleRole) {
                                     $tapePeopleRole = new TapePeopleRole();
                                     $tapePeopleRole->setTape($tape);
@@ -520,6 +565,17 @@ class MutationType extends ObjectType
                                     $imdbNumber->setImdbNumber($person['imdbNumber']);
                                     $imdbNumber->setObject($object);
                                     $entityManager->persist($imdbNumber);
+                                }
+                                /** @var SearchValue $searchValue */
+                                $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
+                                    'object' => $people->getObject(),
+                                    'searchParam' => $person['fullName']
+                                ]);
+                                if(!$searchValue){
+                                    $searchValue = new SearchValue();
+                                    $searchValue->setObject($people->getObject());
+                                    $searchValue->setSearchParam($person['fullName']);
+                                    $entityManager->persist($searchValue);
                                 }
                                 if (!$tapePeopleRole) {
                                     $tapePeopleRole = new TapePeopleRole();
@@ -601,6 +657,17 @@ class MutationType extends ObjectType
                                 }
                                 $tapeTitle->setObservations($data['description']);
                                 $entityManager->persist($tapeTitle);
+                                /** @var SearchValue $searchValue */
+                                $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
+                                    'object' => $tape->getObject(),
+                                    'searchParam' => $data['title']
+                                ]);
+                                if(!$searchValue){
+                                    $searchValue = new SearchValue();
+                                    $searchValue->setObject($tape->getObject());
+                                    $searchValue->setSearchParam($data['title']);
+                                    $entityManager->persist($searchValue);
+                                }
                                 $entityManager->flush();
                             }
                         }
