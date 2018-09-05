@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class User
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="User")
+ * @ORM\Table(name="[User]")
  * @ORM\HasLifecycleCallbacks
  */
 class User implements CinemaEntity
