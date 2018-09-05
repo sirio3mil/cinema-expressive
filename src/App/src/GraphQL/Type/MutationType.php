@@ -38,7 +38,6 @@ use App\Alias\MongoDBClient;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
-use Zend\Debug\Debug;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;
 use GraphQL\Type\Definition\ObjectType;
