@@ -59,8 +59,7 @@ class MutationType extends ObjectType
                     'type' => new ObjectType([
                         'name' => 'ImportImdbMovieOutput',
                         'fields' => [
-                            'title' => Type::string(),
-                            'imdbNumber' => Type::int()
+                            'tapeId' => Type::int()
                         ]
                     ]),
                     'resolve' => function ($source, $args) use ($typeRegistry) {
@@ -692,8 +691,7 @@ class MutationType extends ObjectType
                             }
                         }
                         return [
-                            "title" => $tape->getOriginalTitle(),
-                            "imdbNumber" => $args['imdbNumber']
+                            "tapeId" => $tape->getTapeId()
                         ];
                     }
                 ]
