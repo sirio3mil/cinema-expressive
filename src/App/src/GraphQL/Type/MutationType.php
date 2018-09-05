@@ -10,6 +10,7 @@ namespace App\GraphQL\Type;
 
 
 use App\GraphQL\Resolver\EditTapeUserResolver;
+use App\GraphQL\Resolver\ImportImdbEpisodeListResolver;
 use App\GraphQL\Resolver\ImportImdbMovieResolver;
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
@@ -53,6 +54,22 @@ class MutationType extends ObjectType
                     ]),
                     'resolve' => function ($source, $args) use ($typeRegistry) {
                         return ImportImdbMovieResolver::resolve($typeRegistry, $args);
+                    }
+                ],
+                'importImdbEpisodeList' => [
+                    'args' => [
+                        'imdbNumber' => Type::nonNull(Type::int()),
+                        'seasonNumber' => Type::nonNull(Type::int())
+                    ],
+                    'type' => new ObjectType([
+                        'name' => 'ImportImdbEpisodeListOutput',
+                        'fields' => [
+                            'episodes' => Type::listOf($typeRegistry->get('importedEpisode')),
+                            'tvShowId' => Type::int()
+                        ]
+                    ]),
+                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                        return ImportImdbEpisodeListResolver::resolve($typeRegistry, $args);
                     }
                 ]
             ]
