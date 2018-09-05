@@ -9,6 +9,7 @@
 namespace App\GraphQL\Type;
 
 
+use App\GraphQL\Resolver\EditTapeUserResolver;
 use App\GraphQL\Resolver\ImportImdbMovieResolver;
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
@@ -21,6 +22,25 @@ class MutationType extends ObjectType
 
         parent::__construct([
             'fields' => [
+                'editTapeUser' => [
+                    'args' => [
+                        'userId' => Type::nonNull(Type::int()),
+                        'imdbNumber' => Type::int(),
+                        'tapeId' => Type::int(),
+                        'tapeUserStatusId' => Type::nonNull(Type::int()),
+                        'place' => Type::int()
+                    ],
+                    'type' => new ObjectType([
+                        'name' => 'EditTapeUserOutput',
+                        'fields' => [
+                            'tapeUserId' => Type::int(),
+                            'tapeUserHistoryId' => Type::int()
+                        ]
+                    ]),
+                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                        return EditTapeUserResolver::resolve($typeRegistry, $args);
+                    }
+                ],
                 'importImdbMovie' => [
                     'args' => [
                         'imdbNumber' => Type::nonNull(Type::int())
