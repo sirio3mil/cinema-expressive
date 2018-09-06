@@ -8,33 +8,18 @@
 return [
     'zend-db' => [
         'mssql' => [
-            'hostname' => "mssql",
+            'hostname' => "localhost",
             'username' => "sa",
-            'password' => "ms3CjP{R?1^A",
+            'password' => "#LeNtilla1",
             'database' => "Film",
             'driver' => "sqlsrv",
             'charset' => "UTF-8"
         ],
-        'neo4j' => [
-            'hostname' => "neo4j",
-            'username' => "neo4j",
-            'password' => "testing",
-            'driver' => "bolt",
-            "port" => 7687
-        ],
         'mongo' => [
-            'hostname' => "mongo",
+            'hostname' => "localhost",
             'database' => "cinema",
             'port' => 27017,
-            'dsn' => "mongodb://mongo:27017"
-        ],
-        'mysql' => [
-            'hostname' => "mssql",
-            'username' => "root",
-            'password' => "ms3CjP{R?1^A",
-            'database' => "Film",
-            'driver' => "mysqli",
-            'charset' => "utf8"
-        ],
+            'dsn' => "mongodb://localhost:27017"
+        ]
     ]
 ];
