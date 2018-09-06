@@ -18,7 +18,7 @@ return [
                 'key_pattern' => null,
                 'readable' => true,
                 'writable' => true,
-                'servers' => ['memcached'],
+                'servers' => ['127.0.0.1'],
             ],
         ],
         'plugins' => [
