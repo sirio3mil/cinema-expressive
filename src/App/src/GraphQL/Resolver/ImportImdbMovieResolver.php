@@ -232,7 +232,7 @@ class ImportImdbMovieResolver
         if ($tapeDetail->getIsTvShow()) {
             /** @var TvShow $tvShow */
             $tvShow = $entityManager->getRepository(TvShow::class)->findOneBy([
-                "tapeId" => $tape->getTapeId()
+                "tape" => $tape
             ]);
             if (!$tvShow) {
                 $tvShow = new TvShow();
@@ -244,7 +244,7 @@ class ImportImdbMovieResolver
         if ($gqQueryResult->data['imdbMovieDetails']['isEpisode']) {
             /** @var TvShowChapter $tvShowChapter */
             $tvShowChapter = $entityManager->getRepository(TvShowChapter::class)->findOneBy([
-                "tapeId" => $tape->getTapeId()
+                "tape" => $tape
             ]);
             if (!$tvShowChapter) {
                 /** @var Query $query */
