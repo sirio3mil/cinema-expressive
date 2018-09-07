@@ -22,7 +22,6 @@ class ImportedEpisodeType extends ObjectType
                 'imdbNumber' => Type::int(),
                 'premiere' => Type::string(),
                 'episodeNumber' => Type::int(),
-                'seasonNumber' => Type::int(),
                 'tapeId' => Type::int()
             ]
         ]);

@@ -42,6 +42,7 @@ use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;
 use Interop\Container\ContainerInterface;
 use MongoDB\Collection;
+use Zend\Debug\Debug;
 
 class ImportImdbMovieResolver
 {
@@ -189,6 +190,7 @@ class ImportImdbMovieResolver
                 }
             }
         }
+        $entityManager->flush();
         if ($gqQueryResult->data['imdbMovieKeywords']['keywords']) {
             /** @var ArrayCollection $tags */
             $tags = $tape->getTags();
@@ -206,6 +208,7 @@ class ImportImdbMovieResolver
                     $tape->addTag($tag);
                 }
             }
+            $entityManager->flush();
         }
         if ($gqQueryResult->data['imdbMovieLocations']) {
             /** @var ArrayCollection $locations */
@@ -224,6 +227,7 @@ class ImportImdbMovieResolver
                     $tape->addLocation($location);
                 }
             }
+            $entityManager->flush();
         }
         if ($tapeDetail->getIsTvShow()) {
             /** @var TvShow $tvShow */
@@ -233,8 +237,9 @@ class ImportImdbMovieResolver
             if (!$tvShow) {
                 $tvShow = new TvShow();
                 $tvShow->setTape($tape);
+                $entityManager->persist($tvShow);
+                $entityManager->flush();
             }
-            $entityManager->persist($tvShow);
         }
         if ($gqQueryResult->data['imdbMovieDetails']['isEpisode']) {
             /** @var TvShowChapter $tvShowChapter */

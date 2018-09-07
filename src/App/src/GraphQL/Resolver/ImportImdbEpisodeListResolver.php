@@ -18,6 +18,28 @@ use App\Alias\MongoDBClient;
 
 class ImportImdbEpisodeListResolver
 {
+
+    protected static function importEpisodes(TypeRegistry $typeRegistry, array $episodeList)
+    {
+        $episodes = [];
+
+        foreach ($episodeList as $episode){
+            $result = ImportImdbMovieResolver::resolve($typeRegistry, $episode);
+            if(!filter_var($result['tapeId'], FILTER_VALIDATE_INT)){
+                throw new \HttpResponseException('Tape ' . $episode['imdbNumber'] . ' could not be registered');
+            }
+            $episodes[] = [
+                'title' => $episode['title'],
+                'imdbNumber' => $episode['imdbNumber'],
+                'premiere' => $episode['date'],
+                'episodeNumber' => $episode['episodeNumber'],
+                'tapeId' => $result['tapeId']
+            ];
+        }
+
+        return $episodes;
+    }
+
     public static function resolve(TypeRegistry $typeRegistry, array $args): array
     {
         $source = CachedDocumentNodeResolver::resolve($typeRegistry->getCacheStorageAdapter(),
@@ -51,17 +73,12 @@ class ImportImdbEpisodeListResolver
                     "upsert" => true
                 ]
             );
+        $episodes = [];
+        if(!empty($gqQueryResult->data['imdbEpisodeList']) && is_array($gqQueryResult->data['imdbEpisodeList'])){
+            $episodes = self::importEpisodes($typeRegistry, $gqQueryResult->data['imdbEpisodeList']);
+        }
         return [
-            'episodes' => [
-                [
-                    'title' => '',
-                    'imdbNumber' => 0,
-                    'premiere' => '',
-                    'episodeNumber' => 0,
-                    'seasonNumber' => 0,
-                    'tapeId' => 0
-                ]
-            ],
+            'episodes' => $episodes,
             'tvShowId' => 0
         ];
     }
