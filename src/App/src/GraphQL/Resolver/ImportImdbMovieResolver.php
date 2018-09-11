@@ -41,6 +41,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use ImdbScraper\Model\AlsoKnownAs;
 use ImdbScraper\Model\CastPeople;
 use ImdbScraper\Model\Keyword;
 use ImdbScraper\Model\Release;
@@ -634,11 +635,12 @@ class ImportImdbMovieResolver
             }
         }
         if ($imdbMovieReleases['titles']) {
+            /** @var AlsoKnownAs $data */
             foreach ($imdbMovieReleases['titles'] as $data) {
                 /** @var Country $country */
-                if ($data['country']) {
+                if ($data->getCountry()) {
                     $country = $entityManager->getRepository(Country::class)->findOneBy([
-                        'officialName' => $data['country']
+                        'officialName' => $data->getCountry()
                     ]);
                 } else {
                     $country = null;
@@ -646,29 +648,29 @@ class ImportImdbMovieResolver
                 /** @var TapeTitle $tapeTitle */
                 $tapeTitle = $entityManager->getRepository(TapeTitle::class)->findOneBy([
                     'tape' => $tape,
-                    'title' => $data['title'],
+                    'title' => $data->getTitle(),
                     'country' => $country
                 ]);
                 if (!$tapeTitle) {
                     $tapeTitle = new TapeTitle();
                     $tapeTitle->setTape($tape);
                     $tapeTitle->setCountry($country);
-                    $tapeTitle->setTitle($data['title']);
+                    $tapeTitle->setTitle($data->getTitle());
                     if ($country) {
                         $tapeTitle->setLanguage($country->getLanguage());
                     }
                 }
-                $tapeTitle->setObservations($data['description']);
+                $tapeTitle->setObservations($data->getDescription());
                 $entityManager->persist($tapeTitle);
                 /** @var SearchValue $searchValue */
                 $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
                     'object' => $tape->getObject(),
-                    'searchParam' => $data['title']
+                    'searchParam' => $data->getTitle()
                 ]);
                 if(!$searchValue){
                     $searchValue = new SearchValue();
                     $searchValue->setObject($tape->getObject());
-                    $searchValue->setSearchParam($data['title']);
+                    $searchValue->setSearchParam($data->getTitle());
                     $entityManager->persist($searchValue);
                 }
                 $entityManager->flush();
