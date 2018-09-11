@@ -35,47 +35,26 @@ use App\Entity\TapePeopleRoleCharacter;
 use App\Entity\TapeTitle;
 use App\Entity\TvShow;
 use App\Entity\TvShowChapter;
+use App\GraphQL\Wrapper\MovieCertificatesWrapper;
+use App\GraphQL\Wrapper\MovieReleasesWrapper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
-use GraphQL\Executor\ExecutionResult;
-use GraphQL\GraphQL;
 use Interop\Container\ContainerInterface;
-use MongoDB\Collection;
-use Zend\Debug\Debug;
+use Zend\Cache\Storage\Adapter\AbstractAdapter;
+use App\GraphQL\Wrapper\MovieDetailsWrapper;
+use App\GraphQL\Wrapper\MovieKeywordsWrapper;
+use App\GraphQL\Wrapper\MovieLocationsWrapper;
+use App\GraphQL\Wrapper\MovieCreditsWrapper;
 
 class ImportImdbMovieResolver
 {
     public static function resolve(TypeRegistry $typeRegistry, array $args): array
     {
-        $source = CachedDocumentNodeResolver::resolve($typeRegistry->getCacheStorageAdapter(),
-            'queries/graphql/FullMovie.graphql');
-        /** @var ExecutionResult $gqQueryResult */
-        $gqQueryResult = GraphQL::executeQuery(
-            $typeRegistry->getSchema(),
-            $source,
-            null,
-            null,
-            [
-                "imdbNumber" => $args['imdbNumber']
-            ]
-        );
-        $date = new \DateTime();
+        /** @var AbstractAdapter $cacheStorageAdapter */
+        $cacheStorageAdapter = $typeRegistry->getCacheStorageAdapter();
         /** @var ContainerInterface $container */
         $container = $typeRegistry->getContainer();
-        /** @var Collection $collection */
-        $container->get(MongoDBClient::class)
-            ->cinema
-            ->movies
-            ->findOneAndReplace(
-                [
-                    "imdbMovieDetails.imdbNumber" => $args['imdbNumber']
-                ],
-                array_merge($gqQueryResult->data, ["updated" => $date]),
-                [
-                    "upsert" => true
-                ]
-            );
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);
         /** @var RowType $tapeRowType */
@@ -110,17 +89,19 @@ class ImportImdbMovieResolver
             $imdbNumber->setObject($tape->getObject());
             $entityManager->persist($imdbNumber);
         }
-        $tape->setOriginalTitle($gqQueryResult->data['imdbMovieDetails']['title']);
+        /** @var array $imdbMovieDetails */
+        $imdbMovieDetails = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieDetailsWrapper(), $args);
+        $tape->setOriginalTitle($imdbMovieDetails['title']);
         $entityManager->persist($tape);
         /** @var SearchValue $searchValue */
         $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
             'object' => $tape->getObject(),
-            'searchParam' => $gqQueryResult->data['imdbMovieDetails']['title']
+            'searchParam' => $imdbMovieDetails['title']
         ]);
         if(!$searchValue){
             $searchValue = new SearchValue();
             $searchValue->setObject($tape->getObject());
-            $searchValue->setSearchParam($gqQueryResult->data['imdbMovieDetails']['title']);
+            $searchValue->setSearchParam($imdbMovieDetails['title']);
             $entityManager->persist($searchValue);
         }
         /** @var TapeDetail $tapeDetail */
@@ -131,17 +112,17 @@ class ImportImdbMovieResolver
             $tapeDetail = new TapeDetail();
             $tapeDetail->setTape($tape);
         }
-        $tapeDetail->setDuration($gqQueryResult->data['imdbMovieDetails']['duration']);
-        $tapeDetail->setYear($gqQueryResult->data['imdbMovieDetails']['year']);
-        $tapeDetail->setScore($gqQueryResult->data['imdbMovieDetails']['score']);
-        $tapeDetail->setVotes($gqQueryResult->data['imdbMovieDetails']['votes']);
-        $tapeDetail->setColor($gqQueryResult->data['imdbMovieDetails']['color']);
-        $tapeDetail->setIsTvShow($gqQueryResult->data['imdbMovieDetails']['isTvShow']);
+        $tapeDetail->setDuration($imdbMovieDetails['duration']);
+        $tapeDetail->setYear($imdbMovieDetails['year']);
+        $tapeDetail->setScore($imdbMovieDetails['score']);
+        $tapeDetail->setVotes($imdbMovieDetails['votes']);
+        $tapeDetail->setColor($imdbMovieDetails['color']);
+        $tapeDetail->setIsTvShow($imdbMovieDetails['isTvShow']);
         $entityManager->persist($tapeDetail);
         /** @var ArrayCollection $sounds */
         $sounds = $tape->getSounds();
-        if ($gqQueryResult->data['imdbMovieDetails']['sounds']) {
-            foreach ($gqQueryResult->data['imdbMovieDetails']['sounds'] as $text) {
+        if ($imdbMovieDetails['sounds']) {
+            foreach ($imdbMovieDetails['sounds'] as $text) {
                 /** @var Sound $sound */
                 $sound = $entityManager->getRepository(Sound::class)->findOneBy([
                     "description" => $text
@@ -151,10 +132,10 @@ class ImportImdbMovieResolver
                 }
             }
         }
-        if ($gqQueryResult->data['imdbMovieDetails']['genres']) {
+        if ($imdbMovieDetails['genres']) {
             /** @var ArrayCollection $genres */
             $genres = $tape->getGenres();
-            foreach ($gqQueryResult->data['imdbMovieDetails']['genres'] as $text) {
+            foreach ($imdbMovieDetails['genres'] as $text) {
                 /** @var Genre $genre */
                 $genre = $entityManager->getRepository(Genre::class)->findOneBy([
                     "name" => $text
@@ -164,10 +145,10 @@ class ImportImdbMovieResolver
                 }
             }
         }
-        if ($gqQueryResult->data['imdbMovieDetails']['languages']) {
+        if ($imdbMovieDetails['languages']) {
             /** @var ArrayCollection $languages */
             $languages = $tape->getLanguages();
-            foreach ($gqQueryResult->data['imdbMovieDetails']['languages'] as $text) {
+            foreach ($imdbMovieDetails['languages'] as $text) {
                 /** @var Language $language */
                 $language = $entityManager->getRepository(Language::class)->findOneBy([
                     "name" => $text
@@ -177,10 +158,10 @@ class ImportImdbMovieResolver
                 }
             }
         }
-        if ($gqQueryResult->data['imdbMovieDetails']['countries']) {
+        if ($imdbMovieDetails['countries']) {
             /** @var ArrayCollection $countries */
             $countries = $tape->getCountries();
-            foreach ($gqQueryResult->data['imdbMovieDetails']['countries'] as $text) {
+            foreach ($imdbMovieDetails['countries'] as $text) {
                 /** @var Country $country */
                 $country = $entityManager->getRepository(Country::class)->findOneBy([
                     "officialName" => $text
@@ -191,10 +172,12 @@ class ImportImdbMovieResolver
             }
         }
         $entityManager->flush();
-        if ($gqQueryResult->data['imdbMovieKeywords']['keywords']) {
+        /** @var array $imdbMovieKeywords */
+        $imdbMovieKeywords = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieKeywordsWrapper(), $args);
+        if ($imdbMovieKeywords && $imdbMovieKeywords['keywords']) {
             /** @var ArrayCollection $tags */
             $tags = $tape->getTags();
-            foreach ($gqQueryResult->data['imdbMovieKeywords']['keywords'] as $data) {
+            foreach ($imdbMovieKeywords['keywords'] as $data) {
                 /** @var Tag $tag */
                 $tag = $entityManager->getRepository(Tag::class)->findOneBy([
                     'keyword' => $data['keyword']
@@ -210,10 +193,12 @@ class ImportImdbMovieResolver
             }
             $entityManager->flush();
         }
-        if ($gqQueryResult->data['imdbMovieLocations']) {
+        /** @var array $imdbMovieLocations */
+        $imdbMovieLocations = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieLocationsWrapper(), $args);
+        if ($imdbMovieLocations) {
             /** @var ArrayCollection $locations */
             $locations = $tape->getLocations();
-            foreach ($gqQueryResult->data['imdbMovieLocations'] as $data) {
+            foreach ($imdbMovieLocations as $data) {
                 /** @var Location $location */
                 $location = $entityManager->getRepository(Location::class)->findOneBy([
                     'place' => $data['location']
@@ -241,7 +226,7 @@ class ImportImdbMovieResolver
                 $entityManager->flush();
             }
         }
-        if ($gqQueryResult->data['imdbMovieDetails']['isEpisode']) {
+        if ($imdbMovieDetails['isEpisode']) {
             /** @var TvShowChapter $tvShowChapter */
             $tvShowChapter = $entityManager->getRepository(TvShowChapter::class)->findOneBy([
                 "tape" => $tape
@@ -250,7 +235,7 @@ class ImportImdbMovieResolver
                 /** @var Query $query */
                 $query = $entityManager->createQuery('SELECT i FROM App\Entity\ImdbNumber i JOIN i.object o WHERE i.imdbNumber = :imdbNumber AND o.rowType = :rowType');
                 $query->setParameters([
-                    'imdbNumber' => $gqQueryResult->data['imdbMovieDetails']['tvShow'],
+                    'imdbNumber' => $imdbMovieDetails['tvShow'],
                     'rowType' => $tapeRowType
                 ]);
                 /** @var ImdbNumber $tvShowImdbNumber */
@@ -266,8 +251,8 @@ class ImportImdbMovieResolver
                 $tvShowChapter->setTape($tape);
                 $tvShowChapter->setTvShow($tvShow);
             }
-            $tvShowChapter->setSeason($gqQueryResult->data['imdbMovieDetails']['seasonNumber']);
-            $tvShowChapter->setChapter($gqQueryResult->data['imdbMovieDetails']['episodeNumber']);
+            $tvShowChapter->setSeason($imdbMovieDetails['seasonNumber']);
+            $tvShowChapter->setChapter($imdbMovieDetails['episodeNumber']);
             $entityManager->persist($tvShowChapter);
         }
         $entityManager->flush();
@@ -300,8 +285,10 @@ class ImportImdbMovieResolver
         foreach ($dqlQueryResult as $row) {
             $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
         }
-        if ($gqQueryResult->data['imdbMovieCredits']['cast']) {
-            foreach ($gqQueryResult->data['imdbMovieCredits']['cast'] as $person) {
+        /** @var array $imdbMovieCredits */
+        $imdbMovieCredits = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCreditsWrapper(), $args);
+        if ($imdbMovieCredits['cast']) {
+            foreach ($imdbMovieCredits['cast'] as $person) {
                 /** @var TapePeopleRole $tapePeopleRole */
                 $tapePeopleRole = null;
                 /** @var People $people */
@@ -433,8 +420,8 @@ class ImportImdbMovieResolver
         foreach ($dqlQueryResult as $row) {
             $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
         }
-        if ($gqQueryResult->data['imdbMovieCredits']['directors']) {
-            foreach ($gqQueryResult->data['imdbMovieCredits']['directors'] as $person) {
+        if ($imdbMovieCredits['directors']) {
+            foreach ($imdbMovieCredits['directors'] as $person) {
                 /** @var TapePeopleRole $tapePeopleRole */
                 $tapePeopleRole = null;
                 /** @var People $people */
@@ -516,8 +503,8 @@ class ImportImdbMovieResolver
         foreach ($dqlQueryResult as $row) {
             $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
         }
-        if ($gqQueryResult->data['imdbMovieCredits']['writers']) {
-            foreach ($gqQueryResult->data['imdbMovieCredits']['writers'] as $person) {
+        if ($imdbMovieCredits['writers']) {
+            foreach ($imdbMovieCredits['writers'] as $person) {
                 /** @var TapePeopleRole $tapePeopleRole */
                 $tapePeopleRole = null;
                 /** @var People $people */
@@ -574,8 +561,10 @@ class ImportImdbMovieResolver
                 $entityManager->flush();
             }
         }
-        if ($gqQueryResult->data['imdbMovieReleases']['dates']) {
-            foreach ($gqQueryResult->data['imdbMovieReleases']['dates'] as $data) {
+        /** @var array $imdbMovieReleases */
+        $imdbMovieReleases = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieReleasesWrapper(), $args);
+        if ($imdbMovieReleases['dates']) {
+            foreach ($imdbMovieReleases['dates'] as $data) {
                 /** @var Country $country */
                 if ($data['country']) {
                     $country = $entityManager->getRepository(Country::class)->findOneBy([
@@ -617,8 +606,8 @@ class ImportImdbMovieResolver
                 }
             }
         }
-        if ($gqQueryResult->data['imdbMovieReleases']['titles']) {
-            foreach ($gqQueryResult->data['imdbMovieReleases']['titles'] as $data) {
+        if ($imdbMovieReleases['titles']) {
+            foreach ($imdbMovieReleases['titles'] as $data) {
                 /** @var Country $country */
                 if ($data['country']) {
                     $country = $entityManager->getRepository(Country::class)->findOneBy([
@@ -658,8 +647,10 @@ class ImportImdbMovieResolver
                 $entityManager->flush();
             }
         }
-        if ($gqQueryResult->data['imdbMovieCertifications']) {
-            foreach ($gqQueryResult->data['imdbMovieCertifications'] as $data) {
+        /** @var array $imdbMovieCertifications */
+        $imdbMovieCertifications = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCertificatesWrapper(), $args);
+        if ($imdbMovieCertifications) {
+            foreach ($imdbMovieCertifications as $data) {
                 /** @var Country $country */
                 $country = $entityManager->getRepository(Country::class)->findOneBy([
                     'officialName' => $data['country']
