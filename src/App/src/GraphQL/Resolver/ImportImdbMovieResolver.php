@@ -41,7 +41,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use ImdbScraper\Model\CastPeople;
 use ImdbScraper\Model\Keyword;
+use ImdbScraper\Model\Release;
 use Interop\Container\ContainerInterface;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use App\GraphQL\Wrapper\MovieDetailsWrapper;
@@ -310,13 +312,14 @@ class ImportImdbMovieResolver
         /** @var array $imdbMovieCredits */
         $imdbMovieCredits = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCreditsWrapper(), $args);
         if ($imdbMovieCredits['cast']) {
+            /** @var CastPeople $person */
             foreach ($imdbMovieCredits['cast'] as $person) {
                 /** @var TapePeopleRole $tapePeopleRole */
                 $tapePeopleRole = null;
                 /** @var People $people */
                 $people = null;
-                if (array_key_exists($person['imdbNumber'], $cast)) {
-                    $tapePeopleRole = $cast[$person['imdbNumber']];
+                if (array_key_exists($person->getImdbNumber(), $cast)) {
+                    $tapePeopleRole = $cast[$person->getImdbNumber()];
                     $people = $tapePeopleRole->getPeople();
                 }
                 if (!$people) {
@@ -329,7 +332,7 @@ class ImportImdbMovieResolver
                                         WHERE i.imdbNumber = :imdbNumber
                                     ');
                     $query->setParameters([
-                        'imdbNumber' => $person['imdbNumber']
+                        'imdbNumber' => $person->getImdbNumber()
                     ]);
                     $people = $query->getOneOrNullResult();
                 }
@@ -339,22 +342,22 @@ class ImportImdbMovieResolver
                     $entityManager->persist($object);
                     $people = new People();
                     $people->setObject($object);
-                    $people->setFullName($person['fullName']);
+                    $people->setFullName($person->getFullName());
                     $entityManager->persist($people);
                     $imdbNumber = new ImdbNumber();
-                    $imdbNumber->setImdbNumber($person['imdbNumber']);
+                    $imdbNumber->setImdbNumber($person->getImdbNumber());
                     $imdbNumber->setObject($object);
                     $entityManager->persist($imdbNumber);
                 }
                 /** @var SearchValue $searchValue */
                 $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
                     'object' => $people->getObject(),
-                    'searchParam' => $person['fullName']
+                    'searchParam' => $person->getFullName()
                 ]);
                 if(!$searchValue){
                     $searchValue = new SearchValue();
                     $searchValue->setObject($people->getObject());
-                    $searchValue->setSearchParam($person['fullName']);
+                    $searchValue->setSearchParam($person->getFullName());
                     $entityManager->persist($searchValue);
                 }
                 if (!$tapePeopleRole) {
@@ -365,28 +368,28 @@ class ImportImdbMovieResolver
                     $entityManager->persist($tapePeopleRole);
                 }
                 $entityManager->flush();
-                if (!empty($person['alias'])) {
+                if (!empty($person->getAlias())) {
                     /** @var PeopleAlias $peopleAlias */
                     $peopleAlias = $entityManager->getRepository(PeopleAlias::class)->findOneBy([
                         "people" => $people,
-                        "alias" => $person['alias']
+                        "alias" => $person->getAlias()
                     ]);
                     if (!$peopleAlias) {
                         $peopleAlias = new PeopleAlias();
                         $peopleAlias->setPeople($people);
-                        $peopleAlias->setAlias($person['alias']);
+                        $peopleAlias->setAlias($person->getAlias());
                         $entityManager->persist($peopleAlias);
                         $entityManager->flush();
                     }
                     /** @var SearchValue $searchValue */
                     $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
                         'object' => $people->getObject(),
-                        'searchParam' => $person['alias']
+                        'searchParam' => $person->getAlias()
                     ]);
                     if(!$searchValue){
                         $searchValue = new SearchValue();
                         $searchValue->setObject($people->getObject());
-                        $searchValue->setSearchParam($person['alias']);
+                        $searchValue->setSearchParam($person->getAlias());
                         $entityManager->persist($searchValue);
                     }
                     /** @var PeopleAliasTape $peopleAliasTape */
@@ -402,7 +405,7 @@ class ImportImdbMovieResolver
                         $entityManager->flush();
                     }
                 }
-                if (!empty($person['character'])) {
+                if (!empty($person->getCharacter())) {
                     /** @var TapePeopleRoleCharacter $peopleAliasTape */
                     $tapePeopleRoleCharacter = $entityManager->getRepository(TapePeopleRoleCharacter::class)->findOneBy([
                         "tapePeopleRole" => $tapePeopleRole
@@ -411,7 +414,7 @@ class ImportImdbMovieResolver
                         $tapePeopleRoleCharacter = new TapePeopleRoleCharacter();
                         $tapePeopleRoleCharacter->setTapePeopleRole($tapePeopleRole);
                     }
-                    $tapePeopleRoleCharacter->setCharacter($person['character']);
+                    $tapePeopleRoleCharacter->setCharacter($person->getCharacter());
                     $entityManager->persist($tapePeopleRoleCharacter);
                     $entityManager->flush();
                 }
@@ -443,13 +446,14 @@ class ImportImdbMovieResolver
             $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
         }
         if ($imdbMovieCredits['directors']) {
+            /** @var \ImdbScraper\Model\People $person */
             foreach ($imdbMovieCredits['directors'] as $person) {
                 /** @var TapePeopleRole $tapePeopleRole */
                 $tapePeopleRole = null;
                 /** @var People $people */
                 $people = null;
-                if (array_key_exists($person['imdbNumber'], $cast)) {
-                    $tapePeopleRole = $cast[$person['imdbNumber']];
+                if (array_key_exists($person->getImdbNumber(), $cast)) {
+                    $tapePeopleRole = $cast[$person->getImdbNumber()];
                     $people = $tapePeopleRole->getPeople();
                 }
                 if (!$people) {
@@ -462,7 +466,7 @@ class ImportImdbMovieResolver
                                         WHERE i.imdbNumber = :imdbNumber
                                     ');
                     $query->setParameters([
-                        'imdbNumber' => $person['imdbNumber']
+                        'imdbNumber' => $person->getImdbNumber()
                     ]);
                     $people = $query->getOneOrNullResult();
                 }
@@ -472,22 +476,22 @@ class ImportImdbMovieResolver
                     $entityManager->persist($object);
                     $people = new People();
                     $people->setObject($object);
-                    $people->setFullName($person['fullName']);
+                    $people->setFullName($person->getFullName());
                     $entityManager->persist($people);
                     $imdbNumber = new ImdbNumber();
-                    $imdbNumber->setImdbNumber($person['imdbNumber']);
+                    $imdbNumber->setImdbNumber($person->getImdbNumber());
                     $imdbNumber->setObject($object);
                     $entityManager->persist($imdbNumber);
                 }
                 /** @var SearchValue $searchValue */
                 $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
                     'object' => $people->getObject(),
-                    'searchParam' => $person['fullName']
+                    'searchParam' => $person->getFullName()
                 ]);
                 if(!$searchValue){
                     $searchValue = new SearchValue();
                     $searchValue->setObject($people->getObject());
-                    $searchValue->setSearchParam($person['fullName']);
+                    $searchValue->setSearchParam($person->getFullName());
                     $entityManager->persist($searchValue);
                 }
                 if (!$tapePeopleRole) {
@@ -526,13 +530,14 @@ class ImportImdbMovieResolver
             $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
         }
         if ($imdbMovieCredits['writers']) {
+            /** @var \ImdbScraper\Model\People $person */
             foreach ($imdbMovieCredits['writers'] as $person) {
                 /** @var TapePeopleRole $tapePeopleRole */
                 $tapePeopleRole = null;
                 /** @var People $people */
                 $people = null;
-                if (array_key_exists($person['imdbNumber'], $cast)) {
-                    $tapePeopleRole = $cast[$person['imdbNumber']];
+                if (array_key_exists($person->getImdbNumber(), $cast)) {
+                    $tapePeopleRole = $cast[$person->getImdbNumber()];
                     $people = $tapePeopleRole->getPeople();
                 }
                 if (!$people) {
@@ -545,7 +550,7 @@ class ImportImdbMovieResolver
                                         WHERE i.imdbNumber = :imdbNumber
                                     ');
                     $query->setParameters([
-                        'imdbNumber' => $person['imdbNumber']
+                        'imdbNumber' => $person->getImdbNumber()
                     ]);
                     $people = $query->getOneOrNullResult();
                 }
@@ -555,22 +560,22 @@ class ImportImdbMovieResolver
                     $entityManager->persist($object);
                     $people = new People();
                     $people->setObject($object);
-                    $people->setFullName($person['fullName']);
+                    $people->setFullName($person->getFullName());
                     $entityManager->persist($people);
                     $imdbNumber = new ImdbNumber();
-                    $imdbNumber->setImdbNumber($person['imdbNumber']);
+                    $imdbNumber->setImdbNumber($person->getImdbNumber());
                     $imdbNumber->setObject($object);
                     $entityManager->persist($imdbNumber);
                 }
                 /** @var SearchValue $searchValue */
                 $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
                     'object' => $people->getObject(),
-                    'searchParam' => $person['fullName']
+                    'searchParam' => $person->getFullName()
                 ]);
                 if(!$searchValue){
                     $searchValue = new SearchValue();
                     $searchValue->setObject($people->getObject());
-                    $searchValue->setSearchParam($person['fullName']);
+                    $searchValue->setSearchParam($person->getFullName());
                     $entityManager->persist($searchValue);
                 }
                 if (!$tapePeopleRole) {
@@ -586,32 +591,32 @@ class ImportImdbMovieResolver
         /** @var array $imdbMovieReleases */
         $imdbMovieReleases = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieReleasesWrapper(), $args);
         if ($imdbMovieReleases['dates']) {
+            /** @var Release $data */
             foreach ($imdbMovieReleases['dates'] as $data) {
                 /** @var Country $country */
-                if ($data['country']) {
+                if ($data->getCountry()) {
                     $country = $entityManager->getRepository(Country::class)->findOneBy([
-                        'officialName' => $data['country']
+                        'officialName' => $data->getCountry()
                     ]);
                 } else {
                     $country = null;
                 }
-                $date = \DateTime::createFromFormat("Y-m-d", $data['date']);
                 /** @var Premiere $premiere */
                 $premiere = $entityManager->getRepository(Premiere::class)->findOneBy([
                     'tape' => $tape,
-                    'date' => $date,
+                    'date' => $data->getDate(),
                     'country' => $country
                 ]);
                 if (!$premiere) {
                     $premiere = new Premiere();
                     $premiere->setTape($tape);
-                    $premiere->setDate($date);
+                    $premiere->setDate($data->getDate());
                     $premiere->setCountry($country);
                     $entityManager->persist($premiere);
                     $entityManager->flush();
                 }
-                if ($data['details']) {
-                    foreach ($data['details'] as $detail) {
+                if ($data->getDetails()) {
+                    foreach ($data->getDetails() as $detail) {
                         /** @var PremiereDetail $premiereDetail */
                         $premiereDetail = $entityManager->getRepository(PremiereDetail::class)->findOneBy([
                             'premiere' => $premiere,
