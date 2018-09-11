@@ -10,11 +10,8 @@ namespace App\GraphQL\Resolver;
 
 
 use App\GraphQL\TypeRegistry;
-use GraphQL\Executor\ExecutionResult;
-use GraphQL\GraphQL;
-use Interop\Container\ContainerInterface;
-use MongoDB\Collection;
-use App\Alias\MongoDBClient;
+use App\GraphQL\Wrapper\EpisodeListWrapper;
+use Zend\Cache\Storage\Adapter\AbstractAdapter;
 
 class ImportImdbEpisodeListResolver
 {
@@ -42,40 +39,13 @@ class ImportImdbEpisodeListResolver
 
     public static function resolve(TypeRegistry $typeRegistry, array $args): array
     {
-        $source = CachedDocumentNodeResolver::resolve($typeRegistry->getCacheStorageAdapter(),
-            'queries/graphql/EpisodeList.graphql');
-        /** @var ExecutionResult $gqQueryResult */
-        $gqQueryResult = GraphQL::executeQuery(
-            $typeRegistry->getSchema(),
-            $source,
-            null,
-            null,
-            [
-                "imdbNumber" => $args['imdbNumber'],
-                "seasonNumber" => $args['seasonNumber']
-            ]
-        );
-        $date = new \DateTime();
-        /** @var ContainerInterface $container */
-        $container = $typeRegistry->getContainer();
-        $searchValues = [
-            "imdbNumber" => $args['imdbNumber'],
-            "seasonNumber" => $args['seasonNumber']
-        ];
-        /** @var Collection $collection */
-        $container->get(MongoDBClient::class)
-            ->cinema
-            ->episodes
-            ->findOneAndReplace(
-                $searchValues,
-                array_merge($gqQueryResult->data, $searchValues, ["updated" => $date]),
-                [
-                    "upsert" => true
-                ]
-            );
         $episodes = [];
-        if(!empty($gqQueryResult->data['imdbEpisodeList']) && is_array($gqQueryResult->data['imdbEpisodeList'])){
-            $episodes = self::importEpisodes($typeRegistry, $gqQueryResult->data['imdbEpisodeList']);
+        /** @var AbstractAdapter $cacheStorageAdapter */
+        $cacheStorageAdapter = $typeRegistry->getCacheStorageAdapter();
+        /** @var array $imdbEpisodeList */
+        $imdbEpisodeList = CachedQueryResolver::resolve($cacheStorageAdapter, new EpisodeListWrapper(), $args);
+        if($imdbEpisodeList){
+            $episodes = self::importEpisodes($typeRegistry, $imdbEpisodeList);
         }
         return [
             'episodes' => $episodes,
