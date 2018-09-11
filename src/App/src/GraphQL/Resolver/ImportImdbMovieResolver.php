@@ -531,8 +531,13 @@ class ImportImdbMovieResolver
             $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
         }
         if ($imdbMovieCredits['writers']) {
+            $peopleChecked = [];
             /** @var \ImdbScraper\Model\People $person */
             foreach ($imdbMovieCredits['writers'] as $person) {
+                if(in_array($person->getImdbNumber(), $peopleChecked)){
+                    continue;
+                }
+                $peopleChecked[] = $person->getImdbNumber();
                 /** @var TapePeopleRole $tapePeopleRole */
                 $tapePeopleRole = null;
                 /** @var People $people */
