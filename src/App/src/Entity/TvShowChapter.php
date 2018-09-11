@@ -5,10 +5,10 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class TvShow
+ * Class TvShowChapter
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="TvShow")
+ * @ORM\Table(name="TvShowChapter")
  * @ORM\HasLifecycleCallbacks
  */
 class TvShowChapter implements CinemaEntity
