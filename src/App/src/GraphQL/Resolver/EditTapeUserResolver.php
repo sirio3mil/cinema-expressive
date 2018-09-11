@@ -24,6 +24,16 @@ use Doctrine\ORM\Query;
 
 class EditTapeUserResolver
 {
+
+    /**
+     * @param TypeRegistry $typeRegistry
+     * @param array $args
+     * @return array
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public static function resolve(TypeRegistry $typeRegistry, array $args): array
     {
 
@@ -37,23 +47,22 @@ class EditTapeUserResolver
             if(empty($args['imdbNumber'])) {
                 throw new \InvalidArgumentException('Undefined Tape');
             }
-
-            /** @var RowType $tapeRowType */
-            $tapeRowType = $entityManager->getRepository(RowType::class)->findOneBy([
-                "rowTypeId" => RowType::ROW_TYPE_TAPE
-            ]);
             /** @var Query $query */
-            $query = $entityManager->createQuery('SELECT i FROM App\Entity\ImdbNumber i JOIN i.object o WHERE i.imdbNumber = :imdbNumber AND o.rowType = :rowType');
+            $query = $entityManager->createQuery('
+                    SELECT t 
+                    FROM App\Entity\Tape t 
+                    JOIN App\Entity\ImdbNumber i 
+                        WITH i.object = t.object
+                    JOIN i.object o 
+                    JOIN o.rowType r
+                    WHERE i.imdbNumber = :imdbNumber 
+                        AND r.rowTypeId = :rowTypeId'
+            );
             $query->setParameters([
                 'imdbNumber' => $args['imdbNumber'],
-                'rowType' => $tapeRowType
+                'rowTypeId' => RowType::ROW_TYPE_TAPE
             ]);
-            /** @var ImdbNumber $imdbNumber */
-            $imdbNumber = $query->getSingleResult();
-            /** @var Tape $tape */
-            $tape = $entityManager->getRepository(Tape::class)->findOneBy([
-                "object" => $imdbNumber->getObject()
-            ]);
+            $tape = $query->getSingleResult();
         }
         else{
             /** @var Tape $tape */

@@ -39,6 +39,7 @@ use App\GraphQL\Wrapper\MovieCertificatesWrapper;
 use App\GraphQL\Wrapper\MovieReleasesWrapper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use ImdbScraper\Model\Keyword;
 use Interop\Container\ContainerInterface;
@@ -50,6 +51,16 @@ use App\GraphQL\Wrapper\MovieCreditsWrapper;
 
 class ImportImdbMovieResolver
 {
+
+    /**
+     * @param TypeRegistry $typeRegistry
+     * @param array $args
+     * @return array
+     * @throws NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public static function resolve(TypeRegistry $typeRegistry, array $args): array
     {
         /** @var AbstractAdapter $cacheStorageAdapter */
@@ -62,15 +73,21 @@ class ImportImdbMovieResolver
         $tapeRowType = $entityManager->getRepository(RowType::class)->findOneBy([
             "rowTypeId" => RowType::ROW_TYPE_TAPE
         ]);
-        /** @var Query $query */
-        $query = $entityManager->createQuery('SELECT i FROM App\Entity\ImdbNumber i JOIN i.object o WHERE i.imdbNumber = :imdbNumber AND o.rowType = :rowType');
-        $query->setParameters([
-            'imdbNumber' => $args['imdbNumber'],
-            'rowType' => $tapeRowType
-        ]);
-        /** @var ImdbNumber $imdbNumber */
-        $imdbNumber = $query->getOneOrNullResult();
-        if ($imdbNumber) {
+        try {
+            /** @var Query $query */
+            $query = $entityManager->createQuery('
+                SELECT i 
+                FROM App\Entity\ImdbNumber i 
+                JOIN i.object o 
+                WHERE i.imdbNumber = :imdbNumber 
+                    AND o.rowType = :rowType'
+            );
+            $query->setParameters([
+                'imdbNumber' => $args['imdbNumber'],
+                'rowType' => $tapeRowType
+            ]);
+            /** @var ImdbNumber $imdbNumber */
+            $imdbNumber = $query->getSingleResult();
             /** @var Tape $tape */
             $tape = $entityManager->getRepository(Tape::class)->findOneBy([
                 "object" => $imdbNumber->getObject()
@@ -79,7 +96,8 @@ class ImportImdbMovieResolver
                 $tape = new Tape();
                 $tape->setObject($imdbNumber->getObject());
             }
-        } else {
+        }
+        catch (NoResultException $e){
             $object = new GlobalUniqueObject();
             $object->setRowType($tapeRowType);
             $entityManager->persist($object);
@@ -235,17 +253,19 @@ class ImportImdbMovieResolver
             ]);
             if (!$tvShowChapter) {
                 /** @var Query $query */
-                $query = $entityManager->createQuery('SELECT i FROM App\Entity\ImdbNumber i JOIN i.object o WHERE i.imdbNumber = :imdbNumber AND o.rowType = :rowType');
+                $query = $entityManager->createQuery('
+                    SELECT tv 
+                    FROM App\Entity\TvShow tv 
+                    JOIN tv.tape t 
+                    JOIN App\Entity\ImdbNumber i 
+                        WITH i.object = t.object
+                    JOIN i.object o 
+                    WHERE i.imdbNumber = :imdbNumber 
+                        AND o.rowType = :rowType'
+                );
                 $query->setParameters([
                     'imdbNumber' => $imdbMovieDetails['tvShow'],
                     'rowType' => $tapeRowType
-                ]);
-                /** @var ImdbNumber $tvShowImdbNumber */
-                $tvShowImdbNumber = $query->getSingleResult();
-                /** @var Query $query */
-                $query = $entityManager->createQuery('SELECT tv FROM App\Entity\TvShow tv JOIN tv.tape t WHERE t.object = :object');
-                $query->setParameters([
-                    'object' => $tvShowImdbNumber->getObject()
                 ]);
                 /** @var TvShow $tvShow */
                 $tvShow = $query->getSingleResult();
