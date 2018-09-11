@@ -50,14 +50,10 @@ class TapeUserHistoryDetail implements CinemaEntity
     private $exported;
 
     /**
-     * @var int
+     * @var Place
      *
-     * @ORM\Column(
-     *     type="smallint",
-     *     name="place",
-     *     nullable=true,
-     *     options={"unsigned":false}
-     * )
+     * @ORM\ManyToOne(targetEntity="Place", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="placeId", referencedColumnName="placeId")
      */
     private $place;
 
@@ -119,10 +115,10 @@ class TapeUserHistoryDetail implements CinemaEntity
     }
 
     /**
-     * @param int|null $place
+     * @param Place|null $place
      * @return TapeUserHistoryDetail
      */
-    public function setPlace(?int $place): TapeUserHistoryDetail
+    public function setPlace(?Place $place): TapeUserHistoryDetail
     {
         $this->place = $place;
     
@@ -130,9 +126,9 @@ class TapeUserHistoryDetail implements CinemaEntity
     }
 
     /**
-     * @return int|null
+     * @return Place|null
      */
-    public function getPlace(): ?int
+    public function getPlace(): ?Place
     {
         return $this->place;
     }
