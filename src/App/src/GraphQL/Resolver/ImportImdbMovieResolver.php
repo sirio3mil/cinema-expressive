@@ -40,6 +40,7 @@ use App\GraphQL\Wrapper\MovieReleasesWrapper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
+use ImdbScraper\Model\Keyword;
 use Interop\Container\ContainerInterface;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use App\GraphQL\Wrapper\MovieDetailsWrapper;
@@ -177,14 +178,15 @@ class ImportImdbMovieResolver
         if ($imdbMovieKeywords && $imdbMovieKeywords['keywords']) {
             /** @var ArrayCollection $tags */
             $tags = $tape->getTags();
+            /** @var Keyword $data */
             foreach ($imdbMovieKeywords['keywords'] as $data) {
                 /** @var Tag $tag */
                 $tag = $entityManager->getRepository(Tag::class)->findOneBy([
-                    'keyword' => $data['keyword']
+                    'keyword' => $data->getKeyword()
                 ]);
                 if (!$tag) {
                     $tag = new Tag();
-                    $tag->setKeyword($data['keyword']);
+                    $tag->setKeyword($data->getKeyword());
                     $entityManager->persist($tag);
                 }
                 if ($tag && !$tags->contains($tag)) {
