@@ -48,8 +48,7 @@ class ImportImdbEpisodeListResolver
             $episodes = self::importEpisodes($typeRegistry, $imdbEpisodeList);
         }
         return [
-            'episodes' => $episodes,
-            'tvShowId' => 0
+            'episodes' => $episodes
         ];
     }
 }

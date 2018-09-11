@@ -64,8 +64,7 @@ class MutationType extends ObjectType
                     'type' => new ObjectType([
                         'name' => 'ImportImdbEpisodeListOutput',
                         'fields' => [
-                            'episodes' => Type::listOf($typeRegistry->get('importedEpisode')),
-                            'tvShowId' => Type::int()
+                            'episodes' => Type::listOf($typeRegistry->get('importedEpisode'))
                         ]
                     ]),
                     'resolve' => function ($source, $args) use ($typeRegistry) {
