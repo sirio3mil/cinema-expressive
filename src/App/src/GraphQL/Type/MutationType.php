@@ -29,7 +29,7 @@ class MutationType extends ObjectType
                         'imdbNumber' => Type::int(),
                         'tapeId' => Type::int(),
                         'tapeUserStatusId' => Type::nonNull(Type::int()),
-                        'place' => Type::int()
+                        'placeId' => Type::int()
                     ],
                     'type' => new ObjectType([
                         'name' => 'EditTapeUserOutput',

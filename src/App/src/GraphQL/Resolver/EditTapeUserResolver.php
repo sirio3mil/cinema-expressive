@@ -10,6 +10,7 @@ namespace App\GraphQL\Resolver;
 
 
 use App\Entity\ImdbNumber;
+use App\Entity\Place;
 use App\Entity\RowType;
 use App\Entity\Tape;
 use App\Entity\TapeUser;
@@ -43,8 +44,8 @@ class EditTapeUserResolver
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);
 
-        if(empty($args['tapeId'])){
-            if(empty($args['imdbNumber'])) {
+        if (empty($args['tapeId'])) {
+            if (empty($args['imdbNumber'])) {
                 throw new \InvalidArgumentException('Undefined Tape');
             }
             /** @var Query $query */
@@ -63,27 +64,26 @@ class EditTapeUserResolver
                 'rowTypeId' => RowType::ROW_TYPE_TAPE
             ]);
             $tape = $query->getSingleResult();
-        }
-        else{
+        } else {
             /** @var Tape $tape */
             $tape = $entityManager->getRepository(Tape::class)->find($args['tapeId']);
         }
 
-        if(!$tape){
+        if (!$tape) {
             throw new \InvalidArgumentException('Tape not found');
         }
 
         /** @var User $user */
         $user = $entityManager->getRepository(User::class)->find($args['userId']);
 
-        if(!$user){
+        if (!$user) {
             throw new \InvalidArgumentException('User not found');
         }
 
         /** @var TapeUserStatus $tapeUserStatus */
         $tapeUserStatus = $entityManager->getRepository(TapeUserStatus::class)->find($args['tapeUserStatusId']);
 
-        if(!$tapeUserStatus){
+        if (!$tapeUserStatus) {
             throw new \InvalidArgumentException('Tape user status not found');
         }
 
@@ -95,7 +95,7 @@ class EditTapeUserResolver
         ]);
         /** @var TapeUser $tapeUser */
         $tapeUser = $query->getOneOrNullResult();
-        if(!$tapeUser){
+        if (!$tapeUser) {
             $tapeUser = new TapeUser();
             $tapeUser->setTape($tape);
             $tapeUser->setUser($user);
@@ -111,7 +111,7 @@ class EditTapeUserResolver
         ]);
         /** @var TapeUserHistory $tapeUserHistory */
         $tapeUserHistory = $query->getOneOrNullResult();
-        if(!$tapeUserHistory){
+        if (!$tapeUserHistory) {
             $tapeUserHistory = new TapeUserHistory();
             $tapeUserHistory->setTapeUser($tapeUser);
             $tapeUserHistory->setTapeUserStatus($tapeUserStatus);
@@ -119,19 +119,24 @@ class EditTapeUserResolver
             $entityManager->flush();
         }
 
-        if(!empty($args['place'])){
+        if (!empty($args['placeId'])) {
 
-            /** @var Query $query */
-            $query = $entityManager->createQuery('SELECT i FROM App\Entity\TapeUserHistoryDetail i WHERE i.tapeUserHistory = :tapeUserHistory');
-            $query->setParameters([
+            /** @var Place $place */
+            $place = $entityManager->getRepository(Place::class)->find($args['placeId']);
+
+            if (!$place) {
+                throw new \InvalidArgumentException('Place not found');
+            }
+
+            /** @var TapeUserHistoryDetail $tapeUserHistoryDetail */
+            $tapeUserHistoryDetail = $entityManager->getRepository(TapeUserHistoryDetail::class)->findOneBy([
                 'tapeUserHistory' => $tapeUserHistory
             ]);
-            /** @var TapeUserHistoryDetail $tapeUserHistoryDetail */
-            $tapeUserHistoryDetail = $query->getOneOrNullResult();
-            if(!$tapeUserHistoryDetail){
+
+            if (!$tapeUserHistoryDetail) {
                 $tapeUserHistoryDetail = new TapeUserHistoryDetail();
                 $tapeUserHistoryDetail->setTapeUserHistory($tapeUserHistory);
-                $tapeUserHistoryDetail->setPlace($args['place']);
+                $tapeUserHistoryDetail->setPlace($place);
                 $entityManager->persist($tapeUserHistoryDetail);
                 $entityManager->flush();
             }
