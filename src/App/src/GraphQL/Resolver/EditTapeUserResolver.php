@@ -180,6 +180,8 @@ class EditTapeUserResolver
             ];
         }
 
-        return $tapesUser;
+        return [
+            'tapesUser' => $tapesUser
+        ];
     }
 }
