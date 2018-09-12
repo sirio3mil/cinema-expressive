@@ -351,4 +351,12 @@ class Tape implements CinemaEntity
     {
         return $this->sounds;
     }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return strval($this->getTapeId());
+    }
 }

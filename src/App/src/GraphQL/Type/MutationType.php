@@ -26,16 +26,15 @@ class MutationType extends ObjectType
                 'editTapeUser' => [
                     'args' => [
                         'userId' => Type::nonNull(Type::int()),
-                        'imdbNumber' => Type::int(),
-                        'tapeId' => Type::int(),
+                        'imdbNumbers' => Type::listOf(Type::int()),
+                        'tapeIds' => Type::listOf(Type::int()),
                         'tapeUserStatusId' => Type::nonNull(Type::int()),
                         'placeId' => Type::int()
                     ],
                     'type' => new ObjectType([
                         'name' => 'EditTapeUserOutput',
                         'fields' => [
-                            'tapeUserId' => Type::int(),
-                            'tapeUserHistoryId' => Type::int()
+                            'tapesUser' => Type::listOf($typeRegistry->get('tapeUser'))
                         ]
                     ]),
                     'resolve' => function ($source, $args) use ($typeRegistry) {
