@@ -32,7 +32,7 @@ class TapeUserHistoryDetail implements CinemaEntity
      *     type="boolean",
      *     name="visible",
      *     nullable=false,
-     *     options={"default":0}
+     *     options={"default":1}
      * )
      */
     private $visible;
@@ -131,5 +131,21 @@ class TapeUserHistoryDetail implements CinemaEntity
     public function getPlace(): ?Place
     {
         return $this->place;
+    }
+
+    /** @ORM\PrePersist */
+    public function generateVisibleFlag()
+    {
+        if(is_null($this->visible)) {
+            $this->setVisible(true);
+        }
+    }
+
+    /** @ORM\PrePersist */
+    public function generateExportedFlag()
+    {
+        if(is_null($this->exported)) {
+            $this->setExported(false);
+        }
     }
 }
