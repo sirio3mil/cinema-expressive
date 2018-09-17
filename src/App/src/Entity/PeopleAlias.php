@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity
  * @ORM\Table(name="PeopleAlias")
  */
-class PeopleAlias
+class PeopleAlias implements CinemaEntity
 {
     /**
      * @var int
