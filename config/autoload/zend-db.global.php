@@ -21,5 +21,13 @@ return [
             'port' => 27017,
             'dsn' => "mongodb://localhost:27017"
         ]
+    ],
+    'db' => [
+        'hostname' => "localhost",
+        'username' => "sa",
+        'password' => "#LeNtilla1",
+        'database' => "Film",
+        'driver' => "sqlsrv",
+        'charset' => "UTF-8"
     ]
 ];
