@@ -9,9 +9,7 @@
 namespace App\GraphQL\Resolver;
 
 
-use App\Entity\ImdbNumber;
 use App\Entity\Place;
-use App\Entity\RowType;
 use App\Entity\Tape;
 use App\Entity\TapeUser;
 use App\Entity\TapeUserHistory;
