@@ -20,7 +20,6 @@ use App\GraphQL\Wrapper\MovieReleasesWrapper;
 use App\GraphQL\Wrapper\MovieKeywordsWrapper;
 use App\GraphQL\Wrapper\MovieLocationsWrapper;
 use App\GraphQL\Wrapper\MovieCertificatesWrapper;
-use Zend\Db\Adapter\Adapter;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\ResultSet\ResultSet;
 
@@ -43,12 +42,15 @@ class QueryType extends ObjectType
                     'resolve' => function ($source, $args) use ($typeRegistry) {
                         $adapter = $typeRegistry->getContainer()->get(AdapterInterface::class);
 
-                        $sql = "SELECT FT_TBL.searchParam  
-                                FROM dbo.SearchValue AS FT_TBL   
-                                    INNER JOIN FREETEXTTABLE(dbo.SearchValue,  
-                                        searchParam,   
-                                        ?) AS KEY_TBL  
-                                    ON FT_TBL.searchValueId = KEY_TBL.[KEY]  
+                        $sql = "SELECT s.searchParam  
+                                    ,k.RANK 
+                                    ,o.rowTypeId 
+                                    ,r.description
+                                    ,o.objectId
+                                FROM dbo.SearchValue AS s   
+                                INNER JOIN FREETEXTTABLE(dbo.SearchValue, searchParam, ?) k  ON s.searchValueId = k.[key]
+                                INNER JOIN dbo.Object o on o.objectId = s.objectId
+                                INNER JOIN dbo.RowType r on r.rowTypeId = o.rowTypeId
                                 ORDER BY RANK DESC";
                         /** @var ResultSet $stmt */
                         $stmt = $adapter->query($sql, [
