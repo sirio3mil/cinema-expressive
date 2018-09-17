@@ -124,6 +124,7 @@ class ImportImdbMovieResolver
             $searchValue = new SearchValue();
             $searchValue->setObject($tape->getObject());
             $searchValue->setSearchParam($imdbMovieDetails['title']);
+            $searchValue->setPrimaryParam(true);
             $entityManager->persist($searchValue);
         }
         /** @var TapeDetail $tapeDetail */
@@ -359,6 +360,7 @@ class ImportImdbMovieResolver
                     $searchValue = new SearchValue();
                     $searchValue->setObject($people->getObject());
                     $searchValue->setSearchParam($person->getFullName());
+                    $searchValue->setPrimaryParam(true);
                     $entityManager->persist($searchValue);
                 }
                 if (!$tapePeopleRole) {
@@ -493,6 +495,7 @@ class ImportImdbMovieResolver
                     $searchValue = new SearchValue();
                     $searchValue->setObject($people->getObject());
                     $searchValue->setSearchParam($person->getFullName());
+                    $searchValue->setPrimaryParam(true);
                     $entityManager->persist($searchValue);
                 }
                 if (!$tapePeopleRole) {
@@ -582,6 +585,7 @@ class ImportImdbMovieResolver
                     $searchValue = new SearchValue();
                     $searchValue->setObject($people->getObject());
                     $searchValue->setSearchParam($person->getFullName());
+                    $searchValue->setPrimaryParam(true);
                     $entityManager->persist($searchValue);
                 }
                 if (!$tapePeopleRole) {

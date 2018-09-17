@@ -50,6 +50,18 @@ class SearchValue implements CinemaEntity
      */
     protected $object;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(
+     *     type="boolean",
+     *     name="primaryParam",
+     *     nullable=false,
+     *     options={"default":0}
+     * )
+     */
+    protected $primaryParam = false;
+
 
     /**
      * @return int
@@ -76,5 +88,24 @@ class SearchValue implements CinemaEntity
     public function getSearchParam(): string
     {
         return $this->searchParam;
+    }
+
+    /**
+     * @param bool $primaryParam
+     * @return SearchValue
+     */
+    public function setPrimaryParam(bool $primaryParam): SearchValue
+    {
+        $this->primaryParam = $primaryParam;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getPrimaryParam(): bool
+    {
+        return $this->primaryParam;
     }
 }
