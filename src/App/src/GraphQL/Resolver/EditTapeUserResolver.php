@@ -109,6 +109,10 @@ class EditTapeUserResolver
 
         $place = null;
 
+        $downloaded = false;
+
+        $tapeUserStatusDownloaded = null;
+
         if (!empty($args['placeId'])) {
 
             /** @var Place $place */
@@ -117,6 +121,18 @@ class EditTapeUserResolver
             if (!$place) {
                 throw new \InvalidArgumentException('Place not found');
             }
+
+            if ($place->getPlaceId() == Place::DOWNLOADED) {
+
+                /** @var TapeUserStatus $tapeUserStatusDownloaded */
+                $tapeUserStatusDownloaded = $entityManager->getRepository(TapeUserStatus::class)->find(TapeUserStatus::DOWNLOADED);
+
+                if ($tapeUserStatusDownloaded) {
+                    $downloaded = true;
+                }
+
+            }
+
         }
 
         $tapesUser = [];
@@ -170,6 +186,27 @@ class EditTapeUserResolver
                     $entityManager->persist($tapeUserHistoryDetail);
                     $entityManager->flush();
                 }
+
+                if ($downloaded) {
+
+                    /** @var Query $query */
+                    $query = $entityManager->createQuery('SELECT i FROM App\Entity\TapeUserHistory i WHERE i.tapeUser = :tapeUser AND i.tapeUserStatus = :tapeUserStatus');
+                    $query->setParameters([
+                        'tapeUser' => $tapeUser,
+                        'tapeUserStatus' => $tapeUserStatusDownloaded
+                    ]);
+                    /** @var TapeUserHistory $tapeUserHistoryDownloaded */
+                    $tapeUserHistoryDownloaded = $query->getOneOrNullResult();
+                    if (!$tapeUserHistoryDownloaded) {
+                        $tapeUserHistoryDownloaded = new TapeUserHistory();
+                        $tapeUserHistoryDownloaded->setTapeUser($tapeUser);
+                        $tapeUserHistoryDownloaded->setTapeUserStatus($tapeUserStatusDownloaded);
+                        $entityManager->persist($tapeUserHistoryDownloaded);
+                        $entityManager->flush();
+                    }
+
+                }
+
             }
 
             $tapesUser[] = [

@@ -12,6 +12,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Place implements CinemaEntity
 {
+
+    public const ONLINE = 1;
+
+    public const TELEVISION = 2;
+
+    public const DOWNLOADED = 3;
+
+    public const MOVIE_THEATER = 4;
+
+    public const VIDEO_CLUB = 5;
+
     /**
      * @var int
      *
