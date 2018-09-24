@@ -42,7 +42,8 @@ class QueryType extends ObjectType
                     'resolve' => function ($source, $args) use ($typeRegistry) {
                         $adapter = $typeRegistry->getContainer()->get(AdapterInterface::class);
 
-                        $sql = "SELECT s.searchParam  
+                        $sql = "SELECT s.searchParam
+                                    ,s.searchValueId  
                                     ,k.RANK 
                                     ,o.rowTypeId 
                                     ,r.description
