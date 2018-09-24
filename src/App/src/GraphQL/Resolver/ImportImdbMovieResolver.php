@@ -603,6 +603,9 @@ class ImportImdbMovieResolver
         if ($imdbMovieReleases['dates']) {
             /** @var Release $data */
             foreach ($imdbMovieReleases['dates'] as $data) {
+                if(!$data->getIsFullDate()){
+                    continue;
+                }
                 /** @var Country $country */
                 if ($data->getCountry()) {
                     $country = $entityManager->getRepository(Country::class)->findOneBy([
