@@ -18,7 +18,8 @@ class SearchMatchType extends ObjectType
         parent::__construct([
             'fields' => [
                 'searchValueId' => Type::int(),
-                'searchParam' => Type::string()
+                'searchParam' => Type::string(),
+                'rank' => Type::float()
             ]
         ]);
     }

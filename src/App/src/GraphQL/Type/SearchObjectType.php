@@ -19,7 +19,6 @@ class SearchObjectType extends ObjectType
         parent::__construct([
             'fields' => [
                 'objectId' => Type::int(),
-                'rank' => Type::float(),
                 'results' => Type::listOf($typeRegistry->get('searchMatch'))
             ]
         ]);
