@@ -20,7 +20,7 @@ class SearchResultType extends ObjectType
             'fields' => [
                 'rowTypeId' => Type::int(),
                 'rowType' => Type::string(),
-                'results' => Type::listOf($typeRegistry->get('searchObject'))
+                'objects' => Type::listOf($typeRegistry->get('searchObject'))
             ]
         ]);
     }

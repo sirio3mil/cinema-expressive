@@ -19,7 +19,7 @@ class SearchObjectType extends ObjectType
         parent::__construct([
             'fields' => [
                 'objectId' => Type::int(),
-                'results' => Type::listOf($typeRegistry->get('searchMatch'))
+                'matches' => Type::listOf($typeRegistry->get('searchMatch'))
             ]
         ]);
     }
