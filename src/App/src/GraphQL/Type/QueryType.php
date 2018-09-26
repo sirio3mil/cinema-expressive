@@ -35,7 +35,7 @@ class QueryType extends ObjectType
         parent::__construct([
             'fields' => [
                 'search' => [
-                    'type' => Type::listOf(Type::string()),
+                    'type' => Type::listOf($typeRegistry->get('searchResult')),
                     'args' => [
                         'pattern' => Type::nonNull(Type::string())
                     ],
