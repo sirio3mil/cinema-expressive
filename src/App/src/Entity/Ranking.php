@@ -52,7 +52,7 @@ trait Ranking
      */
     public function getVotes(): int
     {
-        return $this->votes;
+        return $this->votes ?? 0;
     }
 
     /**
@@ -61,7 +61,7 @@ trait Ranking
      */
     public function setScore(float $score): CinemaEntity
     {
-        $this->score = $score;
+        $this->score = $this->convertImdbScore($score);
 
         return $this;
     }
@@ -71,6 +71,15 @@ trait Ranking
      */
     public function getScore(): float
     {
-        return $this->score;
+        return $this->score ?? 0;
+    }
+
+    /**
+     * @param float $score
+     * @return float
+     */
+    protected function convertImdbScore(float $score): float
+    {
+        return $this->getVotes() * $score / 2;
     }
 }
