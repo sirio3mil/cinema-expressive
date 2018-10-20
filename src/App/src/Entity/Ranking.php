@@ -10,8 +10,17 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-trait Ranking
+/**
+ * Class Ranking
+ * @package App\Entity
+ * @ORM\Entity
+ * @ORM\Table(name="Ranking")
+ */
+class Ranking implements CinemaEntity
 {
+
+    use ObjectRelatedPrimary;
+
     /**
      * @var int
      *
@@ -61,7 +70,7 @@ trait Ranking
      */
     public function setScore(float $score): CinemaEntity
     {
-        $this->score = $this->convertImdbScore($score);
+        $this->score = $score;
 
         return $this;
     }
@@ -76,11 +85,11 @@ trait Ranking
 
     /**
      * @param float $score
-     * @return float
+     * @return CinemaEntity
      */
-    protected function convertImdbScore(float $score): float
+    public function setImdbScore(float $score): CinemaEntity
     {
-        return $this->getVotes() * $score / 2;
+        return $this->setScore($this->getVotes() * $score / 2);
     }
 
     /**

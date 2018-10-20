@@ -10,6 +10,7 @@ namespace App\GraphQL\Resolver;
 
 
 use App\Alias\MongoDBClient;
+use App\Entity\Ranking;
 use App\GraphQL\TypeRegistry;
 use App\Entity\Country;
 use App\Entity\Genre;
@@ -136,11 +137,20 @@ class ImportImdbMovieResolver
         }
         $tapeDetail->setDuration($imdbMovieDetails['duration']);
         $tapeDetail->setYear($imdbMovieDetails['year']);
-        $tapeDetail->setScore($imdbMovieDetails['score']);
-        $tapeDetail->setVotes($imdbMovieDetails['votes']);
         $tapeDetail->setColor($imdbMovieDetails['color']);
         $tapeDetail->setIsTvShow($imdbMovieDetails['isTvShow']);
         $entityManager->persist($tapeDetail);
+        /** @var Ranking $tapeRanking */
+        $tapeRanking = $entityManager->getRepository(Ranking::class)->findOneBy([
+            'object' => $tape->getObject()
+        ]);
+        if (!$tapeRanking) {
+            $tapeRanking = new Ranking();
+            $tapeRanking->setObject($tape->getObject());
+        }
+        $tapeRanking->setImdbScore($imdbMovieDetails['score']);
+        $tapeRanking->setVotes($imdbMovieDetails['votes']);
+        $entityManager->persist($tapeRanking);
         /** @var ArrayCollection $sounds */
         $sounds = $tape->getSounds();
         if ($imdbMovieDetails['sounds']) {
