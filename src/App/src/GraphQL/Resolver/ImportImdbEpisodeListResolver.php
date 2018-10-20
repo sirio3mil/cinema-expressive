@@ -20,9 +20,9 @@ class ImportImdbEpisodeListResolver
     {
         $episodes = [];
 
-        foreach ($episodeList as $episode){
+        foreach ($episodeList as $episode) {
             $result = ImportImdbMovieResolver::resolve($typeRegistry, $episode);
-            if(!filter_var($result['tapeId'], FILTER_VALIDATE_INT)){
+            if (!filter_var($result['tapeId'], FILTER_VALIDATE_INT)) {
                 throw new \HttpResponseException('Tape ' . $episode['imdbNumber'] . ' could not be registered');
             }
             $episodes[] = [
@@ -44,7 +44,7 @@ class ImportImdbEpisodeListResolver
         $cacheStorageAdapter = $typeRegistry->getCacheStorageAdapter();
         /** @var array $imdbEpisodeList */
         $imdbEpisodeList = CachedQueryResolver::resolve($cacheStorageAdapter, new EpisodeListWrapper(), $args);
-        if($imdbEpisodeList){
+        if ($imdbEpisodeList) {
             $episodes = self::importEpisodes($typeRegistry, $imdbEpisodeList);
         }
         return [

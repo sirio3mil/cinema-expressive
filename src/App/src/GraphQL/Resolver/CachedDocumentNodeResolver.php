@@ -23,12 +23,12 @@ class CachedDocumentNodeResolver
 
         /** @var ClassCache $cache */
         $cache = PatternFactory::factory('class', [
-            'class'  => QueryFile::class,
+            'class' => QueryFile::class,
             'storage' => $adapter
         ]);
         $source = $cache->getContent($filePath);
         $key = 'DocumentNode' . pathinfo($filePath, PATHINFO_FILENAME);
-        if(!$adapter->hasItem($key)){
+        if (!$adapter->hasItem($key)) {
             $adapter->setItem($key, Parser::parse(new Source($source ?: '', 'GraphQL')));
         }
         return $adapter->getItem($key);
