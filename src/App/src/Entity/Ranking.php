@@ -82,4 +82,15 @@ trait Ranking
     {
         return $this->getVotes() * $score / 2;
     }
+
+    /**
+     * @return float
+     */
+    public function getCalculatedScore(): float
+    {
+        if (!$this->getVotes()) {
+            return 0;
+        }
+        return $this->getScore() / $this->getVotes();
+    }
 }
