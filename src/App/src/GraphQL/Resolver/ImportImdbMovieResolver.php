@@ -148,7 +148,7 @@ class ImportImdbMovieResolver
             $tapeRanking = new Ranking();
             $tapeRanking->setObject($tape->getObject());
         }
-        $tapeRanking->setImdbScore($imdbMovieDetails['score']);
+        $tapeRanking->setScoreFromCalculatedValue($imdbMovieDetails['score']);
         $tapeRanking->setVotes($imdbMovieDetails['votes']);
         $entityManager->persist($tapeRanking);
         /** @var ArrayCollection $sounds */

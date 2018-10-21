@@ -84,12 +84,12 @@ class Ranking implements CinemaEntity
     }
 
     /**
-     * @param float $score
+     * @param float $calculatedValue
      * @return CinemaEntity
      */
-    public function setImdbScore(float $score): CinemaEntity
+    public function setScoreFromCalculatedValue(float $calculatedValue): CinemaEntity
     {
-        return $this->setScore($this->getVotes() * $score / 2);
+        return $this->setScore($this->getVotes() * $calculatedValue / 2);
     }
 
     /**
