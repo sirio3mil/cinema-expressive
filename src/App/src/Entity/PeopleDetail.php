@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PeopleDetail implements CinemaEntity
 {
 
-    use CreationDate, Ranking, Upgradeable, CountryRelated;
+    use CreationDate, Upgradeable, CountryRelated;
 
     /**
      * @var People

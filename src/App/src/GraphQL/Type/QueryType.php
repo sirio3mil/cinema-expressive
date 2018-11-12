@@ -35,24 +35,14 @@ class QueryType extends ObjectType
         parent::__construct([
             'fields' => [
                 'search' => [
-                    'type' => Type::listOf(Type::string()),
+                    'type' => Type::listOf($typeRegistry->get('searchResult')),
                     'args' => [
                         'pattern' => Type::nonNull(Type::string())
                     ],
                     'resolve' => function ($source, $args) use ($typeRegistry) {
                         $adapter = $typeRegistry->getContainer()->get(AdapterInterface::class);
 
-                        $sql = "SELECT s.searchParam
-                                    ,s.searchValueId  
-                                    ,k.RANK 
-                                    ,o.rowTypeId 
-                                    ,r.description
-                                    ,o.objectId
-                                FROM dbo.SearchValue AS s   
-                                INNER JOIN FREETEXTTABLE(dbo.SearchValue, searchParam, ?) k  ON s.searchValueId = k.[key]
-                                INNER JOIN dbo.Object o on o.objectId = s.objectId
-                                INNER JOIN dbo.RowType r on r.rowTypeId = o.rowTypeId
-                                ORDER BY RANK DESC";
+                        $sql = "exec dbo.SearchParam ?";
                         /** @var ResultSet $stmt */
                         $stmt = $adapter->query($sql, [
                             $args['pattern']

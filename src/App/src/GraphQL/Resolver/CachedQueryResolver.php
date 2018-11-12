@@ -21,7 +21,7 @@ class CachedQueryResolver
 
         /** @var ObjectCache $cache */
         $cache = PatternFactory::factory('object', [
-            'object'  => $wrapper,
+            'object' => $wrapper,
             'storage' => $adapter
         ]);
         return $cache->getData($args);

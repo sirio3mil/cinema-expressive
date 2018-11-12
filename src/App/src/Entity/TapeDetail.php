@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TapeDetail implements CinemaEntity
 {
 
-    use CreationDate, Ranking, Upgradeable, TapeRelatedPrimary;
+    use CreationDate, Upgradeable, TapeRelatedPrimary;
 
     /**
      * @var int
@@ -121,7 +121,7 @@ class TapeDetail implements CinemaEntity
     public function setYear(?int $year): TapeDetail
     {
         $this->year = $year;
-    
+
         return $this;
     }
 
@@ -140,7 +140,7 @@ class TapeDetail implements CinemaEntity
     public function setDuration(?int $duration): TapeDetail
     {
         $this->duration = $duration;
-    
+
         return $this;
     }
 
@@ -159,7 +159,7 @@ class TapeDetail implements CinemaEntity
     public function setColor(?string $color): TapeDetail
     {
         $this->color = $color;
-    
+
         return $this;
     }
 
@@ -178,7 +178,7 @@ class TapeDetail implements CinemaEntity
     public function setHaveCover(bool $haveCover): TapeDetail
     {
         $this->haveCover = $haveCover;
-    
+
         return $this;
     }
 
@@ -197,7 +197,7 @@ class TapeDetail implements CinemaEntity
     public function setIsTvShow(bool $isTvShow): TapeDetail
     {
         $this->isTvShow = $isTvShow;
-    
+
         return $this;
     }
 
@@ -216,7 +216,7 @@ class TapeDetail implements CinemaEntity
     public function setAdult(bool $adult): TapeDetail
     {
         $this->adult = $adult;
-    
+
         return $this;
     }
 
@@ -235,7 +235,7 @@ class TapeDetail implements CinemaEntity
     public function setBudget(float $budget): TapeDetail
     {
         $this->budget = $budget;
-    
+
         return $this;
     }
 
@@ -254,7 +254,7 @@ class TapeDetail implements CinemaEntity
     public function setCurrency(int $currency): TapeDetail
     {
         $this->currency = $currency;
-    
+
         return $this;
     }
 
@@ -269,19 +269,19 @@ class TapeDetail implements CinemaEntity
     /** @ORM\PrePersist */
     public function generateDefaultValues()
     {
-        if(is_null($this->currency)) {
+        if (is_null($this->currency)) {
             $this->currency = 1;
         }
-        if(is_null($this->haveCover)) {
+        if (is_null($this->haveCover)) {
             $this->haveCover = 0;
         }
-        if(is_null($this->isTvShow)) {
+        if (is_null($this->isTvShow)) {
             $this->isTvShow = 0;
         }
-        if(is_null($this->adult)) {
+        if (is_null($this->adult)) {
             $this->adult = 0;
         }
-        if(is_null($this->budget)) {
+        if (is_null($this->budget)) {
             $this->budget = 0;
         }
     }

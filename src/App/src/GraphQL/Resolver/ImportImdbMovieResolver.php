@@ -10,6 +10,7 @@ namespace App\GraphQL\Resolver;
 
 
 use App\Alias\MongoDBClient;
+use App\Entity\Ranking;
 use App\GraphQL\TypeRegistry;
 use App\Entity\Country;
 use App\Entity\Genre;
@@ -99,8 +100,7 @@ class ImportImdbMovieResolver
                 $tape = new Tape();
                 $tape->setObject($imdbNumber->getObject());
             }
-        }
-        catch (NoResultException $e){
+        } catch (NoResultException $e) {
             $object = new GlobalUniqueObject();
             $object->setRowType($tapeRowType);
             $entityManager->persist($object);
@@ -120,7 +120,7 @@ class ImportImdbMovieResolver
             'object' => $tape->getObject(),
             'searchParam' => $imdbMovieDetails['title']
         ]);
-        if(!$searchValue){
+        if (!$searchValue) {
             $searchValue = new SearchValue();
             $searchValue->setObject($tape->getObject());
             $searchValue->setSearchParam($imdbMovieDetails['title']);
@@ -137,11 +137,20 @@ class ImportImdbMovieResolver
         }
         $tapeDetail->setDuration($imdbMovieDetails['duration']);
         $tapeDetail->setYear($imdbMovieDetails['year']);
-        $tapeDetail->setScore($imdbMovieDetails['score']);
-        $tapeDetail->setVotes($imdbMovieDetails['votes']);
         $tapeDetail->setColor($imdbMovieDetails['color']);
         $tapeDetail->setIsTvShow($imdbMovieDetails['isTvShow']);
         $entityManager->persist($tapeDetail);
+        /** @var Ranking $tapeRanking */
+        $tapeRanking = $entityManager->getRepository(Ranking::class)->findOneBy([
+            'object' => $tape->getObject()
+        ]);
+        if (!$tapeRanking) {
+            $tapeRanking = new Ranking();
+            $tapeRanking->setObject($tape->getObject());
+        }
+        $tapeRanking->setScoreFromCalculatedValue($imdbMovieDetails['score']);
+        $tapeRanking->setVotes($imdbMovieDetails['votes']);
+        $entityManager->persist($tapeRanking);
         /** @var ArrayCollection $sounds */
         $sounds = $tape->getSounds();
         if ($imdbMovieDetails['sounds']) {
@@ -356,7 +365,7 @@ class ImportImdbMovieResolver
                     'object' => $people->getObject(),
                     'searchParam' => $person->getFullName()
                 ]);
-                if(!$searchValue){
+                if (!$searchValue) {
                     $searchValue = new SearchValue();
                     $searchValue->setObject($people->getObject());
                     $searchValue->setSearchParam($person->getFullName());
@@ -389,7 +398,7 @@ class ImportImdbMovieResolver
                         'object' => $people->getObject(),
                         'searchParam' => $person->getAlias()
                     ]);
-                    if(!$searchValue){
+                    if (!$searchValue) {
                         $searchValue = new SearchValue();
                         $searchValue->setObject($people->getObject());
                         $searchValue->setSearchParam($person->getAlias());
@@ -491,7 +500,7 @@ class ImportImdbMovieResolver
                     'object' => $people->getObject(),
                     'searchParam' => $person->getFullName()
                 ]);
-                if(!$searchValue){
+                if (!$searchValue) {
                     $searchValue = new SearchValue();
                     $searchValue->setObject($people->getObject());
                     $searchValue->setSearchParam($person->getFullName());
@@ -537,7 +546,7 @@ class ImportImdbMovieResolver
             $peopleChecked = [];
             /** @var \ImdbScraper\Model\People $person */
             foreach ($imdbMovieCredits['writers'] as $person) {
-                if(in_array($person->getImdbNumber(), $peopleChecked)){
+                if (in_array($person->getImdbNumber(), $peopleChecked)) {
                     continue;
                 }
                 $peopleChecked[] = $person->getImdbNumber();
@@ -581,7 +590,7 @@ class ImportImdbMovieResolver
                     'object' => $people->getObject(),
                     'searchParam' => $person->getFullName()
                 ]);
-                if(!$searchValue){
+                if (!$searchValue) {
                     $searchValue = new SearchValue();
                     $searchValue->setObject($people->getObject());
                     $searchValue->setSearchParam($person->getFullName());
@@ -603,7 +612,7 @@ class ImportImdbMovieResolver
         if ($imdbMovieReleases['dates']) {
             /** @var Release $data */
             foreach ($imdbMovieReleases['dates'] as $data) {
-                if(!$data->getIsFullDate()){
+                if (!$data->getIsFullDate()) {
                     continue;
                 }
                 /** @var Country $country */
@@ -679,7 +688,7 @@ class ImportImdbMovieResolver
                     'object' => $tape->getObject(),
                     'searchParam' => $data->getTitle()
                 ]);
-                if(!$searchValue){
+                if (!$searchValue) {
                     $searchValue = new SearchValue();
                     $searchValue->setObject($tape->getObject());
                     $searchValue->setSearchParam($data->getTitle());

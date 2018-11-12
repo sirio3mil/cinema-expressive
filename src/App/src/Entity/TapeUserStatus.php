@@ -12,6 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TapeUserStatus implements CinemaEntity
 {
+
+    public const WISH_LIST = 3;
+
+    public const VIEW = 2;
+
+    public const DOWNLOADED = 1;
+
     /**
      * @var int
      *
