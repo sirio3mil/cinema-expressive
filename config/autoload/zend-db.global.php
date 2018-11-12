@@ -7,17 +7,17 @@
  */
 return [
     'mongo' => [
-        'hostname' => "localhost",
-        'database' => "cinema",
-        'port' => 27017,
-        'dsn' => "mongodb://localhost:27017"
+        'hostname' => "",
+        'database' => "",
+        'port' => ,
+        'dsn' => ""
     ],
     'db' => [
-        'hostname' => "localhost",
-        'username' => "sa",
-        'password' => "#LeNtilla1",
-        'database' => "Film",
-        'driver' => "sqlsrv",
-        'charset' => "UTF-8"
+        'hostname' => "",
+        'username' => "",
+        'password' => "",
+        'database' => "",
+        'driver' => "",
+        'charset' => ""
     ]
 ];
