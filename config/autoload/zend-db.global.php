@@ -9,7 +9,7 @@ return [
     'mongo' => [
         'hostname' => "",
         'database' => "",
-        'port' => ,
+        'port' => 0,
         'dsn' => ""
     ],
     'db' => [
