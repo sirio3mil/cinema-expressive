@@ -42,6 +42,11 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use ImdbScraper\Iterator\AlsoKnownAsIterator;
+use ImdbScraper\Iterator\CastIterator;
+use ImdbScraper\Iterator\KeywordIterator;
+use ImdbScraper\Iterator\PersonIterator;
+use ImdbScraper\Iterator\ReleaseIterator;
 use ImdbScraper\Model\AlsoKnownAs;
 use ImdbScraper\Model\CastPeople;
 use ImdbScraper\Model\Keyword;
@@ -206,25 +211,29 @@ class ImportImdbMovieResolver
         $entityManager->flush();
         /** @var array $imdbMovieKeywords */
         $imdbMovieKeywords = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieKeywordsWrapper(), $args);
-        if ($imdbMovieKeywords && $imdbMovieKeywords['keywords']) {
+        if ($imdbMovieKeywords && array_key_exists('keywords', $imdbMovieKeywords)) {
+            /** @var KeywordIterator $keywords */
+            $keywords = $imdbMovieKeywords['keywords'];
             /** @var ArrayCollection $tags */
             $tags = $tape->getTags();
-            /** @var Keyword $data */
-            foreach ($imdbMovieKeywords['keywords'] as $data) {
-                /** @var Tag $tag */
-                $tag = $entityManager->getRepository(Tag::class)->findOneBy([
-                    'keyword' => $data->getKeyword()
-                ]);
-                if (!$tag) {
-                    $tag = new Tag();
-                    $tag->setKeyword($data->getKeyword());
-                    $entityManager->persist($tag);
+            if ($keywords->getIterator()->count()) {
+                /** @var Keyword $data */
+                foreach ($keywords as $data) {
+                    /** @var Tag $tag */
+                    $tag = $entityManager->getRepository(Tag::class)->findOneBy([
+                        'keyword' => $data->getKeyword()
+                    ]);
+                    if (!$tag) {
+                        $tag = new Tag();
+                        $tag->setKeyword($data->getKeyword());
+                        $entityManager->persist($tag);
+                    }
+                    if ($tag && !$tags->contains($tag)) {
+                        $tape->addTag($tag);
+                    }
                 }
-                if ($tag && !$tags->contains($tag)) {
-                    $tape->addTag($tag);
-                }
+                $entityManager->flush();
             }
-            $entityManager->flush();
         }
         /** @var array $imdbMovieLocations */
         $imdbMovieLocations = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieLocationsWrapper(), $args);
@@ -274,8 +283,8 @@ class ImportImdbMovieResolver
                         WITH i.object = t.object
                     JOIN i.object o 
                     WHERE i.imdbNumber = :imdbNumber 
-                        AND o.rowType = :rowType'
-                );
+                        AND o.rowType = :rowType
+                ');
                 $query->setParameters([
                     'imdbNumber' => $imdbMovieDetails['tvShow'],
                     'rowType' => $tapeRowType
@@ -301,15 +310,15 @@ class ImportImdbMovieResolver
         ]);
         /** @var Query $query */
         $query = $entityManager->createQuery('
-                            SELECT r tapePeopleRole
-                              ,i.imdbNumber
-                            FROM App\Entity\TapePeopleRole r
-                            JOIN r.people p
-                            JOIN App\Entity\ImdbNumber i 
-                              WITH i.object = p.object
-                            WHERE r.role = :role 
-                              AND r.tape = :tape
-                        ');
+            SELECT r tapePeopleRole
+              ,i.imdbNumber
+            FROM App\Entity\TapePeopleRole r
+            JOIN r.people p
+            JOIN App\Entity\ImdbNumber i 
+              WITH i.object = p.object
+            WHERE r.role = :role 
+              AND r.tape = :tape
+        ');
         $query->setParameters([
             'role' => $castRole,
             'tape' => $tape
@@ -322,9 +331,11 @@ class ImportImdbMovieResolver
         }
         /** @var array $imdbMovieCredits */
         $imdbMovieCredits = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCreditsWrapper(), $args);
-        if ($imdbMovieCredits['cast']) {
+        /** @var CastIterator $cast */
+        $cast = $imdbMovieCredits['cast'];
+        if ($cast->getIterator()->count()) {
             /** @var CastPeople $person */
-            foreach ($imdbMovieCredits['cast'] as $person) {
+            foreach ($cast as $person) {
                 /** @var TapePeopleRole $tapePeopleRole */
                 $tapePeopleRole = null;
                 /** @var People $people */
@@ -457,9 +468,11 @@ class ImportImdbMovieResolver
         foreach ($dqlQueryResult as $row) {
             $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
         }
-        if ($imdbMovieCredits['directors']) {
+        /** @var PersonIterator $directors */
+        $directors = $imdbMovieCredits['directors'];
+        if ($directors->getIterator()->count()) {
             /** @var \ImdbScraper\Model\People $person */
-            foreach ($imdbMovieCredits['directors'] as $person) {
+            foreach ($directors as $person) {
                 /** @var TapePeopleRole $tapePeopleRole */
                 $tapePeopleRole = null;
                 /** @var People $people */
@@ -542,10 +555,12 @@ class ImportImdbMovieResolver
         foreach ($dqlQueryResult as $row) {
             $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
         }
-        if ($imdbMovieCredits['writers']) {
+        /** @var PersonIterator $writers */
+        $writers = $imdbMovieCredits['writers'];
+        if ($writers->getIterator()->count()) {
             $peopleChecked = [];
             /** @var \ImdbScraper\Model\People $person */
-            foreach ($imdbMovieCredits['writers'] as $person) {
+            foreach ($writers as $person) {
                 if (in_array($person->getImdbNumber(), $peopleChecked)) {
                     continue;
                 }
@@ -609,9 +624,11 @@ class ImportImdbMovieResolver
         }
         /** @var array $imdbMovieReleases */
         $imdbMovieReleases = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieReleasesWrapper(), $args);
-        if ($imdbMovieReleases['dates']) {
+        /** @var ReleaseIterator $releaseDates */
+        $releaseDates = $imdbMovieReleases['dates'];
+        if ($releaseDates->getIterator()->count()) {
             /** @var Release $data */
-            foreach ($imdbMovieReleases['dates'] as $data) {
+            foreach ($releaseDates as $data) {
                 if (!$data->getIsFullDate()) {
                     continue;
                 }
@@ -655,9 +672,11 @@ class ImportImdbMovieResolver
                 }
             }
         }
-        if ($imdbMovieReleases['titles']) {
+        /** @var AlsoKnownAsIterator $titles */
+        $titles = $imdbMovieReleases['titles'];
+        if ($titles->getIterator()->count()) {
             /** @var AlsoKnownAs $data */
-            foreach ($imdbMovieReleases['titles'] as $data) {
+            foreach ($titles as $data) {
                 /** @var Country $country */
                 if ($data->getCountry()) {
                     $country = $entityManager->getRepository(Country::class)->findOneBy([

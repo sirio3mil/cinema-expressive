@@ -32,13 +32,15 @@ class MovieLocationsWrapper extends AbstractWrapper
         $this->pageMapper->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
         /** @var LocationIterator $locations */
         $locations = $this->pageMapper->getLocations();
-        /** @var Location $location */
-        foreach ($locations as $location){
-            $data[] = [
-                'location' => $location->getLocation(),
-                'totalVotes' => $location->getTotalVotes(),
-                'relevantVotes' => $location->getRelevantVotes()
-            ];
+        if ($locations->getIterator()->count()) {
+            /** @var Location $location */
+            foreach ($locations as $location) {
+                $data[] = [
+                    'location' => $location->getLocation(),
+                    'totalVotes' => $location->getTotalVotes(),
+                    'relevantVotes' => $location->getRelevantVotes()
+                ];
+            }
         }
         return $data;
     }

@@ -32,14 +32,16 @@ class MovieCertificatesWrapper extends AbstractWrapper
         $this->pageMapper->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
         /** @var CertificateIterator $certificates */
         $certificates = $this->pageMapper->getCertificates();
-        /** @var Certificate $certificate */
-        foreach ($certificates as $certificate){
-            $data[] = [
-                'certification' => $certificate->getCertification(),
-                'details' => $certificate->getDetails(),
-                'country' => $certificate->getCountryName(),
-                'isoCountryCode' => $certificate->getIsoCountryCode()
-            ];
+        if ($certificates->getIterator()->count()) {
+            /** @var Certificate $certificate */
+            foreach ($certificates as $certificate) {
+                $data[] = [
+                    'certification' => $certificate->getCertification(),
+                    'details' => $certificate->getDetails(),
+                    'country' => $certificate->getCountryName(),
+                    'isoCountryCode' => $certificate->getIsoCountryCode()
+                ];
+            }
         }
         return $data;
     }
