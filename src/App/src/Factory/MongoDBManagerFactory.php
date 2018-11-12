@@ -17,7 +17,6 @@ class MongoDBManagerFactory
     public function __invoke(ContainerInterface $container): Manager
     {
         $config = $container->has('config') ? $container->get('config') : [];
-        $config = $config['zend-db'] ?? [];
         $config = $config['mongo'] ?? [];
 
         return new Manager($config['dsn']);
