@@ -17,7 +17,6 @@ class MongoDBClientFactory
     public function __invoke(ContainerInterface $container): Client
     {
         $config = $container->has('config') ? $container->get('config') : [];
-        $config = $config['zend-db'] ?? [];
         $config = $config['mongo'] ?? [];
 
         return new Client($config['dsn']);

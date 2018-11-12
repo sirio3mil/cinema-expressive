@@ -18,8 +18,7 @@ class EntityManagerFactory
     public function __invoke(ContainerInterface $container): EntityManager
     {
         $config = $container->has('config') ? $container->get('config') : [];
-        $config = $config['zend-db'] ?? [];
-        $config = $config['mssql'] ?? [];
+        $config = $config['db'] ?? [];
 
         $paths = [
             __DIR__ . "/src/App/src/Entity"

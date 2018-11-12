@@ -6,21 +6,11 @@
  * Time: 9:16
  */
 return [
-    'zend-db' => [
-        'mssql' => [
-            'hostname' => "localhost",
-            'username' => "sa",
-            'password' => "#LeNtilla1",
-            'database' => "Film",
-            'driver' => "sqlsrv",
-            'charset' => "UTF-8"
-        ],
-        'mongo' => [
-            'hostname' => "localhost",
-            'database' => "cinema",
-            'port' => 27017,
-            'dsn' => "mongodb://localhost:27017"
-        ]
+    'mongo' => [
+        'hostname' => "localhost",
+        'database' => "cinema",
+        'port' => 27017,
+        'dsn' => "mongodb://localhost:27017"
     ],
     'db' => [
         'hostname' => "localhost",
