@@ -331,11 +331,11 @@ class ImportImdbMovieResolver
         }
         /** @var array $imdbMovieCredits */
         $imdbMovieCredits = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCreditsWrapper(), $args);
-        /** @var CastIterator $cast */
-        $cast = $imdbMovieCredits['cast'];
-        if ($cast->getIterator()->count()) {
+        /** @var CastIterator $castIterator */
+        $castIterator = $imdbMovieCredits['cast'];
+        if ($castIterator->getIterator()->count()) {
             /** @var CastPeople $person */
-            foreach ($cast as $person) {
+            foreach ($castIterator as $person) {
                 /** @var TapePeopleRole $tapePeopleRole */
                 $tapePeopleRole = null;
                 /** @var People $people */
