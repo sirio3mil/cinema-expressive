@@ -11,6 +11,7 @@ namespace App\GraphQL\Type;
 
 use App\GraphQL\Resolver\CachedQueryResolver;
 use App\GraphQL\TypeRegistry;
+use App\GraphQL\Wrapper\AbstractWrapper;
 use App\GraphQL\Wrapper\SearchWrapper;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
@@ -26,8 +27,13 @@ use App\GraphQL\Wrapper\MovieCertificatesWrapper;
 class QueryType extends ObjectType
 {
 
+    /** @var TypeRegistry */
+    protected $typeRegistry;
+
     public function __construct(TypeRegistry $typeRegistry)
     {
+
+        $this->typeRegistry = $typeRegistry;
 
         parent::__construct([
             'fields' => [
@@ -37,8 +43,8 @@ class QueryType extends ObjectType
                         'pattern' => Type::nonNull(Type::string())
                     ],
                     'resolve' => function ($source, $args) use ($typeRegistry) {
-                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
-                            new SearchWrapper($typeRegistry->getContainer()), $args);
+                        $wrapper = new SearchWrapper($typeRegistry->getContainer());
+                        return $this->getResults($wrapper, $args);
                     }
                 ],
                 'imdbMovieDetails' => [
@@ -47,8 +53,8 @@ class QueryType extends ObjectType
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
                     'resolve' => function ($source, $args) use ($typeRegistry) {
-                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
-                            new MovieDetailsWrapper(), $args);
+                        $wrapper = new MovieDetailsWrapper();
+                        return $this->getResults($wrapper, $args);
                     }
                 ],
                 'imdbMovieCredits' => [
@@ -57,8 +63,8 @@ class QueryType extends ObjectType
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
                     'resolve' => function ($source, $args) use ($typeRegistry) {
-                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
-                            new MovieCreditsWrapper(), $args);
+                        $wrapper = new MovieCreditsWrapper();
+                        return $this->getResults($wrapper, $args);
                     }
                 ],
                 'imdbMovieReleases' => [
@@ -67,8 +73,8 @@ class QueryType extends ObjectType
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
                     'resolve' => function ($source, $args) use ($typeRegistry) {
-                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
-                            new MovieReleasesWrapper(), $args);
+                        $wrapper = new MovieReleasesWrapper();
+                        return $this->getResults($wrapper, $args);
                     }
                 ],
                 'imdbMovieKeywords' => [
@@ -77,8 +83,8 @@ class QueryType extends ObjectType
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
                     'resolve' => function ($source, $args) use ($typeRegistry) {
-                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
-                            new MovieKeywordsWrapper(), $args);
+                        $wrapper = new MovieKeywordsWrapper();
+                        return $this->getResults($wrapper, $args);
                     }
                 ],
                 'imdbMovieLocations' => [
@@ -87,8 +93,8 @@ class QueryType extends ObjectType
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
                     'resolve' => function ($source, $args) use ($typeRegistry) {
-                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
-                            new MovieLocationsWrapper(), $args);
+                        $wrapper = new MovieLocationsWrapper();
+                        return $this->getResults($wrapper, $args);
                     }
                 ],
                 'imdbMovieCertifications' => [
@@ -97,9 +103,8 @@ class QueryType extends ObjectType
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
                     'resolve' => function ($source, $args) use ($typeRegistry) {
-                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
-                            new MovieCertificatesWrapper(),
-                            $args);
+                        $wrapper = new MovieCertificatesWrapper();
+                        return $this->getResults($wrapper, $args);
                     }
                 ],
                 'imdbEpisodeList' => [
@@ -109,11 +114,16 @@ class QueryType extends ObjectType
                         'seasonNumber' => Type::int()
                     ],
                     'resolve' => function ($source, $args) use ($typeRegistry) {
-                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
-                            new EpisodeListWrapper(), $args);
+                        $wrapper = new EpisodeListWrapper();
+                        return $this->getResults($wrapper, $args);
                     }
                 ]
             ]
         ]);
+    }
+
+    protected function getResults(AbstractWrapper $wrapper, array $args): array
+    {
+        return CachedQueryResolver::resolve($this->typeRegistry->getCacheStorageAdapter(), $wrapper, $args);
     }
 }
