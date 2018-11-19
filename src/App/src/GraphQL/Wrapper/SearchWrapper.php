@@ -63,7 +63,7 @@ class SearchWrapper extends AbstractWrapper
                 "object" => $object
             ]);
             $original = null;
-            switch ($rowTypeId){
+            switch ($rowTypeId) {
                 case RowType::ROW_TYPE_PEOPLE:
                     /** @var People $person */
                     $person = $entityManager->getRepository(People::class)->findOneBy([
@@ -88,7 +88,7 @@ class SearchWrapper extends AbstractWrapper
                 'rowTypeId' => $rowTypeId,
                 'rowType' => $rowType->getDescription(),
                 'internalId' => $internalId,
-                'imdbNumber' => $imdbNumber->getImdbNumber(),
+                'imdbNumber' => $imdbNumber ? $imdbNumber->getImdbNumber() : '',
                 'original' => $original
             ];
         }
