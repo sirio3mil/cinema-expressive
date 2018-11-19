@@ -24,7 +24,7 @@ class ChaptersFromViewedTvShow implements CinemaEntity
      * @var TvShow
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="TvShow", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="TvShow", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tvShowId", referencedColumnName="tapeId")
      */
     private $tvShow;
@@ -33,7 +33,7 @@ class ChaptersFromViewedTvShow implements CinemaEntity
      * @var TvShowChapter
      *
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity="TvShowChapter", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="TvShowChapter", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="chapterId", referencedColumnName="tapeId")
      */
     private $chapter;
