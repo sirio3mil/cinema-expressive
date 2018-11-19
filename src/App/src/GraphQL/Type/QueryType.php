@@ -9,6 +9,7 @@
 namespace App\GraphQL\Type;
 
 use App\Entity\GlobalUniqueObject;
+use App\Entity\ImdbNumber;
 use App\Entity\People;
 use App\Entity\RowType;
 use App\Entity\Tape;
@@ -69,6 +70,10 @@ class QueryType extends ObjectType
                             $internalId = null;
                             $rowType = $object->getRowType();
                             $rowTypeId = $rowType->getRowTypeId();
+                            /** @var ImdbNumber $imdbNumber */
+                            $imdbNumber = $entityManager->getRepository(ImdbNumber::class)->findOneBy([
+                                "object" => $object
+                            ]);
                             switch ($rowTypeId){
                                 case RowType::ROW_TYPE_PEOPLE:
                                     /** @var People $person */
@@ -91,7 +96,8 @@ class QueryType extends ObjectType
                                 'objectId' => $row->objectId,
                                 'rowTypeId' => $rowTypeId,
                                 'rowType' => $rowType->getDescription(),
-                                'internalId' => $internalId
+                                'internalId' => $internalId,
+                                'imdbNumber' => $imdbNumber->getImdbNumber()
                             ];
                         }
 
