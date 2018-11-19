@@ -13,7 +13,7 @@ use ImdbScraper\Iterator\LocationIterator;
 use ImdbScraper\Mapper\LocationMapper;
 use ImdbScraper\Model\Location;
 
-class MovieLocationsWrapper extends AbstractWrapper
+class MovieLocationsWrapper extends AbstractPageWrapper
 {
 
     public function __construct()

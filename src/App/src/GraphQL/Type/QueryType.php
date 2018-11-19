@@ -8,17 +8,12 @@
 
 namespace App\GraphQL\Type;
 
-use App\Entity\GlobalUniqueObject;
-use App\Entity\ImdbNumber;
-use App\Entity\People;
-use App\Entity\RowType;
-use App\Entity\Tape;
+
 use App\GraphQL\Resolver\CachedQueryResolver;
 use App\GraphQL\TypeRegistry;
-use Doctrine\ORM\EntityManager;
+use App\GraphQL\Wrapper\SearchWrapper;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
-use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use App\GraphQL\Wrapper\MovieDetailsWrapper;
 use App\GraphQL\Wrapper\EpisodeListWrapper;
 use App\GraphQL\Wrapper\MovieCreditsWrapper;
@@ -26,18 +21,13 @@ use App\GraphQL\Wrapper\MovieReleasesWrapper;
 use App\GraphQL\Wrapper\MovieKeywordsWrapper;
 use App\GraphQL\Wrapper\MovieLocationsWrapper;
 use App\GraphQL\Wrapper\MovieCertificatesWrapper;
-use Zend\Db\Adapter\Adapter;
-use Zend\Db\Adapter\AdapterInterface;
-use Zend\Db\ResultSet\ResultSet;
+
 
 class QueryType extends ObjectType
 {
 
     public function __construct(TypeRegistry $typeRegistry)
     {
-
-        /** @var AbstractAdapter $cacheStorageAdapter */
-        $cacheStorageAdapter = $typeRegistry->getCacheStorageAdapter();
 
         parent::__construct([
             'fields' => [
@@ -47,129 +37,80 @@ class QueryType extends ObjectType
                         'pattern' => Type::nonNull(Type::string())
                     ],
                     'resolve' => function ($source, $args) use ($typeRegistry) {
-                        /** @var ContainerInterface $container */
-                        $container = $typeRegistry->getContainer();
-                        /** @var Adapter $adapter */
-                        $adapter = $container->get(AdapterInterface::class);
-                        /** @var EntityManager $entityManager */
-                        $entityManager = $container->get(EntityManager::class);
-
-                        $sql = "exec dbo.SearchParam ?";
-                        /** @var ResultSet $stmt */
-                        $stmt = $adapter->query($sql, [
-                            $args['pattern']
-                        ]);
-
-                        $results = [];
-
-                        foreach ($stmt as $row) {
-                            /** @var GlobalUniqueObject $object */
-                            $object = $entityManager->getRepository(GlobalUniqueObject::class)->findOneBy([
-                                "objectId" => $row->objectId
-                            ]);
-                            $internalId = null;
-                            $rowType = $object->getRowType();
-                            $rowTypeId = $rowType->getRowTypeId();
-                            /** @var ImdbNumber $imdbNumber */
-                            $imdbNumber = $entityManager->getRepository(ImdbNumber::class)->findOneBy([
-                                "object" => $object
-                            ]);
-                            $original = null;
-                            switch ($rowTypeId){
-                                case RowType::ROW_TYPE_PEOPLE:
-                                    /** @var People $person */
-                                    $person = $entityManager->getRepository(People::class)->findOneBy([
-                                        "object" => $object
-                                    ]);
-                                    $internalId = $person->getPeopleId();
-                                    $original = $person->getFullName();
-                                    break;
-                                case RowType::ROW_TYPE_TAPE:
-                                    /** @var Tape $tape */
-                                    $tape = $entityManager->getRepository(Tape::class)->findOneBy([
-                                        "object" => $object
-                                    ]);
-                                    $internalId = $tape->getTapeId();
-                                    $original = $tape->getOriginalTitle();
-                                    break;
-                            }
-
-                            $results[] = [
-                                'searchParam' => $row->searchParam,
-                                'objectId' => $row->objectId,
-                                'rowTypeId' => $rowTypeId,
-                                'rowType' => $rowType->getDescription(),
-                                'internalId' => $internalId,
-                                'imdbNumber' => $imdbNumber->getImdbNumber(),
-                                'original' => $original
-                            ];
-                        }
-
-                        return $results;
+                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
+                            new SearchWrapper($typeRegistry->getContainer()), $args);
                     }
                 ],
                 'imdbMovieDetails' => [
-                    'type'    => $typeRegistry->get('movie'),
-                    'args'    => [
+                    'type' => $typeRegistry->get('movie'),
+                    'args' => [
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
-                    'resolve' => function ($source, $args) use ($cacheStorageAdapter) {
-                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieDetailsWrapper(), $args);
+                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
+                            new MovieDetailsWrapper(), $args);
                     }
                 ],
                 'imdbMovieCredits' => [
                     'type' => $typeRegistry->get('credits'),
-                    'args'    => [
+                    'args' => [
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
-                    'resolve' => function ($source, $args) use ($cacheStorageAdapter) {
-                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCreditsWrapper(), $args);
+                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
+                            new MovieCreditsWrapper(), $args);
                     }
                 ],
                 'imdbMovieReleases' => [
                     'type' => $typeRegistry->get('release'),
-                    'args'    => [
+                    'args' => [
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
-                    'resolve' => function ($source, $args) use ($cacheStorageAdapter) {
-                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieReleasesWrapper(), $args);
+                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
+                            new MovieReleasesWrapper(), $args);
                     }
                 ],
                 'imdbMovieKeywords' => [
                     'type' => $typeRegistry->get('keywords'),
-                    'args'    => [
+                    'args' => [
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
-                    'resolve' => function ($source, $args) use ($cacheStorageAdapter) {
-                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieKeywordsWrapper(), $args);
+                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
+                            new MovieKeywordsWrapper(), $args);
                     }
                 ],
                 'imdbMovieLocations' => [
                     'type' => Type::listOf($typeRegistry->get('location')),
-                    'args'    => [
+                    'args' => [
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
-                    'resolve' => function ($source, $args) use ($cacheStorageAdapter) {
-                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieLocationsWrapper(), $args);
+                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
+                            new MovieLocationsWrapper(), $args);
                     }
                 ],
                 'imdbMovieCertifications' => [
                     'type' => Type::listOf($typeRegistry->get('certification')),
-                    'args'    => [
+                    'args' => [
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
-                    'resolve' => function ($source, $args) use ($cacheStorageAdapter) {
-                        return CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCertificatesWrapper(), $args);
+                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
+                            new MovieCertificatesWrapper(),
+                            $args);
                     }
                 ],
                 'imdbEpisodeList' => [
-                    'type'    => Type::listOf($typeRegistry->get('episode')),
-                    'args'    => [
+                    'type' => Type::listOf($typeRegistry->get('episode')),
+                    'args' => [
                         'imdbNumber' => Type::nonNull(Type::int()),
                         'seasonNumber' => Type::int()
                     ],
-                    'resolve' => function ($source, $args) use ($cacheStorageAdapter) {
-                        return CachedQueryResolver::resolve($cacheStorageAdapter, new EpisodeListWrapper(), $args);
+                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                        return CachedQueryResolver::resolve($typeRegistry->getCacheStorageAdapter(),
+                            new EpisodeListWrapper(), $args);
                     }
                 ]
             ]

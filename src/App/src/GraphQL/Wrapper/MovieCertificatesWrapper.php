@@ -13,7 +13,7 @@ use ImdbScraper\Iterator\CertificateIterator;
 use ImdbScraper\Mapper\ParentalGuideMapper;
 use ImdbScraper\Model\Certificate;
 
-class MovieCertificatesWrapper extends AbstractWrapper
+class MovieCertificatesWrapper extends AbstractPageWrapper
 {
 
     public function __construct()
