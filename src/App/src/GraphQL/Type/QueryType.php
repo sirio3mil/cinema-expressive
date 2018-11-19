@@ -14,6 +14,7 @@ use App\Entity\RowType;
 use App\Entity\Tape;
 use App\GraphQL\Resolver\CachedQueryResolver;
 use App\GraphQL\TypeRegistry;
+use Doctrine\ORM\EntityManager;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
