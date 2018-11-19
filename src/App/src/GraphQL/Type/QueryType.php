@@ -74,6 +74,7 @@ class QueryType extends ObjectType
                             $imdbNumber = $entityManager->getRepository(ImdbNumber::class)->findOneBy([
                                 "object" => $object
                             ]);
+                            $original = null;
                             switch ($rowTypeId){
                                 case RowType::ROW_TYPE_PEOPLE:
                                     /** @var People $person */
@@ -81,6 +82,7 @@ class QueryType extends ObjectType
                                         "object" => $object
                                     ]);
                                     $internalId = $person->getPeopleId();
+                                    $original = $person->getFullName();
                                     break;
                                 case RowType::ROW_TYPE_TAPE:
                                     /** @var Tape $tape */
@@ -88,6 +90,7 @@ class QueryType extends ObjectType
                                         "object" => $object
                                     ]);
                                     $internalId = $tape->getTapeId();
+                                    $original = $tape->getOriginalTitle();
                                     break;
                             }
 
@@ -97,7 +100,8 @@ class QueryType extends ObjectType
                                 'rowTypeId' => $rowTypeId,
                                 'rowType' => $rowType->getDescription(),
                                 'internalId' => $internalId,
-                                'imdbNumber' => $imdbNumber->getImdbNumber()
+                                'imdbNumber' => $imdbNumber->getImdbNumber(),
+                                'original' => $original
                             ];
                         }
 
