@@ -88,7 +88,7 @@ class SearchWrapper extends AbstractWrapper
                 'rowTypeId' => $rowTypeId,
                 'rowType' => $rowType->getDescription(),
                 'internalId' => $internalId,
-                'imdbNumber' => $imdbNumber ? $imdbNumber->getImdbNumber() : null,
+                'imdbNumber' => $imdbNumber ? $imdbNumber->getImdbNumber() : 0,
                 'original' => $original
             ];
         }
