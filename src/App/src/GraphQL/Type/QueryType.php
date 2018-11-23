@@ -43,11 +43,8 @@ class QueryType extends ObjectType
                         'pattern' => Type::nonNull(Type::string())
                     ],
                     'resolve' => function ($source, $args) use ($typeRegistry) {
-                        /*
                         $wrapper = new SearchWrapper($typeRegistry->getContainer());
                         return $this->getResults($wrapper, $args);
-                        */
-                        return (new SearchWrapper($typeRegistry->getContainer()))->getData($args);
                     }
                 ],
                 'imdbMovieDetails' => [
