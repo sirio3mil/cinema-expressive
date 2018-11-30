@@ -52,7 +52,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
-                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                    'resolve' => function ($source, $args) {
                         $wrapper = new MovieDetailsWrapper();
                         return $this->getResults($wrapper, $args);
                     }
@@ -62,7 +62,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
-                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                    'resolve' => function ($source, $args) {
                         $wrapper = new MovieCreditsWrapper();
                         return $this->getResults($wrapper, $args);
                     }
@@ -72,7 +72,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
-                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                    'resolve' => function ($source, $args) {
                         $wrapper = new MovieReleasesWrapper();
                         return $this->getResults($wrapper, $args);
                     }
@@ -82,7 +82,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
-                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                    'resolve' => function ($source, $args) {
                         $wrapper = new MovieKeywordsWrapper();
                         return $this->getResults($wrapper, $args);
                     }
@@ -92,7 +92,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
-                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                    'resolve' => function ($source, $args) {
                         $wrapper = new MovieLocationsWrapper();
                         return $this->getResults($wrapper, $args);
                     }
@@ -102,7 +102,7 @@ class QueryType extends ObjectType
                     'args' => [
                         'imdbNumber' => Type::nonNull(Type::int()),
                     ],
-                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                    'resolve' => function ($source, $args) {
                         $wrapper = new MovieCertificatesWrapper();
                         return $this->getResults($wrapper, $args);
                     }
@@ -113,7 +113,7 @@ class QueryType extends ObjectType
                         'imdbNumber' => Type::nonNull(Type::int()),
                         'seasonNumber' => Type::int()
                     ],
-                    'resolve' => function ($source, $args) use ($typeRegistry) {
+                    'resolve' => function ($source, $args) {
                         $wrapper = new EpisodeListWrapper();
                         return $this->getResults($wrapper, $args);
                     }
