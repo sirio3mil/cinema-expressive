@@ -43,14 +43,19 @@ abstract class AbstractWrapper
         return $cache->getData($args);
     }
 
+    public function getClosure()
+    {
+        return function ($source, $args) {
+            return $this->getData($args);
+        };
+    }
+
     public function getGraphQLType()
     {
         return [
             'type' => $this->type,
             'args' => $this->args,
-            'resolve' => function ($source, $args) {
-                return $this->getData($args);
-            }
+            'resolve' => $this->getClosure()
         ];
     }
 }
