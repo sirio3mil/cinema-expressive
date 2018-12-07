@@ -9,7 +9,8 @@
 namespace App\Factory;
 
 
-use App\GraphQL\TypeRegistry;
+use App\GraphQL\Type\Mutation;
+use App\GraphQL\Type\Query;
 use GraphQL\Type\Schema;
 use GraphQL\Type\SchemaConfig;
 use Psr\Container\ContainerInterface;
@@ -18,10 +19,9 @@ class SchemaFactory
 {
     public function __invoke(ContainerInterface $container): Schema
     {
-        $typeRegistry = $container->get(TypeRegistry::class);
         $config = SchemaConfig::create()
-            ->setQuery($typeRegistry->get('query'))
-            ->setMutation($typeRegistry->get('mutation'));
+            ->setQuery($container->get(Query::class))
+            ->setMutation($container->get(Mutation::class));
         return new Schema($config);
     }
 }

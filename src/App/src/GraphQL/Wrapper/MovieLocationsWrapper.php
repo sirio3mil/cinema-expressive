@@ -9,16 +9,24 @@
 namespace App\GraphQL\Wrapper;
 
 
+use GraphQL\Type\Definition\Type;
 use ImdbScraper\Iterator\LocationIterator;
 use ImdbScraper\Mapper\LocationMapper;
 use ImdbScraper\Model\Location;
+use Zend\Cache\Storage\Adapter\AbstractAdapter;
+use App\GraphQL\TypeRegistry;
 
 class MovieLocationsWrapper extends AbstractPageWrapper
 {
 
-    public function __construct()
+    public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)
     {
         $this->setPageMapper(new LocationMapper());
+        $this->cacheStorageAdapter = $cacheStorageAdapter;
+        $this->type = Type::listOf($typeRegistry->get('location'));
+        $this->args = [
+            'imdbNumber' => Type::nonNull(Type::int()),
+        ];
     }
 
     /**

@@ -15,11 +15,15 @@ use App\GraphQL\Resolver\ImportImdbMovieResolver;
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
+use Psr\Container\ContainerInterface;
 
-class MutationType extends ObjectType
+class Mutation extends ObjectType
 {
-    public function __construct(TypeRegistry $typeRegistry)
+    public function __construct(ContainerInterface $container)
     {
+
+        /** @var TypeRegistry $typeRegistry */
+        $typeRegistry = $container->get(TypeRegistry::class);
 
         parent::__construct([
             'fields' => [

@@ -10,13 +10,21 @@ namespace App\GraphQL\Wrapper;
 
 
 use ImdbScraper\Mapper\ReleaseMapper;
+use Zend\Cache\Storage\Adapter\AbstractAdapter;
+use App\GraphQL\TypeRegistry;
+use GraphQL\Type\Definition\Type;
 
 class MovieReleasesWrapper extends AbstractPageWrapper
 {
 
-    public function __construct()
+    public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)
     {
         $this->setPageMapper(new ReleaseMapper());
+        $this->cacheStorageAdapter = $cacheStorageAdapter;
+        $this->type = $typeRegistry->get('release');
+        $this->args = [
+            'imdbNumber' => Type::nonNull(Type::int()),
+        ];
     }
 
     /**

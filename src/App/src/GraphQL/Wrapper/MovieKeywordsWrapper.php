@@ -10,13 +10,21 @@ namespace App\GraphQL\Wrapper;
 
 
 use ImdbScraper\Mapper\KeywordMapper;
+use Zend\Cache\Storage\Adapter\AbstractAdapter;
+use App\GraphQL\TypeRegistry;
+use GraphQL\Type\Definition\Type;
 
 class MovieKeywordsWrapper extends AbstractPageWrapper
 {
 
-    public function __construct()
+    public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)
     {
         $this->setPageMapper(new KeywordMapper());
+        $this->cacheStorageAdapter = $cacheStorageAdapter;
+        $this->type = $typeRegistry->get('keywords');
+        $this->args = [
+            'imdbNumber' => Type::nonNull(Type::int()),
+        ];
     }
 
     /**

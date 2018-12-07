@@ -12,13 +12,22 @@ namespace App\GraphQL\Wrapper;
 use ImdbScraper\Iterator\EpisodeIterator;
 use ImdbScraper\Mapper\EpisodeListMapper;
 use ImdbScraper\Model\Episode;
+use Zend\Cache\Storage\Adapter\AbstractAdapter;
+use App\GraphQL\TypeRegistry;
+use GraphQL\Type\Definition\Type;
 
 class EpisodeListWrapper extends AbstractPageWrapper
 {
 
-    public function __construct()
+    public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)
     {
         $this->setPageMapper(new EpisodeListMapper());
+        $this->cacheStorageAdapter = $cacheStorageAdapter;
+        $this->type = Type::listOf($typeRegistry->get('episode'));
+        $this->args = [
+            'imdbNumber' => Type::nonNull(Type::int()),
+            'seasonNumber' => Type::int()
+        ];
     }
 
     /**

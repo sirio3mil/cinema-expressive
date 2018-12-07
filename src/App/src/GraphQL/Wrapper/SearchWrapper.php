@@ -13,21 +13,31 @@ use App\Entity\ImdbNumber;
 use App\Entity\People;
 use App\Entity\RowType;
 use App\Entity\Tape;
+use App\GraphQL\TypeRegistry;
 use Doctrine\ORM\EntityManager;
-use Psr\Container\ContainerInterface;
+use GraphQL\Type\Definition\Type;
+use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use Zend\Db\Adapter\Adapter;
-use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\ResultSet\ResultSet;
 
 class SearchWrapper extends AbstractWrapper
 {
 
-    /** @var ContainerInterface */
-    protected $container;
+    /** @var Adapter */
+    protected $adapter;
 
-    public function __construct(ContainerInterface $container)
+    /** @var EntityManager */
+    protected $entityManager;
+
+    public function __construct(Adapter $adapter, EntityManager $entityManager, AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)
     {
-        $this->container = $container;
+        $this->adapter = $adapter;
+        $this->entityManager = $entityManager;
+        $this->cacheStorageAdapter = $cacheStorageAdapter;
+        $this->type = Type::listOf($typeRegistry->get('searchResult'));
+        $this->args = [
+            'pattern' => Type::nonNull(Type::string())
+        ];
     }
 
     /**
@@ -37,14 +47,9 @@ class SearchWrapper extends AbstractWrapper
      */
     public function getData(array $args): array
     {
-        /** @var Adapter $adapter */
-        $adapter = $this->container->get(AdapterInterface::class);
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->container->get(EntityManager::class);
-
         $sql = "exec dbo.SearchParam ?";
         /** @var ResultSet $stmt */
-        $stmt = $adapter->query($sql, [
+        $stmt = $this->adapter->query($sql, [
             $args['pattern']
         ]);
 
@@ -52,21 +57,21 @@ class SearchWrapper extends AbstractWrapper
 
         foreach ($stmt as $row) {
             /** @var GlobalUniqueObject $object */
-            $object = $entityManager->getRepository(GlobalUniqueObject::class)->findOneBy([
+            $object = $this->entityManager->getRepository(GlobalUniqueObject::class)->findOneBy([
                 "objectId" => $row->objectId
             ]);
             $internalId = null;
             $rowType = $object->getRowType();
             $rowTypeId = $rowType->getRowTypeId();
             /** @var ImdbNumber $imdbNumber */
-            $imdbNumber = $entityManager->getRepository(ImdbNumber::class)->findOneBy([
+            $imdbNumber = $this->entityManager->getRepository(ImdbNumber::class)->findOneBy([
                 "object" => $object
             ]);
             $original = null;
             switch ($rowTypeId) {
                 case RowType::ROW_TYPE_PEOPLE:
                     /** @var People $person */
-                    $person = $entityManager->getRepository(People::class)->findOneBy([
+                    $person = $this->entityManager->getRepository(People::class)->findOneBy([
                         "object" => $object
                     ]);
                     $internalId = $person->getPeopleId();
@@ -74,7 +79,7 @@ class SearchWrapper extends AbstractWrapper
                     break;
                 case RowType::ROW_TYPE_TAPE:
                     /** @var Tape $tape */
-                    $tape = $entityManager->getRepository(Tape::class)->findOneBy([
+                    $tape = $this->entityManager->getRepository(Tape::class)->findOneBy([
                         "object" => $object
                     ]);
                     $internalId = $tape->getTapeId();

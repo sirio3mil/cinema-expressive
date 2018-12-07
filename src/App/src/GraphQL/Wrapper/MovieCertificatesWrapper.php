@@ -9,16 +9,24 @@
 namespace App\GraphQL\Wrapper;
 
 
+use GraphQL\Type\Definition\Type;
 use ImdbScraper\Iterator\CertificateIterator;
 use ImdbScraper\Mapper\ParentalGuideMapper;
 use ImdbScraper\Model\Certificate;
+use Zend\Cache\Storage\Adapter\AbstractAdapter;
+use App\GraphQL\TypeRegistry;
 
 class MovieCertificatesWrapper extends AbstractPageWrapper
 {
 
-    public function __construct()
+    public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)
     {
         $this->setPageMapper(new ParentalGuideMapper());
+        $this->cacheStorageAdapter = $cacheStorageAdapter;
+        $this->type = Type::listOf($typeRegistry->get('certification'));
+        $this->args = [
+            'imdbNumber' => Type::nonNull(Type::int()),
+        ];
     }
 
     /**
