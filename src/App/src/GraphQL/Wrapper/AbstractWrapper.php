@@ -26,50 +26,6 @@ abstract class AbstractWrapper
     protected $args;
 
     /**
-     * @param AbstractAdapter $cacheStorageAdapter
-     * @return AbstractWrapper
-     */
-    public function setCacheStorageAdapter(AbstractAdapter $cacheStorageAdapter): AbstractWrapper
-    {
-        $this->cacheStorageAdapter = $cacheStorageAdapter;
-        return $this;
-    }
-
-    /**
-     * @param ObjectType $type
-     * @return AbstractWrapper
-     */
-    public function setType(ObjectType $type): AbstractWrapper
-    {
-        $this->type = $type;
-        return $this;
-    }
-
-    /**
-     * @return ObjectType
-     */
-    public function getType(): ObjectType
-    {
-        return $this->type;
-    }
-
-    /**
-     * @return array
-     */
-    public function getArgs(): array
-    {
-        return $this->args;
-    }
-
-    /**
-     * @return AbstractAdapter
-     */
-    public function getCacheStorageAdapter(): AbstractAdapter
-    {
-        return $this->cacheStorageAdapter;
-    }
-
-    /**
      * @param array $args
      * @return array
      * @throws \Exception
@@ -82,7 +38,7 @@ abstract class AbstractWrapper
         /** @var ObjectCache $cache */
         $cache = PatternFactory::factory('object', [
             'object' => $this,
-            'storage' => $this->getCacheStorageAdapter()
+            'storage' => $this->cacheStorageAdapter
         ]);
         return $cache->getData($args);
     }
@@ -90,8 +46,8 @@ abstract class AbstractWrapper
     public function getGraphQLType()
     {
         return [
-            'type' => $this->getType(),
-            'args' => $this->getArgs(),
+            'type' => $this->type,
+            'args' => $this->args,
             'resolve' => function ($source, $args) {
                 return $this->getData($args);
             }
