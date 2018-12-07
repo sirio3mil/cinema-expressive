@@ -12,6 +12,7 @@ namespace App\Factory;
 use App\GraphQL\TypeRegistry;
 use App\GraphQL\Wrapper\SearchWrapper;
 use Doctrine\ORM\EntityManager;
+use Psr\Container\ContainerInterface;
 use Zend\Cache\Storage\Adapter\Memcached;
 use Zend\Db\Adapter\Adapter;
 
