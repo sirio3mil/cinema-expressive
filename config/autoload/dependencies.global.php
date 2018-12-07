@@ -18,14 +18,13 @@ return [
         // not require arguments to the constructor. Map a service name to the
         // class name.
         'invokables' => [
-            //App\GraphQL\TypeRegistry::class => App\GraphQL\TypeRegistry::class,
+            App\GraphQL\TypeRegistry::class => App\GraphQL\TypeRegistry::class,
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories'  => [
             Zend\Cache\Storage\Adapter\Memcached::class => App\Factory\MemcachedFactory::class,
             GraphQL\Type\Schema::class => App\Factory\SchemaFactory::class,
             GraphQL\Server\StandardServer::class => App\Factory\StandardServerFactory::class,
-            App\GraphQL\TypeRegistry::class => App\Factory\TypeRegistryFactory::class,
             App\GraphQL\Type\Query::class => App\Factory\QueryFactory::class,
             App\GraphQL\Type\Mutation::class => App\Factory\MutationFactory::class,
             App\GraphQL\Wrapper\SearchWrapper::class => App\Factory\SearchWrapperFactory::class,

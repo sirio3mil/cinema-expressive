@@ -57,12 +57,13 @@ use App\GraphQL\Wrapper\MovieDetailsWrapper;
 use App\GraphQL\Wrapper\MovieKeywordsWrapper;
 use App\GraphQL\Wrapper\MovieLocationsWrapper;
 use App\GraphQL\Wrapper\MovieCreditsWrapper;
+use Zend\Cache\Storage\Adapter\Memcached;
 
 class ImportImdbMovieResolver
 {
 
     /**
-     * @param TypeRegistry $typeRegistry
+     * @param ContainerInterface $container
      * @param array $args
      * @return array
      * @throws NoResultException
@@ -70,12 +71,10 @@ class ImportImdbMovieResolver
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public static function resolve(TypeRegistry $typeRegistry, array $args): array
+    public static function resolve(ContainerInterface $container, array $args): array
     {
         /** @var AbstractAdapter $cacheStorageAdapter */
-        $cacheStorageAdapter = $typeRegistry->getCacheStorageAdapter();
-        /** @var ContainerInterface $container */
-        $container = $typeRegistry->getContainer();
+        $cacheStorageAdapter = $container->get(Memcached::class);
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);
         /** @var RowType $tapeRowType */

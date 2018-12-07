@@ -75,18 +75,15 @@ class EditTapeUserResolver
     }
 
     /**
-     * @param TypeRegistry $typeRegistry
+     * @param ContainerInterface $container
      * @param array $args
      * @return array
      * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public static function resolve(TypeRegistry $typeRegistry, array $args): array
+    public static function resolve(ContainerInterface $container, array $args): array
     {
-
-        /** @var ContainerInterface $container */
-        $container = $typeRegistry->getContainer();
 
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);

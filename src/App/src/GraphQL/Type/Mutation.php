@@ -41,8 +41,8 @@ class Mutation extends ObjectType
                             'tapesUser' => Type::listOf($typeRegistry->get('tapeUser'))
                         ]
                     ]),
-                    'resolve' => function ($source, $args) use ($typeRegistry) {
-                        return EditTapeUserResolver::resolve($typeRegistry, $args);
+                    'resolve' => function ($source, $args) use ($container) {
+                        return EditTapeUserResolver::resolve($container, $args);
                     }
                 ],
                 'importImdbMovie' => [
@@ -55,8 +55,8 @@ class Mutation extends ObjectType
                             'tapeId' => Type::int()
                         ]
                     ]),
-                    'resolve' => function ($source, $args) use ($typeRegistry) {
-                        return ImportImdbMovieResolver::resolve($typeRegistry, $args);
+                    'resolve' => function ($source, $args) use ($container) {
+                        return ImportImdbMovieResolver::resolve($container, $args);
                     }
                 ],
                 'importImdbEpisodeList' => [
@@ -70,8 +70,8 @@ class Mutation extends ObjectType
                             'episodes' => Type::listOf($typeRegistry->get('importedEpisode'))
                         ]
                     ]),
-                    'resolve' => function ($source, $args) use ($typeRegistry) {
-                        return ImportImdbEpisodeListResolver::resolve($typeRegistry, $args);
+                    'resolve' => function ($source, $args) use ($container) {
+                        return ImportImdbEpisodeListResolver::resolve($container, $args);
                     }
                 ]
             ]
