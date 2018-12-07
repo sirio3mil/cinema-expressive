@@ -9,11 +9,7 @@
 namespace App\GraphQL\Type;
 
 
-use App\GraphQL\TypeRegistry;
-use App\GraphQL\Wrapper\AbstractWrapper;
 use App\GraphQL\Wrapper\SearchWrapper;
-use GraphQL\Type\Definition\ObjectType;
-use GraphQL\Type\Definition\Type;
 use App\GraphQL\Wrapper\MovieDetailsWrapper;
 use App\GraphQL\Wrapper\EpisodeListWrapper;
 use App\GraphQL\Wrapper\MovieCreditsWrapper;
@@ -21,9 +17,8 @@ use App\GraphQL\Wrapper\MovieReleasesWrapper;
 use App\GraphQL\Wrapper\MovieKeywordsWrapper;
 use App\GraphQL\Wrapper\MovieLocationsWrapper;
 use App\GraphQL\Wrapper\MovieCertificatesWrapper;
+use GraphQL\Type\Definition\ObjectType;
 use Psr\Container\ContainerInterface;
-use Zend\Cache\Storage\Adapter\AbstractAdapter;
-use Zend\Cache\Storage\Adapter\Memcached;
 
 
 class Query extends ObjectType
