@@ -93,7 +93,7 @@ abstract class AbstractWrapper
             'type' => $this->getType(),
             'args' => $this->getArgs(),
             'resolve' => function ($source, $args) {
-                return $this->getDataInCache($args);
+                return $this->getData($args);
             }
         ];
     }
