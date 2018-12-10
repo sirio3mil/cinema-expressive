@@ -9,36 +9,27 @@
 namespace App\GraphQL\Resolver;
 
 
-use App\GraphQL\TypeRegistry;
 use ImdbScraper\Mapper\CastMapper;
-use Zend\Cache\Storage\Adapter\AbstractAdapter;
-use GraphQL\Type\Definition\Type;
+use Psr\Container\ContainerInterface;
 
 class MovieCastResolver
 {
 
-    public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)
-    {
-        $this->setPageMapper(new CastMapper());
-        $this->cacheStorageAdapter = $cacheStorageAdapter;
-        $this->type = $typeRegistry->get('credits');
-        $this->args = [
-            'imdbNumber' => Type::nonNull(Type::int()),
-        ];
-    }
-
     /**
+     * @param ContainerInterface $container
      * @param array $args
      * @return array
      * @throws \Exception
      */
-    public function getData(array $args): array
+    public static function resolve(ContainerInterface $container, array $args): array
     {
-        $this->pageMapper->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
+        /** @var CastMapper $mapper */
+        $mapper = $container->get(CastMapper::class);
+        $mapper->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
         return [
-            'cast' => $this->pageMapper->getCast(),
-            'writers' => $this->pageMapper->getWriters(),
-            'directors' => $this->pageMapper->getDirectors()
+            'cast' => $mapper->getCast(),
+            'writers' => $mapper->getWriters(),
+            'directors' => $mapper->getDirectors()
         ];
     }
 }

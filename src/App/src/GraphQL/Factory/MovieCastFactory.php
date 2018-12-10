@@ -12,14 +12,23 @@ namespace App\GraphQL\Factory;
 use App\GraphQL\TypeRegistry;
 use App\GraphQL\Resolver\MovieCastResolver;
 use Psr\Container\ContainerInterface;
-use Zend\Cache\Storage\Adapter\Memcached;
+use GraphQL\Type\Definition\Type;
 
 class MovieCastFactory
 {
-    public function __invoke(ContainerInterface $container): MovieCastResolver
+    public function __invoke(ContainerInterface $container): array
     {
-        $cacheStorageAdapter = $container->get(Memcached::class);
+        /** @var TypeRegistry $typeRegistry */
         $typeRegistry = $container->get(TypeRegistry::class);
-        return new MovieCastResolver($cacheStorageAdapter, $typeRegistry);
+
+        return [
+            'type' => $typeRegistry->get('credits'),
+            'args' => [
+                'imdbNumber' => Type::nonNull(Type::int()),
+            ],
+            'resolve' => function ($source, $args) use ($container) {
+                return MovieCastResolver::resolve($container, $args);
+            }
+        ];
     }
 }
