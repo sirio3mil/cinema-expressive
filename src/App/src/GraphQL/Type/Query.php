@@ -9,6 +9,7 @@
 namespace App\GraphQL\Type;
 
 
+use App\GraphQL\Service\SearchService;
 use App\GraphQL\Wrapper\SearchWrapper;
 use App\GraphQL\Wrapper\MovieDetailsWrapper;
 use App\GraphQL\Wrapper\EpisodeListWrapper;
@@ -29,7 +30,8 @@ class Query extends ObjectType
 
         parent::__construct([
             'fields' => [
-                'search' => $container->get(SearchWrapper::class)->getGraphQLType(),
+                'search' => SearchService::toType($container),
+                /*
                 'imdbMovieDetails' => $container->get(MovieDetailsWrapper::class)->getGraphQLType(),
                 'imdbMovieCredits' => $container->get(MovieCreditsWrapper::class)->getGraphQLType(),
                 'imdbMovieReleases' => $container->get(MovieReleasesWrapper::class)->getGraphQLType(),
@@ -37,6 +39,7 @@ class Query extends ObjectType
                 'imdbMovieLocations' => $container->get(MovieLocationsWrapper::class)->getGraphQLType(),
                 'imdbMovieCertifications' => $container->get(MovieCertificatesWrapper::class)->getGraphQLType(),
                 'imdbEpisodeList' => $container->get(EpisodeListWrapper::class)->getGraphQLType()
+                */
             ]
         ]);
     }
