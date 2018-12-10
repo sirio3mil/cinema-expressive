@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Factory;
 
-
 use App\GraphQL\Resolver\MovieKeywordResolver;
 use App\GraphQL\TypeRegistry;
 use Psr\Container\ContainerInterface;

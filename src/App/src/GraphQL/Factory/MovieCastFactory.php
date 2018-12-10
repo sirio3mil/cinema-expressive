@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Factory;
 
-
 use App\GraphQL\TypeRegistry;
 use App\GraphQL\Resolver\MovieCastResolver;
 use Psr\Container\ContainerInterface;

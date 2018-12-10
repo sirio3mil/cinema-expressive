@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Factory;
 
-
 use GraphQL\Server\StandardServer;
 use GraphQL\Type\Schema;
 use Psr\Container\ContainerInterface;

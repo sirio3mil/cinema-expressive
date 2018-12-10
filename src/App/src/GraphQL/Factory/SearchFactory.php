@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Factory;
 
-
 use App\GraphQL\Resolver\SearchResolver;
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\Type;
