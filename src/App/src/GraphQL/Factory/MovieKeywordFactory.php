@@ -12,14 +12,23 @@ namespace App\GraphQL\Factory;
 use App\GraphQL\Resolver\MovieKeywordResolver;
 use App\GraphQL\TypeRegistry;
 use Psr\Container\ContainerInterface;
-use Zend\Cache\Storage\Adapter\Memcached;
+use GraphQL\Type\Definition\Type;
 
 class MovieKeywordFactory
 {
-    public function __invoke(ContainerInterface $container): MovieKeywordResolver
+    public function __invoke(ContainerInterface $container): array
     {
-        $cacheStorageAdapter = $container->get(Memcached::class);
+        /** @var TypeRegistry $typeRegistry */
         $typeRegistry = $container->get(TypeRegistry::class);
-        return new MovieKeywordResolver($cacheStorageAdapter, $typeRegistry);
+
+        return [
+            'type' => $typeRegistry->get('keywords'),
+            'args' => [
+                'imdbNumber' => Type::nonNull(Type::int()),
+            ],
+            'resolve' => function ($source, $args) use ($container) {
+                return MovieKeywordResolver::resolve($container, $args);
+            }
+        ];
     }
 }

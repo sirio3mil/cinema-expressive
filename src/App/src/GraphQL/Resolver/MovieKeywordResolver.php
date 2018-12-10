@@ -10,34 +10,25 @@ namespace App\GraphQL\Resolver;
 
 
 use ImdbScraper\Mapper\KeywordMapper;
-use Zend\Cache\Storage\Adapter\AbstractAdapter;
-use App\GraphQL\TypeRegistry;
-use GraphQL\Type\Definition\Type;
+use Psr\Container\ContainerInterface;
 
 class MovieKeywordResolver
 {
 
-    public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)
-    {
-        $this->setPageMapper(new KeywordMapper());
-        $this->cacheStorageAdapter = $cacheStorageAdapter;
-        $this->type = $typeRegistry->get('keywords');
-        $this->args = [
-            'imdbNumber' => Type::nonNull(Type::int()),
-        ];
-    }
-
     /**
+     * @param ContainerInterface $container
      * @param array $args
      * @return array
      * @throws \Exception
      */
-    public function getData(array $args): array
+    public static function resolve(ContainerInterface $container, array $args): array
     {
-        $this->pageMapper->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
+        /** @var KeywordMapper $mapper */
+        $mapper = $container->get(KeywordMapper::class);
+        $mapper->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
         return [
-            'total' => $this->pageMapper->getTotalKeywords(),
-            'keywords' => $this->pageMapper->getKeywords()
+            'total' => $mapper->getTotalKeywords(),
+            'keywords' => $mapper->getKeywords()
         ];
     }
 }

@@ -21,6 +21,8 @@ return [
             App\GraphQL\TypeRegistry::class => App\GraphQL\TypeRegistry::class,
             ImdbScraper\Mapper\HomeMapper::class => ImdbScraper\Mapper\HomeMapper::class,
             ImdbScraper\Mapper\ReleaseMapper::class => ImdbScraper\Mapper\ReleaseMapper::class,
+            ImdbScraper\Mapper\LocationMapper::class => ImdbScraper\Mapper\LocationMapper::class,
+            ImdbScraper\Mapper\KeywordMapper::class => ImdbScraper\Mapper\KeywordMapper::class,
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories'  => [

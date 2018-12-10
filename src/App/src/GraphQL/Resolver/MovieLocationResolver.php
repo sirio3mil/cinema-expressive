@@ -9,37 +9,28 @@
 namespace App\GraphQL\Resolver;
 
 
-use GraphQL\Type\Definition\Type;
 use ImdbScraper\Iterator\LocationIterator;
 use ImdbScraper\Mapper\LocationMapper;
 use ImdbScraper\Model\Location;
-use Zend\Cache\Storage\Adapter\AbstractAdapter;
-use App\GraphQL\TypeRegistry;
+use Psr\Container\ContainerInterface;
 
 class MovieLocationResolver
 {
 
-    public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)
-    {
-        $this->setPageMapper(new LocationMapper());
-        $this->cacheStorageAdapter = $cacheStorageAdapter;
-        $this->type = Type::listOf($typeRegistry->get('location'));
-        $this->args = [
-            'imdbNumber' => Type::nonNull(Type::int()),
-        ];
-    }
-
     /**
+     * @param ContainerInterface $container
      * @param array $args
      * @return array
      * @throws \Exception
      */
-    public function getData(array $args): array
+    public static function resolve(ContainerInterface $container, array $args): array
     {
         $data = [];
-        $this->pageMapper->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
+        /** @var LocationMapper $mapper */
+        $mapper = $container->get(LocationMapper::class);
+        $mapper->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
         /** @var LocationIterator $locations */
-        $locations = $this->pageMapper->getLocations();
+        $locations = $mapper->getLocations();
         if ($locations->getIterator()->count()) {
             /** @var Location $location */
             foreach ($locations as $location) {
