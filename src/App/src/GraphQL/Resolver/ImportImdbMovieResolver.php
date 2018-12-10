@@ -109,7 +109,7 @@ class ImportImdbMovieResolver
             $entityManager->persist($imdbNumber);
         }
         /** @var array $imdbMovieDetails */
-        $imdbMovieDetails = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieDetailResolver(), $args);
+        $imdbMovieDetails = MovieDetailResolver::resolve($container, $args);
         $tape->setOriginalTitle($imdbMovieDetails['title']);
         $entityManager->persist($tape);
         /** @var SearchValue $searchValue */
@@ -202,7 +202,7 @@ class ImportImdbMovieResolver
         }
         $entityManager->flush();
         /** @var array $imdbMovieKeywords */
-        $imdbMovieKeywords = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieKeywordResolver(), $args);
+        $imdbMovieKeywords = MovieKeywordResolver::resolve($container, $args);
         if ($imdbMovieKeywords && array_key_exists('keywords', $imdbMovieKeywords)) {
             /** @var KeywordIterator $keywords */
             $keywords = $imdbMovieKeywords['keywords'];
@@ -228,7 +228,7 @@ class ImportImdbMovieResolver
             }
         }
         /** @var array $imdbMovieLocations */
-        $imdbMovieLocations = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieLocationResolver(), $args);
+        $imdbMovieLocations = MovieLocationResolver::resolve($container, $args);
         if ($imdbMovieLocations) {
             /** @var ArrayCollection $locations */
             $locations = $tape->getLocations();
@@ -322,7 +322,7 @@ class ImportImdbMovieResolver
             $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
         }
         /** @var array $imdbMovieCredits */
-        $imdbMovieCredits = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCastResolver(), $args);
+        $imdbMovieCredits = MovieCastResolver::resolve($container, $args);
         /** @var CastIterator $castIterator */
         $castIterator = $imdbMovieCredits['cast'];
         if ($castIterator->getIterator()->count()) {
@@ -615,7 +615,7 @@ class ImportImdbMovieResolver
             }
         }
         /** @var array $imdbMovieReleases */
-        $imdbMovieReleases = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieReleaseResolver(), $args);
+        $imdbMovieReleases = MovieReleaseResolver::resolve($container, $args);
         /** @var ReleaseIterator $releaseDates */
         $releaseDates = $imdbMovieReleases['dates'];
         if ($releaseDates->getIterator()->count()) {
@@ -709,7 +709,7 @@ class ImportImdbMovieResolver
             }
         }
         /** @var array $imdbMovieCertifications */
-        $imdbMovieCertifications = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCertificateResolver(), $args);
+        $imdbMovieCertifications = MovieCertificateResolver::resolve($container, $args);
         if ($imdbMovieCertifications) {
             foreach ($imdbMovieCertifications as $data) {
                 /** @var Country $country */

@@ -9,10 +9,7 @@
 namespace App\GraphQL\Resolver;
 
 
-use App\GraphQL\Resolver\EpisodeListResolver;
 use Psr\Container\ContainerInterface;
-use Zend\Cache\Storage\Adapter\AbstractAdapter;
-use Zend\Cache\Storage\Adapter\Memcache;
 
 class ImportImdbEpisodeListResolver
 {
@@ -41,10 +38,8 @@ class ImportImdbEpisodeListResolver
     public static function resolve(ContainerInterface $container, array $args): array
     {
         $episodes = [];
-        /** @var AbstractAdapter $cacheStorageAdapter */
-        $cacheStorageAdapter = $container->get(Memcache::class);
         /** @var array $imdbEpisodeList */
-        $imdbEpisodeList = CachedQueryResolver::resolve($cacheStorageAdapter, new EpisodeListResolver(), $args);
+        $imdbEpisodeList = EpisodeListResolver::resolve($container, $args);
         if ($imdbEpisodeList) {
             $episodes = self::importEpisodes($container, $imdbEpisodeList);
         }
