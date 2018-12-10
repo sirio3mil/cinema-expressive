@@ -11,11 +11,30 @@ namespace App\GraphQL\Factory;
 
 use App\GraphQL\Type\Query;
 use Psr\Container\ContainerInterface;
+use App\GraphQL\Resolver\EpisodeListResolver;
+use App\GraphQL\Resolver\MovieCastResolver;
+use App\GraphQL\Resolver\MovieCertificateResolver;
+use App\GraphQL\Resolver\MovieKeywordResolver;
+use App\GraphQL\Resolver\MovieLocationResolver;
+use App\GraphQL\Resolver\MovieReleaseResolver;
+use App\GraphQL\Resolver\SearchResolver;
+use App\GraphQL\Resolver\MovieDetailResolver;
 
 class QueryFactory
 {
     public function __invoke(ContainerInterface $container): Query
     {
-        return new Query($container);
+        return new Query([
+            'fields' => [
+                'search' => $container->get(SearchResolver::class),
+                'imdbMovieDetails' => $container->get(MovieDetailResolver::class),
+                'imdbMovieCredits' => $container->get(MovieCastResolver::class),
+                'imdbMovieReleases' => $container->get(MovieReleaseResolver::class),
+                'imdbMovieKeywords' => $container->get(MovieKeywordResolver::class),
+                'imdbMovieLocations' => $container->get(MovieLocationResolver::class),
+                'imdbMovieCertifications' => $container->get(MovieCertificateResolver::class),
+                'imdbEpisodeList' => $container->get(EpisodeListResolver::class)
+            ]
+        ]);
     }
 }
