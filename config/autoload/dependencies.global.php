@@ -35,6 +35,7 @@ return [
             App\GraphQL\Wrapper\MovieLocationsWrapper::class => App\Factory\MovieLocationsWrapperFactory::class,
             App\GraphQL\Wrapper\MovieCertificatesWrapper::class => App\Factory\MovieCertificatesWrapperFactory::class,
             App\GraphQL\Wrapper\EpisodeListWrapper::class => App\Factory\EpisodeListWrapperFactory::class,
+            App\GraphQL\Service\SearchService::class => App\GraphQL\Factory\SearchFactory::class,
             MongoDB\Client::class => App\Factory\MongoDBClientFactory::class,
             MongoDB\Driver\Manager::class => App\Factory\MongoDBManagerFactory::class,
             Doctrine\ORM\EntityManager::class => App\Factory\EntityManagerFactory::class

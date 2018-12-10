@@ -30,7 +30,7 @@ class Query extends ObjectType
 
         parent::__construct([
             'fields' => [
-                'search' => SearchService::toType($container),
+                'search' => $container->get(SearchService::class),
                 /*
                 'imdbMovieDetails' => $container->get(MovieDetailsWrapper::class)->getGraphQLType(),
                 'imdbMovieCredits' => $container->get(MovieCreditsWrapper::class)->getGraphQLType(),

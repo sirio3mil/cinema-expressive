@@ -88,24 +88,4 @@ class SearchService
 
         return $results;
     }
-
-    /**
-     * @param ContainerInterface $container
-     * @return array
-     */
-    public static function toType(ContainerInterface $container): array
-    {
-        /** @var TypeRegistry $typeRegistry */
-        $typeRegistry = $container->get(TypeRegistry::class);
-
-        return [
-            'type' => Type::listOf($typeRegistry->get('searchResult')),
-            'args' => [
-                'pattern' => Type::nonNull(Type::string())
-            ],
-            'resolve' => function ($source, $args) use ($container) {
-                return self::resolve($container, $args);
-            }
-        ];
-    }
 }
