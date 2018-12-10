@@ -11,7 +11,6 @@ namespace App\GraphQL\Resolver;
 
 use App\Alias\MongoDBClient;
 use App\Entity\Ranking;
-use App\GraphQL\TypeRegistry;
 use App\Entity\Country;
 use App\Entity\Genre;
 use App\Entity\ImdbNumber;
@@ -36,8 +35,6 @@ use App\Entity\TapePeopleRoleCharacter;
 use App\Entity\TapeTitle;
 use App\Entity\TvShow;
 use App\Entity\TvShowChapter;
-use App\GraphQL\Resolver\MovieCertificateResolver;
-use App\GraphQL\Resolver\MovieReleaseResolver;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
@@ -53,10 +50,6 @@ use ImdbScraper\Model\Keyword;
 use ImdbScraper\Model\Release;
 use Interop\Container\ContainerInterface;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
-use App\GraphQL\Resolver\MovieDetailResolver;
-use App\GraphQL\Resolver\MovieKeywordResolver;
-use App\GraphQL\Resolver\MovieLocationResolver;
-use App\GraphQL\Resolver\MovieCastResolver;
 use Zend\Cache\Storage\Adapter\Memcached;
 
 class ImportImdbMovieResolver

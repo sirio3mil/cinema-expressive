@@ -9,37 +9,28 @@
 namespace App\GraphQL\Resolver;
 
 
-use GraphQL\Type\Definition\Type;
 use ImdbScraper\Iterator\CertificateIterator;
 use ImdbScraper\Mapper\ParentalGuideMapper;
 use ImdbScraper\Model\Certificate;
-use Zend\Cache\Storage\Adapter\AbstractAdapter;
-use App\GraphQL\TypeRegistry;
+use Psr\Container\ContainerInterface;
 
 class MovieCertificateResolver
 {
 
-    public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)
-    {
-        $this->setPageMapper(new ParentalGuideMapper());
-        $this->cacheStorageAdapter = $cacheStorageAdapter;
-        $this->type = Type::listOf($typeRegistry->get('certification'));
-        $this->args = [
-            'imdbNumber' => Type::nonNull(Type::int()),
-        ];
-    }
-
     /**
+     * @param ContainerInterface $container
      * @param array $args
      * @return array
      * @throws \Exception
      */
-    public function getData(array $args): array
+    public static function resolve(ContainerInterface $container, array $args): array
     {
         $data = [];
-        $this->pageMapper->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
+        /** @var ParentalGuideMapper $mapper */
+        $mapper = $container->get(ParentalGuideMapper::class);
+        $mapper->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
         /** @var CertificateIterator $certificates */
-        $certificates = $this->pageMapper->getCertificates();
+        $certificates = $mapper->getCertificates();
         if ($certificates->getIterator()->count()) {
             /** @var Certificate $certificate */
             foreach ($certificates as $certificate) {
