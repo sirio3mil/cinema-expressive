@@ -12,14 +12,24 @@ namespace App\GraphQL\Factory;
 use App\GraphQL\Resolver\EpisodeListResolver;
 use App\GraphQL\TypeRegistry;
 use Psr\Container\ContainerInterface;
-use Zend\Cache\Storage\Adapter\Memcached;
+use GraphQL\Type\Definition\Type;
 
 class EpisodeListFactory
 {
-    public function __invoke(ContainerInterface $container): EpisodeListResolver
+    public function __invoke(ContainerInterface $container): array
     {
-        $cacheStorageAdapter = $container->get(Memcached::class);
+        /** @var TypeRegistry $typeRegistry */
         $typeRegistry = $container->get(TypeRegistry::class);
-        return new EpisodeListResolver($cacheStorageAdapter, $typeRegistry);
+
+        return [
+            'type' => Type::listOf($typeRegistry->get('episode')),
+            'args' => [
+                'imdbNumber' => Type::nonNull(Type::int()),
+                'seasonNumber' => Type::int()
+            ],
+            'resolve' => function ($source, $args) use ($container) {
+                return EpisodeListResolver::resolve($container, $args);
+            }
+        ];
     }
 }

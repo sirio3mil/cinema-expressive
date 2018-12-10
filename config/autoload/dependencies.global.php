@@ -25,6 +25,7 @@ return [
             ImdbScraper\Mapper\KeywordMapper::class => ImdbScraper\Mapper\KeywordMapper::class,
             ImdbScraper\Mapper\ParentalGuideMapper::class => ImdbScraper\Mapper\ParentalGuideMapper::class,
             ImdbScraper\Mapper\CastMapper::class => ImdbScraper\Mapper\CastMapper::class,
+            ImdbScraper\Mapper\EpisodeListMapper::class => ImdbScraper\Mapper\EpisodeListMapper::class,
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories'  => [

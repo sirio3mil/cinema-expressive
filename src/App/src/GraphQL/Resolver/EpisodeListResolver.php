@@ -12,35 +12,25 @@ namespace App\GraphQL\Resolver;
 use ImdbScraper\Iterator\EpisodeIterator;
 use ImdbScraper\Mapper\EpisodeListMapper;
 use ImdbScraper\Model\Episode;
-use Zend\Cache\Storage\Adapter\AbstractAdapter;
-use App\GraphQL\TypeRegistry;
-use GraphQL\Type\Definition\Type;
+use Psr\Container\ContainerInterface;
 
 class EpisodeListResolver
 {
 
-    public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)
-    {
-        $this->setPageMapper(new EpisodeListMapper());
-        $this->cacheStorageAdapter = $cacheStorageAdapter;
-        $this->type = Type::listOf($typeRegistry->get('episode'));
-        $this->args = [
-            'imdbNumber' => Type::nonNull(Type::int()),
-            'seasonNumber' => Type::int()
-        ];
-    }
-
     /**
+     * @param ContainerInterface $container
      * @param array $args
      * @return array
      * @throws \Exception
      */
-    public function getData(array $args): array
+    public static function resolve(ContainerInterface $container, array $args): array
     {
         $data = [];
-        $this->pageMapper->setImdbNumber($args['imdbNumber'])->setSeason($args['seasonNumber'])->setContentFromUrl();
+        /** @var EpisodeListMapper $mapper */
+        $mapper = $container->get(EpisodeListMapper::class);
+        $mapper->setImdbNumber($args['imdbNumber'])->setSeason($args['seasonNumber'])->setContentFromUrl();
         /** @var EpisodeIterator $episodeIterator */
-        $episodeIterator = $this->pageMapper->getEpisodes();
+        $episodeIterator = $mapper->getEpisodes();
         /** @var Episode $episode */
         foreach ($episodeIterator as $episode){
             $data[] = [
