@@ -19,6 +19,7 @@ return [
         // class name.
         'invokables' => [
             App\GraphQL\TypeRegistry::class => App\GraphQL\TypeRegistry::class,
+            ImdbScraper\Mapper\HomeMapper::class => \mdbScraper\Mapper\HomeMapper::class,
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories'  => [
@@ -27,15 +28,14 @@ return [
             GraphQL\Server\StandardServer::class => App\Factory\StandardServerFactory::class,
             App\GraphQL\Type\Query::class => App\Factory\QueryFactory::class,
             App\GraphQL\Type\Mutation::class => App\Factory\MutationFactory::class,
-            App\GraphQL\Wrapper\SearchWrapper::class => App\Factory\SearchWrapperFactory::class,
-            App\GraphQL\Wrapper\MovieDetailsWrapper::class => App\Factory\MovieDetailsWrapperFactory::class,
             App\GraphQL\Wrapper\MovieCreditsWrapper::class => App\Factory\MovieCreditsWrapperFactory::class,
             App\GraphQL\Wrapper\MovieReleasesWrapper::class => App\Factory\MovieCreditsWrapperFactory::class,
             App\GraphQL\Wrapper\MovieKeywordsWrapper::class => App\Factory\MovieKeywordsWrapperFactory::class,
             App\GraphQL\Wrapper\MovieLocationsWrapper::class => App\Factory\MovieLocationsWrapperFactory::class,
             App\GraphQL\Wrapper\MovieCertificatesWrapper::class => App\Factory\MovieCertificatesWrapperFactory::class,
             App\GraphQL\Wrapper\EpisodeListWrapper::class => App\Factory\EpisodeListWrapperFactory::class,
-            App\GraphQL\Service\SearchService::class => App\GraphQL\Factory\SearchFactory::class,
+            App\GraphQL\Resolver\SearchResolver::class => App\GraphQL\Factory\SearchFactory::class,
+            App\GraphQL\Resolver\MovieDetailResolver::class => App\GraphQL\Factory\MovieDetailFactory::class,
             MongoDB\Client::class => App\Factory\MongoDBClientFactory::class,
             MongoDB\Driver\Manager::class => App\Factory\MongoDBManagerFactory::class,
             Doctrine\ORM\EntityManager::class => App\Factory\EntityManagerFactory::class

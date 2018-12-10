@@ -2,19 +2,19 @@
 /**
  * Created by PhpStorm.
  * User: reynier.delarosa
- * Date: 10/12/2018
- * Time: 15:54
+ * Date: 07/12/2018
+ * Time: 12:21
  */
 
 namespace App\GraphQL\Factory;
 
 
-use App\GraphQL\Resolver\SearchResolver;
 use App\GraphQL\TypeRegistry;
-use GraphQL\Type\Definition\Type;
+use App\GraphQL\Resolver\MovieDetailResolver;
+use PHPUnit\Util\Type;
 use Psr\Container\ContainerInterface;
 
-class SearchFactory
+class MovieDetailFactory
 {
     public function __invoke(ContainerInterface $container): array
     {
@@ -22,12 +22,12 @@ class SearchFactory
         $typeRegistry = $container->get(TypeRegistry::class);
 
         return [
-            'type' => Type::listOf($typeRegistry->get('searchResult')),
+            'type' => $typeRegistry->get('movie'),
             'args' => [
-                'pattern' => Type::nonNull(Type::string())
+                'imdbNumber' => Type::nonNull(Type::int()),
             ],
             'resolve' => function ($source, $args) use ($container) {
-                return SearchResolver::resolve($container, $args);
+                return MovieDetailResolver::resolve($container, $args);
             }
         ];
     }

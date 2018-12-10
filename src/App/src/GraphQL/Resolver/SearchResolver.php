@@ -6,7 +6,7 @@
  * Time: 15:02
  */
 
-namespace App\GraphQL\Service;
+namespace App\GraphQL\Resolver;
 
 
 use App\Entity\GlobalUniqueObject;
@@ -19,7 +19,7 @@ use Psr\Container\ContainerInterface;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
 
-class SearchService
+class SearchResolver
 {
     /**
      * @param ContainerInterface $container

@@ -53,7 +53,7 @@ use ImdbScraper\Model\Keyword;
 use ImdbScraper\Model\Release;
 use Interop\Container\ContainerInterface;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
-use App\GraphQL\Wrapper\MovieDetailsWrapper;
+use App\GraphQL\Wrapper\MovieDetailResolver;
 use App\GraphQL\Wrapper\MovieKeywordsWrapper;
 use App\GraphQL\Wrapper\MovieLocationsWrapper;
 use App\GraphQL\Wrapper\MovieCreditsWrapper;
@@ -116,7 +116,7 @@ class ImportImdbMovieResolver
             $entityManager->persist($imdbNumber);
         }
         /** @var array $imdbMovieDetails */
-        $imdbMovieDetails = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieDetailsWrapper(), $args);
+        $imdbMovieDetails = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieDetailResolver(), $args);
         $tape->setOriginalTitle($imdbMovieDetails['title']);
         $entityManager->persist($tape);
         /** @var SearchValue $searchValue */
