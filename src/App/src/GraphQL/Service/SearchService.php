@@ -14,9 +14,8 @@ use App\Entity\ImdbNumber;
 use App\Entity\People;
 use App\Entity\RowType;
 use App\Entity\Tape;
-use App\GraphQL\TypeRegistry;
 use Doctrine\ORM\EntityManager;
-use GraphQL\Type\Definition\Type;
+use Psr\Container\ContainerInterface;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
 
