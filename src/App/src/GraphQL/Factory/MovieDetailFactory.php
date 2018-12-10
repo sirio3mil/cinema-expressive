@@ -11,7 +11,7 @@ namespace App\GraphQL\Factory;
 
 use App\GraphQL\TypeRegistry;
 use App\GraphQL\Resolver\MovieDetailResolver;
-use PHPUnit\Util\Type;
+use GraphQL\Type\Definition\Type;
 use Psr\Container\ContainerInterface;
 
 class MovieDetailFactory
