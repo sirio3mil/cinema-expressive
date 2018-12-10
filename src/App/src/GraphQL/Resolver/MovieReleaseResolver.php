@@ -10,34 +10,25 @@ namespace App\GraphQL\Resolver;
 
 
 use ImdbScraper\Mapper\ReleaseMapper;
-use Zend\Cache\Storage\Adapter\AbstractAdapter;
-use App\GraphQL\TypeRegistry;
-use GraphQL\Type\Definition\Type;
+use Psr\Container\ContainerInterface;
 
 class MovieReleaseResolver
 {
 
-    public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)
-    {
-        $this->setPageMapper(new ReleaseMapper());
-        $this->cacheStorageAdapter = $cacheStorageAdapter;
-        $this->type = $typeRegistry->get('release');
-        $this->args = [
-            'imdbNumber' => Type::nonNull(Type::int()),
-        ];
-    }
-
     /**
+     * @param ContainerInterface $container
      * @param array $args
      * @return array
      * @throws \Exception
      */
-    public function getData(array $args): array
+    public function getData(ContainerInterface $container, array $args): array
     {
-        $this->pageMapper->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
+        /** @var ReleaseMapper $mapper */
+        $mapper = $container->get(ReleaseMapper::class);
+        $mapper->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
         return [
-            'titles' => $this->pageMapper->getAlsoKnownAs(),
-            'dates' => $this->pageMapper->getReleaseDates()
+            'titles' => $mapper->getAlsoKnownAs(),
+            'dates' => $mapper->getReleaseDates()
         ];
     }
 }
