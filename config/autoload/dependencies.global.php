@@ -19,7 +19,7 @@ return [
         // class name.
         'invokables' => [
             App\GraphQL\TypeRegistry::class => App\GraphQL\TypeRegistry::class,
-            ImdbScraper\Mapper\HomeMapper::class => \mdbScraper\Mapper\HomeMapper::class,
+            ImdbScraper\Mapper\HomeMapper::class => ImdbScraper\Mapper\HomeMapper::class,
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories'  => [
