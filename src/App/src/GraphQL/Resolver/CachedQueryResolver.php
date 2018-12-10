@@ -9,14 +9,14 @@
 namespace App\GraphQL\Resolver;
 
 
-use App\GraphQL\Wrapper\AbstractWrapper;
+use App\GraphQL\Resolver\AbstractResolver;
 use Zend\Cache\Pattern\ObjectCache;
 use Zend\Cache\PatternFactory;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
 
 class CachedQueryResolver
 {
-    public static function resolve(AbstractAdapter $adapter, AbstractWrapper $wrapper, array $args)
+    public static function resolve(AbstractAdapter $adapter, AbstractResolver $Resolver, array $args)
     {
 
         /** @var ObjectCache $cache */

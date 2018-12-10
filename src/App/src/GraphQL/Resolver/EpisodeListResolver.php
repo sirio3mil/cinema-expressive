@@ -6,7 +6,7 @@
  * Time: 18:02
  */
 
-namespace App\GraphQL\Wrapper;
+namespace App\GraphQL\Resolver;
 
 
 use ImdbScraper\Iterator\EpisodeIterator;
@@ -16,7 +16,7 @@ use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\Type;
 
-class EpisodeListWrapper extends AbstractPageWrapper
+class EpisodeListResolver
 {
 
     public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)

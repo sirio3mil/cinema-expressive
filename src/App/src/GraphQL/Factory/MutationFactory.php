@@ -6,7 +6,7 @@
  * Time: 11:51
  */
 
-namespace App\Factory;
+namespace App\GraphQL\Factory;
 
 
 use App\GraphQL\Type\Mutation;

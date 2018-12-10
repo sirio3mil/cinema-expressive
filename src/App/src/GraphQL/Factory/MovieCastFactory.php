@@ -3,22 +3,23 @@
  * Created by PhpStorm.
  * User: reynier.delarosa
  * Date: 07/12/2018
- * Time: 12:39
+ * Time: 12:25
  */
 
-namespace App\Factory;
+namespace App\GraphQL\Factory;
+
 
 use App\GraphQL\TypeRegistry;
-use App\GraphQL\Wrapper\MovieLocationsWrapper;
+use App\GraphQL\Resolver\MovieCastResolver;
 use Psr\Container\ContainerInterface;
 use Zend\Cache\Storage\Adapter\Memcached;
 
-class MovieLocationsWrapperFactory
+class MovieCastFactory
 {
-    public function __invoke(ContainerInterface $container): MovieLocationsWrapper
+    public function __invoke(ContainerInterface $container): MovieCastResolver
     {
         $cacheStorageAdapter = $container->get(Memcached::class);
         $typeRegistry = $container->get(TypeRegistry::class);
-        return new MovieLocationsWrapper($cacheStorageAdapter, $typeRegistry);
+        return new MovieCastResolver($cacheStorageAdapter, $typeRegistry);
     }
 }

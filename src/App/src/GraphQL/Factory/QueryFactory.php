@@ -6,7 +6,7 @@
  * Time: 11:43
  */
 
-namespace App\Factory;
+namespace App\GraphQL\Factory;
 
 
 use App\GraphQL\Type\Query;

@@ -3,23 +3,23 @@
  * Created by PhpStorm.
  * User: reynier.delarosa
  * Date: 07/12/2018
- * Time: 12:46
+ * Time: 12:44
  */
 
-namespace App\Factory;
+namespace App\GraphQL\Factory;
 
 
-use App\GraphQL\Wrapper\EpisodeListWrapper;
+use App\GraphQL\Resolver\MovieCertificateResolver;
 use App\GraphQL\TypeRegistry;
 use Psr\Container\ContainerInterface;
 use Zend\Cache\Storage\Adapter\Memcached;
 
-class EpisodeListWrapperFactory
+class MovieCertificateFactory
 {
-    public function __invoke(ContainerInterface $container): EpisodeListWrapper
+    public function __invoke(ContainerInterface $container): MovieCertificateResolver
     {
         $cacheStorageAdapter = $container->get(Memcached::class);
         $typeRegistry = $container->get(TypeRegistry::class);
-        return new EpisodeListWrapper($cacheStorageAdapter, $typeRegistry);
+        return new MovieCertificateResolver($cacheStorageAdapter, $typeRegistry);
     }
 }

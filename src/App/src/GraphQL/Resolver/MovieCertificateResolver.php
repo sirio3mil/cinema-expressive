@@ -6,7 +6,7 @@
  * Time: 17:19
  */
 
-namespace App\GraphQL\Wrapper;
+namespace App\GraphQL\Resolver;
 
 
 use GraphQL\Type\Definition\Type;
@@ -16,7 +16,7 @@ use ImdbScraper\Model\Certificate;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use App\GraphQL\TypeRegistry;
 
-class MovieCertificatesWrapper extends AbstractPageWrapper
+class MovieCertificateResolver
 {
 
     public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)

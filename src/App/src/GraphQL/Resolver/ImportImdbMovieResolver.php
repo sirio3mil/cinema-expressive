@@ -36,8 +36,8 @@ use App\Entity\TapePeopleRoleCharacter;
 use App\Entity\TapeTitle;
 use App\Entity\TvShow;
 use App\Entity\TvShowChapter;
-use App\GraphQL\Wrapper\MovieCertificatesWrapper;
-use App\GraphQL\Wrapper\MovieReleasesWrapper;
+use App\GraphQL\Resolver\MovieCertificateResolver;
+use App\GraphQL\Resolver\MovieReleaseResolver;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
@@ -53,10 +53,10 @@ use ImdbScraper\Model\Keyword;
 use ImdbScraper\Model\Release;
 use Interop\Container\ContainerInterface;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
-use App\GraphQL\Wrapper\MovieDetailResolver;
-use App\GraphQL\Wrapper\MovieKeywordsWrapper;
-use App\GraphQL\Wrapper\MovieLocationsWrapper;
-use App\GraphQL\Wrapper\MovieCreditsWrapper;
+use App\GraphQL\Resolver\MovieDetailResolver;
+use App\GraphQL\Resolver\MovieKeywordResolver;
+use App\GraphQL\Resolver\MovieLocationResolver;
+use App\GraphQL\Resolver\MovieCastResolver;
 use Zend\Cache\Storage\Adapter\Memcached;
 
 class ImportImdbMovieResolver
@@ -209,7 +209,7 @@ class ImportImdbMovieResolver
         }
         $entityManager->flush();
         /** @var array $imdbMovieKeywords */
-        $imdbMovieKeywords = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieKeywordsWrapper(), $args);
+        $imdbMovieKeywords = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieKeywordResolver(), $args);
         if ($imdbMovieKeywords && array_key_exists('keywords', $imdbMovieKeywords)) {
             /** @var KeywordIterator $keywords */
             $keywords = $imdbMovieKeywords['keywords'];
@@ -235,7 +235,7 @@ class ImportImdbMovieResolver
             }
         }
         /** @var array $imdbMovieLocations */
-        $imdbMovieLocations = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieLocationsWrapper(), $args);
+        $imdbMovieLocations = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieLocationResolver(), $args);
         if ($imdbMovieLocations) {
             /** @var ArrayCollection $locations */
             $locations = $tape->getLocations();
@@ -329,7 +329,7 @@ class ImportImdbMovieResolver
             $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
         }
         /** @var array $imdbMovieCredits */
-        $imdbMovieCredits = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCreditsWrapper(), $args);
+        $imdbMovieCredits = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCastResolver(), $args);
         /** @var CastIterator $castIterator */
         $castIterator = $imdbMovieCredits['cast'];
         if ($castIterator->getIterator()->count()) {
@@ -622,7 +622,7 @@ class ImportImdbMovieResolver
             }
         }
         /** @var array $imdbMovieReleases */
-        $imdbMovieReleases = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieReleasesWrapper(), $args);
+        $imdbMovieReleases = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieReleaseResolver(), $args);
         /** @var ReleaseIterator $releaseDates */
         $releaseDates = $imdbMovieReleases['dates'];
         if ($releaseDates->getIterator()->count()) {
@@ -716,7 +716,7 @@ class ImportImdbMovieResolver
             }
         }
         /** @var array $imdbMovieCertifications */
-        $imdbMovieCertifications = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCertificatesWrapper(), $args);
+        $imdbMovieCertifications = CachedQueryResolver::resolve($cacheStorageAdapter, new MovieCertificateResolver(), $args);
         if ($imdbMovieCertifications) {
             foreach ($imdbMovieCertifications as $data) {
                 /** @var Country $country */

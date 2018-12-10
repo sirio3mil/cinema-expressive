@@ -6,7 +6,7 @@
  * Time: 17:04
  */
 
-namespace App\GraphQL\Wrapper;
+namespace App\GraphQL\Resolver;
 
 
 use GraphQL\Type\Definition\Type;
@@ -16,7 +16,7 @@ use ImdbScraper\Model\Location;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use App\GraphQL\TypeRegistry;
 
-class MovieLocationsWrapper extends AbstractPageWrapper
+class MovieLocationResolver
 {
 
     public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)

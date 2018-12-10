@@ -6,7 +6,7 @@
  * Time: 10:58
  */
 
-namespace App\Factory;
+namespace App\GraphQL\Factory;
 
 
 use GraphQL\Server\StandardServer;

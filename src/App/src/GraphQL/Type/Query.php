@@ -9,14 +9,14 @@
 namespace App\GraphQL\Type;
 
 
+use App\GraphQL\Resolver\EpisodeListResolver;
+use App\GraphQL\Resolver\MovieCastResolver;
+use App\GraphQL\Resolver\MovieCertificateResolver;
+use App\GraphQL\Resolver\MovieKeywordResolver;
+use App\GraphQL\Resolver\MovieLocationResolver;
+use App\GraphQL\Resolver\MovieReleaseResolver;
 use App\GraphQL\Resolver\SearchResolver;
 use App\GraphQL\Resolver\MovieDetailResolver;
-use App\GraphQL\Wrapper\EpisodeListWrapper;
-use App\GraphQL\Wrapper\MovieCreditsWrapper;
-use App\GraphQL\Wrapper\MovieReleasesWrapper;
-use App\GraphQL\Wrapper\MovieKeywordsWrapper;
-use App\GraphQL\Wrapper\MovieLocationsWrapper;
-use App\GraphQL\Wrapper\MovieCertificatesWrapper;
 use GraphQL\Type\Definition\ObjectType;
 use Psr\Container\ContainerInterface;
 
@@ -31,14 +31,12 @@ class Query extends ObjectType
             'fields' => [
                 'search' => $container->get(SearchResolver::class),
                 'imdbMovieDetails' => $container->get(MovieDetailResolver::class),
-                /*
-                'imdbMovieCredits' => $container->get(MovieCreditsWrapper::class)->getGraphQLType(),
-                'imdbMovieReleases' => $container->get(MovieReleasesWrapper::class)->getGraphQLType(),
-                'imdbMovieKeywords' => $container->get(MovieKeywordsWrapper::class)->getGraphQLType(),
-                'imdbMovieLocations' => $container->get(MovieLocationsWrapper::class)->getGraphQLType(),
-                'imdbMovieCertifications' => $container->get(MovieCertificatesWrapper::class)->getGraphQLType(),
-                'imdbEpisodeList' => $container->get(EpisodeListWrapper::class)->getGraphQLType()
-                */
+                'imdbMovieCredits' => $container->get(MovieCastResolver::class),
+                'imdbMovieReleases' => $container->get(MovieReleaseResolver::class),
+                'imdbMovieKeywords' => $container->get(MovieKeywordResolver::class),
+                'imdbMovieLocations' => $container->get(MovieLocationResolver::class),
+                'imdbMovieCertifications' => $container->get(MovieCertificateResolver::class),
+                'imdbEpisodeList' => $container->get(EpisodeListResolver::class)
             ]
         ]);
     }

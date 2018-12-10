@@ -3,25 +3,25 @@
  * Created by PhpStorm.
  * User: SYSTEM
  * Date: 19/07/2018
- * Time: 12:23
+ * Time: 13:01
  */
 
-namespace App\GraphQL\Wrapper;
+namespace App\GraphQL\Resolver;
 
 
-use ImdbScraper\Mapper\ReleaseMapper;
+use ImdbScraper\Mapper\KeywordMapper;
 use Zend\Cache\Storage\Adapter\AbstractAdapter;
 use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\Type;
 
-class MovieReleasesWrapper extends AbstractPageWrapper
+class MovieKeywordResolver
 {
 
     public function __construct(AbstractAdapter $cacheStorageAdapter, TypeRegistry $typeRegistry)
     {
-        $this->setPageMapper(new ReleaseMapper());
+        $this->setPageMapper(new KeywordMapper());
         $this->cacheStorageAdapter = $cacheStorageAdapter;
-        $this->type = $typeRegistry->get('release');
+        $this->type = $typeRegistry->get('keywords');
         $this->args = [
             'imdbNumber' => Type::nonNull(Type::int()),
         ];
@@ -36,8 +36,8 @@ class MovieReleasesWrapper extends AbstractPageWrapper
     {
         $this->pageMapper->setImdbNumber($args['imdbNumber'])->setContentFromUrl();
         return [
-            'titles' => $this->pageMapper->getAlsoKnownAs(),
-            'dates' => $this->pageMapper->getReleaseDates()
+            'total' => $this->pageMapper->getTotalKeywords(),
+            'keywords' => $this->pageMapper->getKeywords()
         ];
     }
 }
