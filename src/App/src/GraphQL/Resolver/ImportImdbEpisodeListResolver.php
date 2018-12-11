@@ -43,8 +43,6 @@ class ImportImdbEpisodeListResolver
         if ($imdbEpisodeList) {
             $episodes = self::importEpisodes($container, $imdbEpisodeList);
         }
-        return [
-            'episodes' => $episodes
-        ];
+        return $episodes;
     }
 }
