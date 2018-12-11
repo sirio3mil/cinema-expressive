@@ -11,11 +11,20 @@ namespace App\GraphQL\Factory;
 
 use App\GraphQL\Type\Mutation;
 use Psr\Container\ContainerInterface;
+use App\GraphQL\Resolver\EditTapeUserResolver;
+use App\GraphQL\Resolver\ImportImdbEpisodeListResolver;
+use App\GraphQL\Resolver\ImportImdbMovieResolver;
 
 class MutationFactory
 {
     public function __invoke(ContainerInterface $container): Mutation
     {
-        return new Mutation($container);
+        return new Mutation([
+            'fields' => [
+                'editTapeUser' => $container->get(EditTapeUserResolver::class),
+                'importImdbMovie' => $container->get(ImportImdbMovieResolver::class),
+                'importImdbEpisodeList' => $container->get(ImportImdbEpisodeListResolver::class)
+            ]
+        ]);
     }
 }

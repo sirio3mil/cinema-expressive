@@ -42,6 +42,9 @@ return [
             App\GraphQL\Resolver\EpisodeListResolver::class => App\GraphQL\Factory\EpisodeListFactory::class,
             App\GraphQL\Resolver\SearchResolver::class => App\GraphQL\Factory\SearchFactory::class,
             App\GraphQL\Resolver\MovieDetailResolver::class => App\GraphQL\Factory\MovieDetailFactory::class,
+            App\GraphQL\Resolver\EditTapeUserResolver::class => App\GraphQL\Factory\EditTapeUserFactory::class,
+            App\GraphQL\Resolver\ImportImdbMovieResolver::class => App\GraphQL\Factory\ImportImdbMovieFactory::class,
+            App\GraphQL\Resolver\ImportImdbEpisodeListResolver::class => App\GraphQL\Factory\ImportImdbEpisodeListFactory::class,
             MongoDB\Client::class => App\Factory\MongoDBClientFactory::class,
             MongoDB\Driver\Manager::class => App\Factory\MongoDBManagerFactory::class,
             Doctrine\ORM\EntityManager::class => App\Factory\EntityManagerFactory::class
