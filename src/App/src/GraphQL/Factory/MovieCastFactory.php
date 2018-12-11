@@ -21,7 +21,7 @@ class MovieCastFactory
         $typeRegistry = $container->get(TypeRegistry::class);
 
         return [
-            'type' => $typeRegistry->get('credits'),
+            'type' => $typeRegistry->get('crew'),
             'args' => [
                 'imdbNumber' => Type::nonNull(Type::int()),
             ],
