@@ -1,9 +1,0 @@
-query ($imdbNumber: Int!, $seasonNumber: Int!) {
-  imdbEpisodeList(imdbNumber: $imdbNumber, seasonNumber: $seasonNumber){
-    title
-    imdbNumber
-    date
-    isFullDate
-    episodeNumber
-  }
-}

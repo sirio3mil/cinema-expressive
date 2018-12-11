@@ -25,14 +25,7 @@ class QueryFactory
     {
         return new Query([
             'fields' => [
-                'search' => $container->get(SearchResolver::class),
-                'imdbMovieDetails' => $container->get(MovieDetailResolver::class),
-                'imdbMovieCredits' => $container->get(MovieCastResolver::class),
-                'imdbMovieReleases' => $container->get(MovieReleaseResolver::class),
-                'imdbMovieKeywords' => $container->get(MovieKeywordResolver::class),
-                'imdbMovieLocations' => $container->get(MovieLocationResolver::class),
-                'imdbMovieCertifications' => $container->get(MovieCertificateResolver::class),
-                'imdbEpisodeList' => $container->get(EpisodeListResolver::class)
+                'search' => $container->get(SearchResolver::class)
             ]
         ]);
     }

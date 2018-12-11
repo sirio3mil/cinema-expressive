@@ -1,5 +1,0 @@
-mutation ($imdbNumber: Int!) {
-  importImdbMovie(imdbNumber: $imdbNumber){
-    tapeId
-  }
-}
