@@ -21,7 +21,7 @@ class MovieReleaseResolver
      * @return array
      * @throws \Exception
      */
-    public function getData(ContainerInterface $container, array $args): array
+    public static function resolve(ContainerInterface $container, array $args): array
     {
         /** @var ReleaseMapper $mapper */
         $mapper = $container->get(ReleaseMapper::class);
