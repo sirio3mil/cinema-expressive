@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Factory;
 
-
 use App\GraphQL\Type\Mutation;
 use Psr\Container\ContainerInterface;
 use App\GraphQL\Resolver\EditTapeUserResolver;

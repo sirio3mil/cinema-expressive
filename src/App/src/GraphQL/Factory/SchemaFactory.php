@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Factory;
 
-
 use App\GraphQL\Type\Mutation;
 use App\GraphQL\Type\Query;
 use GraphQL\Type\Schema;
