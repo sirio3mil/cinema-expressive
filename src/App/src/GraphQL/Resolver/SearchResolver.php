@@ -109,8 +109,9 @@ class SearchResolver
                                 $histories = [];
                                 /** @var TapeUserHistory $tapeUserHistory */
                                 foreach ($tapeUserHistories as $tapeUserHistory) {
-                                    $histories['statusId'] = $tapeUserHistory->getTapeUserStatus()->getTapeUserStatusId();
-                                    $histories['status'] = $tapeUserHistory->getTapeUserStatus()->getStatusDescription();
+                                    $history = [];
+                                    $history['statusId'] = $tapeUserHistory->getTapeUserStatus()->getTapeUserStatusId();
+                                    $history['status'] = $tapeUserHistory->getTapeUserStatus()->getStatusDescription();
                                     /** @var TapeUserHistoryDetail $tapeUserHistoryDetail */
                                     $tapeUserHistoryDetail = $entityManager->getRepository(TapeUserHistoryDetail::class)->findOneBy([
                                         "tapeUserHistory" => $tapeUserHistory
@@ -126,8 +127,9 @@ class SearchResolver
                                             $details['placeId'] = $place->getPlaceId();
                                             $details['place'] = $place->getDescription();
                                         }
-                                        $histories['details'] = $details;
+                                        $history['details'] = $details;
                                     }
+                                    $histories[] = $history;
                                 }
                                 $userObject['history'] = $histories;
                             }
