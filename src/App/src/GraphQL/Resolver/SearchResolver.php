@@ -38,10 +38,9 @@ class SearchResolver
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);
 
-        $userLogged = filter_var($args['userId'], FILTER_VALIDATE_INT);
         /** @var User|null $user */
         $user = null;
-        if ($userLogged){
+        if (array_key_exists('userId', $args) && filter_var($args['userId'], FILTER_VALIDATE_INT)) {
             $user = $entityManager->getRepository(User::class)->findOneBy([
                 "userId" => $args['userId']
             ]);
@@ -85,19 +84,19 @@ class SearchResolver
                     ]);
                     $internalId = $tape->getTapeId();
                     $original = $tape->getOriginalTitle();
-                    if($user){
+                    if ($user) {
                         /** @var TapeUser $tapeUser */
                         $tapeUser = $entityManager->getRepository(TapeUser::class)->findOneBy([
                             "user" => $user,
                             "tape" => $tape
                         ]);
-                        if($tapeUser) {
+                        if ($tapeUser) {
                             $userObject['objectUserId'] = $tapeUser->getTapeUserId();
                             /** @var TapeUserScore $tapeScore */
                             $tapeScore = $entityManager->getRepository(TapeUserScore::class)->findOneBy([
                                 "tapeUser" => $tapeUser
                             ]);
-                            if($tapeScore){
+                            if ($tapeScore) {
                                 $userObject['score'] = $tapeScore->getScore();
                                 $userObject['scoreDate'] = $tapeScore->getCreatedAt()->format("d/m/Y");
                             }
@@ -105,10 +104,10 @@ class SearchResolver
                             $tapeUserHistories = $entityManager->getRepository(TapeUserHistory::class)->findBy([
                                 "tapeUser" => $tapeUser
                             ]);
-                            if($tapeUserHistories){
+                            if ($tapeUserHistories) {
                                 $histories = [];
                                 /** @var TapeUserHistory $tapeUserHistory */
-                                foreach ($tapeUserHistories as $tapeUserHistory){
+                                foreach ($tapeUserHistories as $tapeUserHistory) {
                                     $histories['statusId'] = $tapeUserHistory->getTapeUserStatus()->getTapeUserStatusId();
                                     $histories['status'] = $tapeUserHistory->getTapeUserStatus()->getStatusDescription();
                                     $details = [];
