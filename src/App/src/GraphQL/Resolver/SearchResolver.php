@@ -12,6 +12,7 @@ namespace App\GraphQL\Resolver;
 use App\Entity\GlobalUniqueObject;
 use App\Entity\ImdbNumber;
 use App\Entity\People;
+use App\Entity\Place;
 use App\Entity\RowType;
 use App\Entity\Tape;
 use App\Entity\TapeUser;
@@ -116,10 +117,14 @@ class SearchResolver
                                         "tapeUserHistory" => $tapeUserHistory
                                     ]);
                                     $details['date'] = $tapeUserHistoryDetail->getCreatedAt()->format("d/m/Y");
-                                    $details['placeId'] = $tapeUserHistoryDetail->getPlace()->getPlaceId();
                                     $details['visible'] = $tapeUserHistoryDetail->getVisible();
                                     $details['exported'] = $tapeUserHistoryDetail->getExported();
-                                    $details['place'] = $tapeUserHistoryDetail->getPlace()->getDescription();
+                                    /** @var Place $place */
+                                    $place = $tapeUserHistoryDetail->getPlace();
+                                    if ($place) {
+                                        $details['placeId'] = $place->getPlaceId();
+                                        $details['place'] = $place->getDescription();
+                                    }
                                     $histories['details'] = $details;
                                 }
                                 $userObject['history'] = $histories;
