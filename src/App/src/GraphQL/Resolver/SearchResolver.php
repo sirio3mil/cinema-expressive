@@ -111,21 +111,23 @@ class SearchResolver
                                 foreach ($tapeUserHistories as $tapeUserHistory) {
                                     $histories['statusId'] = $tapeUserHistory->getTapeUserStatus()->getTapeUserStatusId();
                                     $histories['status'] = $tapeUserHistory->getTapeUserStatus()->getStatusDescription();
-                                    $details = [];
                                     /** @var TapeUserHistoryDetail $tapeUserHistoryDetail */
                                     $tapeUserHistoryDetail = $entityManager->getRepository(TapeUserHistoryDetail::class)->findOneBy([
                                         "tapeUserHistory" => $tapeUserHistory
                                     ]);
-                                    $details['date'] = $tapeUserHistoryDetail->getCreatedAt()->format("d/m/Y");
-                                    $details['visible'] = $tapeUserHistoryDetail->getVisible();
-                                    $details['exported'] = $tapeUserHistoryDetail->getExported();
-                                    /** @var Place $place */
-                                    $place = $tapeUserHistoryDetail->getPlace();
-                                    if ($place) {
-                                        $details['placeId'] = $place->getPlaceId();
-                                        $details['place'] = $place->getDescription();
+                                    if ($tapeUserHistoryDetail) {
+                                        $details = [];
+                                        $details['date'] = $tapeUserHistoryDetail->getCreatedAt()->format("d/m/Y");
+                                        $details['visible'] = $tapeUserHistoryDetail->getVisible();
+                                        $details['exported'] = $tapeUserHistoryDetail->getExported();
+                                        /** @var Place $place */
+                                        $place = $tapeUserHistoryDetail->getPlace();
+                                        if ($place) {
+                                            $details['placeId'] = $place->getPlaceId();
+                                            $details['place'] = $place->getDescription();
+                                        }
+                                        $histories['details'] = $details;
                                     }
-                                    $histories['details'] = $details;
                                 }
                                 $userObject['history'] = $histories;
                             }
