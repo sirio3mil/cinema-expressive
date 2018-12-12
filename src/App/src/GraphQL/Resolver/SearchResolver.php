@@ -112,6 +112,7 @@ class SearchResolver
                                     $history = [];
                                     $history['statusId'] = $tapeUserHistory->getTapeUserStatus()->getTapeUserStatusId();
                                     $history['status'] = $tapeUserHistory->getTapeUserStatus()->getStatusDescription();
+                                    $history['date'] = $tapeUserHistory->getCreatedAt()->format("d/m/Y");
                                     /** @var TapeUserHistoryDetail $tapeUserHistoryDetail */
                                     $tapeUserHistoryDetail = $entityManager->getRepository(TapeUserHistoryDetail::class)->findOneBy([
                                         "tapeUserHistory" => $tapeUserHistory

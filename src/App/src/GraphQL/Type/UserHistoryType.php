@@ -21,6 +21,7 @@ class UserHistoryType extends ObjectType
             'fields' => [
                 'status' => Type::string(),
                 'statusId' => Type::int(),
+                'date' => Type::string(),
                 'details' => $typeRegistry->get('userHistoryDetail')
             ]
         ]);
