@@ -8,12 +8,13 @@
 
 namespace App\GraphQL\Type;
 
+use App\GraphQL\TypeRegistry;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
 class SearchResultType extends ObjectType
 {
-    public function __construct()
+    public function __construct(TypeRegistry $typeRegistry)
     {
         parent::__construct([
             'fields' => [
@@ -23,7 +24,8 @@ class SearchResultType extends ObjectType
                 'rowType' => Type::string(),
                 'internalId' => Type::int(),
                 'imdbNumber' => Type::int(),
-                'original' => Type::string()
+                'original' => Type::string(),
+                'userObject' => $typeRegistry->get('userObject')
             ]
         ]);
     }

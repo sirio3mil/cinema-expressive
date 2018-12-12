@@ -23,7 +23,8 @@ class SearchFactory
         return [
             'type' => Type::listOf($typeRegistry->get('searchResult')),
             'args' => [
-                'pattern' => Type::nonNull(Type::string())
+                'pattern' => Type::nonNull(Type::string()),
+                'userId' => Type::int()
             ],
             'resolve' => function ($source, $args) use ($container) {
                 return SearchResolver::resolve($container, $args);
