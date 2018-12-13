@@ -19,7 +19,7 @@ class TapeDefaultValue implements CinemaEntity
      * @var Tape
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Tape", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="Tape", inversedBy="tapeDefaultValue", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
      */
     protected $tape;
