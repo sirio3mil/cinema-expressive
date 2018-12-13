@@ -28,7 +28,7 @@ class TapeDefaultValue implements CinemaEntity
      * @var SearchValue
      *
      * @ORM\ManyToOne(targetEntity="SearchValue", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="searchValueId", referencedColumnName="searchValueId")
+     * @ORM\JoinColumn(name="titleSearchValueId", referencedColumnName="searchValueId")
      */
     private $title;
 
