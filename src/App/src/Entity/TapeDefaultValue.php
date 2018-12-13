@@ -13,7 +13,16 @@ use Doctrine\ORM\Mapping as ORM;
 class TapeDefaultValue implements CinemaEntity
 {
 
-    use TapeRelatedPrimary, CountryRelated;
+    use TapeRelated, CountryRelated;
+
+    /**
+     * @var Tape
+     *
+     * @ORM\Id
+     * @ORM\OneToOne(targetEntity="Tape", inversedBy="tapeDefaultValue", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
+     */
+    protected $tape;
 
     /**
      * @var SearchValue

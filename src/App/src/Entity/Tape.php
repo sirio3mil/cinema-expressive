@@ -116,6 +116,15 @@ class Tape implements CinemaEntity
     private $tags;
 
     /**
+     * @var TapeDefaultValue
+     *
+     * @ORM\Id
+     * @ORM\OneToOne(targetEntity="TapeDefaultValue", mappedBy="tape", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
+     */
+    protected $tapeDefaultValue;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -358,5 +367,23 @@ class Tape implements CinemaEntity
     public function __toString(): string
     {
         return strval($this->getTapeId());
+    }
+
+    /**
+     * @param TapeDefaultValue $tapeDefaultValue
+     * @return Tape
+     */
+    public function setTapeDefaultValue(TapeDefaultValue $tapeDefaultValue): Tape
+    {
+        $this->tapeDefaultValue = $tapeDefaultValue;
+        return $this;
+    }
+
+    /**
+     * @return TapeDefaultValue
+     */
+    public function getTapeDefaultValue(): TapeDefaultValue
+    {
+        return $this->tapeDefaultValue;
     }
 }
