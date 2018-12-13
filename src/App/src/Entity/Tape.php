@@ -118,7 +118,6 @@ class Tape implements CinemaEntity
     /**
      * @var TapeDefaultValue
      *
-     * @ORM\Id
      * @ORM\OneToOne(targetEntity="TapeDefaultValue", mappedBy="tape", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
      */
