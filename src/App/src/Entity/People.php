@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class People implements CinemaEntity
 {
 
-    use CreationDate, ObjectRelatedColumn;
+    use CreationDate, ObjectRelated;
 
     /**
      * @var int
@@ -29,6 +29,14 @@ class People implements CinemaEntity
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $peopleId;
+
+    /**
+     * @var GlobalUniqueObject
+     *
+     * @ORM\OneToOne(targetEntity="GlobalUniqueObject", inversedBy="people")
+     * @ORM\JoinColumn(name="objectId", referencedColumnName="objectId")
+     */
+    protected $object;
 
     /**
      * @var string

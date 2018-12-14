@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Tape implements CinemaEntity
 {
 
-    use CreationDate, ObjectRelatedColumn;
+    use CreationDate, ObjectRelated;
 
     /**
      * @var int
@@ -31,6 +31,14 @@ class Tape implements CinemaEntity
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $tapeId;
+
+    /**
+     * @var GlobalUniqueObject
+     *
+     * @ORM\OneToOne(targetEntity="GlobalUniqueObject", inversedBy="tape")
+     * @ORM\JoinColumn(name="objectId", referencedColumnName="objectId")
+     */
+    protected $object;
 
     /**
      * @var string

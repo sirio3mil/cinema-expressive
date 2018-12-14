@@ -65,6 +65,20 @@ class GlobalUniqueObject implements CinemaEntity
      */
     protected $ranking;
 
+    /**
+     * @var People
+     *
+     * @ORM\OneToOne(targetEntity="People", mappedBy="object")
+     */
+    protected $people;
+
+    /**
+     * @var Tape
+     *
+     * @ORM\OneToOne(targetEntity="Tape", mappedBy="object")
+     */
+    protected $tape;
+
 
     /**
      * @return UuidInterface
@@ -145,5 +159,41 @@ class GlobalUniqueObject implements CinemaEntity
     public function getRanking(): Ranking
     {
         return $this->ranking;
+    }
+
+    /**
+     * @param People $people
+     * @return GlobalUniqueObject
+     */
+    public function setPeople(People $people): GlobalUniqueObject
+    {
+        $this->people = $people->setObject($this);
+        return $this;
+    }
+
+    /**
+     * @return People
+     */
+    public function getPeople(): People
+    {
+        return $this->people;
+    }
+
+    /**
+     * @param Tape $tape
+     * @return GlobalUniqueObject
+     */
+    public function setTape(Tape $tape): GlobalUniqueObject
+    {
+        $this->tape = $tape->setObject($this);
+        return $this;
+    }
+
+    /**
+     * @return Tape
+     */
+    public function getTape(): Tape
+    {
+        return $this->tape;
     }
 }
