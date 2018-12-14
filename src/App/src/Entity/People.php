@@ -44,6 +44,13 @@ class People implements CinemaEntity
     private $fullName;
 
     /**
+     * @var PeopleDetail
+     *
+     * @ORM\OneToOne(targetEntity="PeopleDetail", mappedBy="people")
+     */
+    protected $detail;
+
+    /**
      * @return int
      */
     public function getPeopleId(): int
@@ -68,5 +75,23 @@ class People implements CinemaEntity
     public function getFullName(): string
     {
         return $this->fullName;
+    }
+
+    /**
+     * @param PeopleDetail $detail
+     * @return People
+     */
+    public function setDetail(PeopleDetail $detail): People
+    {
+        $this->detail = $detail->setPeople($this);
+        return $this;
+    }
+
+    /**
+     * @return PeopleDetail
+     */
+    public function getDetail(): PeopleDetail
+    {
+        return $this->detail;
     }
 }

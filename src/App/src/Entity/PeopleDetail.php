@@ -20,7 +20,7 @@ class PeopleDetail implements CinemaEntity
      * @var People
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="People", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="People", inversedBy="detail", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="peopleId", referencedColumnName="peopleId")
      */
     private $people;
