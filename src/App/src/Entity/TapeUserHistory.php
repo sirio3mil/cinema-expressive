@@ -49,7 +49,7 @@ class TapeUserHistory implements CinemaEntity
     /**
      * @var TapeUserHistoryDetail
      *
-     * @ORM\OneToMany(targetEntity="TapeUserHistoryDetail", mappedBy="tapeUserHistory")
+     * @ORM\OneToOne(targetEntity="TapeUserHistoryDetail", mappedBy="tapeUserHistory")
      */
     protected $detail;
 
