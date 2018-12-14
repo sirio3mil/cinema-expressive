@@ -97,14 +97,14 @@ class SearchResolver
                             $history = $tapeUser->getHistory();
                             if ($history) {
                                 $items = [];
-                                /** @var TapeUserHistory $row */
-                                foreach ($history as $row) {
+                                /** @var TapeUserHistory $tapeUserHistory */
+                                foreach ($history as $tapeUserHistory) {
                                     $item = [];
-                                    $item['statusId'] = $row->getTapeUserStatus()->getTapeUserStatusId();
-                                    $item['status'] = $row->getTapeUserStatus()->getStatusDescription();
-                                    $item['date'] = $row->getCreatedAt()->format("d/m/Y");
+                                    $item['statusId'] = $tapeUserHistory->getTapeUserStatus()->getTapeUserStatusId();
+                                    $item['status'] = $tapeUserHistory->getTapeUserStatus()->getStatusDescription();
+                                    $item['date'] = $tapeUserHistory->getCreatedAt()->format("d/m/Y");
                                     /** @var TapeUserHistoryDetail $tapeUserHistoryDetail */
-                                    $tapeUserHistoryDetail = $row->getDetail();
+                                    $tapeUserHistoryDetail = $tapeUserHistory->getDetail();
                                     if ($tapeUserHistoryDetail) {
                                         $details = [];
                                         $details['date'] = $tapeUserHistoryDetail->getCreatedAt()->format("d/m/Y");
