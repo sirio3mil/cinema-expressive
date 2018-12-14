@@ -14,7 +14,16 @@ use Doctrine\ORM\Mapping as ORM;
 class TvShowChapter implements CinemaEntity
 {
 
-    use CreationDate, TapeRelatedPrimary;
+    use CreationDate, TapeRelated;
+
+    /**
+     * @var Tape
+     *
+     * @ORM\Id
+     * @ORM\OneToOne(targetEntity="Tape", inversedBy="tvShowChapter", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
+     */
+    protected $tape;
 
     /**
      * @@var TvShow

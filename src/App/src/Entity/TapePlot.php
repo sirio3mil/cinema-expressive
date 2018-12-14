@@ -13,7 +13,16 @@ use Doctrine\ORM\Mapping as ORM;
 class TapePlot implements CinemaEntity
 {
 
-    use TapeRelatedPrimary;
+    use TapeRelated;
+
+    /**
+     * @var Tape
+     *
+     * @ORM\Id
+     * @ORM\OneToOne(targetEntity="Tape", inversedBy="plot", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
+     */
+    protected $tape;
 
     /**
      * @var string

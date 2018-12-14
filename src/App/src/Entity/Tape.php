@@ -118,9 +118,37 @@ class Tape implements CinemaEntity
     /**
      * @var TapeDefaultValue
      *
-     * @ORM\OneToOne(targetEntity="TapeDefaultValue", mappedBy="tape", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="TapeDefaultValue", mappedBy="tape")
      */
-    protected $tapeDefaultValue;
+    protected $default;
+
+    /**
+     * @var TapeDetail
+     *
+     * @ORM\OneToOne(targetEntity="TapeDetail", mappedBy="tape")
+     */
+    protected $detail;
+
+    /**
+     * @var TapePlot
+     *
+     * @ORM\OneToOne(targetEntity="TapePlot", mappedBy="tape")
+     */
+    protected $plot;
+
+    /**
+     * @var TvShow
+     *
+     * @ORM\OneToOne(targetEntity="TvShow", mappedBy="tape")
+     */
+    protected $tvShow;
+
+    /**
+     * @var TvShowChapter
+     *
+     * @ORM\OneToOne(targetEntity="TvShowChapter", mappedBy="tape")
+     */
+    protected $tvShowChapter;
 
     /**
      * Constructor
@@ -151,7 +179,7 @@ class Tape implements CinemaEntity
     public function setOriginalTitle(string $originalTitle): Tape
     {
         $this->originalTitle = $originalTitle;
-    
+
         return $this;
     }
 
@@ -170,7 +198,7 @@ class Tape implements CinemaEntity
     public function addCountry(Country $country): Tape
     {
         $this->countries[] = $country;
-    
+
         return $this;
     }
 
@@ -198,7 +226,7 @@ class Tape implements CinemaEntity
     public function addGenre(Genre $genre): Tape
     {
         $this->genres[] = $genre;
-    
+
         return $this;
     }
 
@@ -226,7 +254,7 @@ class Tape implements CinemaEntity
     public function addLanguage(Language $language): Tape
     {
         $this->languages[] = $language;
-    
+
         return $this;
     }
 
@@ -254,7 +282,7 @@ class Tape implements CinemaEntity
     public function addLocation(Location $location): Tape
     {
         $this->locations[] = $location;
-    
+
         return $this;
     }
 
@@ -282,7 +310,7 @@ class Tape implements CinemaEntity
     public function addProducer(Producer $producer): Tape
     {
         $this->producers[] = $producer;
-    
+
         return $this;
     }
 
@@ -310,7 +338,7 @@ class Tape implements CinemaEntity
     public function addTag(Tag $tag): Tape
     {
         $this->tags[] = $tag;
-    
+
         return $this;
     }
 
@@ -368,20 +396,93 @@ class Tape implements CinemaEntity
     }
 
     /**
-     * @param TapeDefaultValue $tapeDefaultValue
+     * @param TapeDefaultValue $default
      * @return Tape
      */
-    public function setTapeDefaultValue(TapeDefaultValue $tapeDefaultValue): Tape
+    public function setDefault(TapeDefaultValue $default): Tape
     {
-        $this->tapeDefaultValue = $tapeDefaultValue->setTape($this);
+        $this->default = $default->setTape($this);
         return $this;
     }
 
     /**
      * @return TapeDefaultValue
      */
-    public function getTapeDefaultValue(): TapeDefaultValue
+    public function getDefault(): TapeDefaultValue
     {
-        return $this->tapeDefaultValue;
+        return $this->default;
+    }
+
+    /**
+     * @param TapeDetail $detail
+     * @return Tape
+     */
+    public function setDetail(TapeDetail $detail): Tape
+    {
+        $this->detail = $detail->setTape($this);
+        return $this;
+    }
+
+    /**
+     * @return TapeDetail
+     */
+    public function getDetail(): TapeDetail
+    {
+        return $this->detail;
+    }
+
+    /**
+     * @param TapePlot $plot
+     * @return Tape
+     */
+    public function setPlot(TapePlot $plot): Tape
+    {
+        $this->plot = $plot->setTape($this);
+        return $this;
+    }
+
+    /**
+     * @return TapePlot
+     */
+    public function getPlot(): TapePlot
+    {
+        return $this->plot;
+    }
+
+    /**
+     * @param TvShow $tvShow
+     * @return Tape
+     */
+    public function setTvShow(TvShow $tvShow): Tape
+    {
+        $this->tvShow = $tvShow->setTape($this);
+        return $this;
+    }
+
+    /**
+     * @return TvShow
+     */
+    public function getTvShow(): TvShow
+    {
+        return $this->tvShow;
+    }
+
+
+    /**
+     * @param TvShowChapter $tvShowChapter
+     * @return Tape
+     */
+    public function setTvShowChapter(TvShowChapter $tvShowChapter): Tape
+    {
+        $this->tvShowChapter = $tvShowChapter->setTape($this);
+        return $this;
+    }
+
+    /**
+     * @return TvShowChapter
+     */
+    public function getTvShowChapter(): TvShowChapter
+    {
+        return $this->tvShowChapter;
     }
 }

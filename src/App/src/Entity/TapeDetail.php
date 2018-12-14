@@ -14,7 +14,16 @@ use Doctrine\ORM\Mapping as ORM;
 class TapeDetail implements CinemaEntity
 {
 
-    use CreationDate, Upgradeable, TapeRelatedPrimary;
+    use CreationDate, Upgradeable, TapeRelated;
+
+    /**
+     * @var Tape
+     *
+     * @ORM\Id
+     * @ORM\OneToOne(targetEntity="Tape", inversedBy="detail", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
+     */
+    protected $tape;
 
     /**
      * @var int
