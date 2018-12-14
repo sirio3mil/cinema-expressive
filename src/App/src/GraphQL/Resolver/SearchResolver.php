@@ -88,29 +88,23 @@ class SearchResolver
                         if ($tapeUser) {
                             $userObject['objectUserId'] = $tapeUser->getTapeUserId();
                             /** @var TapeUserScore $tapeScore */
-                            $tapeScore = $entityManager->getRepository(TapeUserScore::class)->findOneBy([
-                                "tapeUser" => $tapeUser
-                            ]);
+                            $tapeScore = $tapeUser->getScore();
                             if ($tapeScore) {
                                 $userObject['score'] = $tapeScore->getScore();
                                 $userObject['scoreDate'] = $tapeScore->getCreatedAt()->format("d/m/Y");
                             }
-                            /** @var TapeUserHistory[] $tapeUserHistories */
-                            $tapeUserHistories = $entityManager->getRepository(TapeUserHistory::class)->findBy([
-                                "tapeUser" => $tapeUser
-                            ]);
-                            if ($tapeUserHistories) {
-                                $histories = [];
-                                /** @var TapeUserHistory $tapeUserHistory */
-                                foreach ($tapeUserHistories as $tapeUserHistory) {
-                                    $history = [];
-                                    $history['statusId'] = $tapeUserHistory->getTapeUserStatus()->getTapeUserStatusId();
-                                    $history['status'] = $tapeUserHistory->getTapeUserStatus()->getStatusDescription();
-                                    $history['date'] = $tapeUserHistory->getCreatedAt()->format("d/m/Y");
+                            /** @var TapeUserHistory[] $history */
+                            $history = $tapeUser->getHistory();
+                            if ($history) {
+                                $items = [];
+                                /** @var TapeUserHistory $row */
+                                foreach ($history as $row) {
+                                    $item = [];
+                                    $item['statusId'] = $row->getTapeUserStatus()->getTapeUserStatusId();
+                                    $item['status'] = $row->getTapeUserStatus()->getStatusDescription();
+                                    $item['date'] = $row->getCreatedAt()->format("d/m/Y");
                                     /** @var TapeUserHistoryDetail $tapeUserHistoryDetail */
-                                    $tapeUserHistoryDetail = $entityManager->getRepository(TapeUserHistoryDetail::class)->findOneBy([
-                                        "tapeUserHistory" => $tapeUserHistory
-                                    ]);
+                                    $tapeUserHistoryDetail = $row->getDetail();
                                     if ($tapeUserHistoryDetail) {
                                         $details = [];
                                         $details['date'] = $tapeUserHistoryDetail->getCreatedAt()->format("d/m/Y");
@@ -122,11 +116,11 @@ class SearchResolver
                                             $details['placeId'] = $place->getPlaceId();
                                             $details['place'] = $place->getDescription();
                                         }
-                                        $history['details'] = $details;
+                                        $item['details'] = $details;
                                     }
-                                    $histories[] = $history;
+                                    $items[] = $item;
                                 }
-                                $userObject['history'] = $histories;
+                                $userObject['history'] = $items;
                             }
                         }
                     }

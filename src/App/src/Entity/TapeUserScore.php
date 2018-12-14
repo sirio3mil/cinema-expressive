@@ -26,7 +26,7 @@ class TapeUserScore implements CinemaEntity
      * @var TapeUser
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="TapeUser", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="TapeUser", inversedBy="score", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapeUserId", referencedColumnName="tapeUserId")
      */
     private $tapeUser;

@@ -20,7 +20,7 @@ class TapeUserHistoryDetail implements CinemaEntity
      * @var TapeUserHistory
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="TapeUserHistory", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="TapeUserHistory", inversedBy="detail", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapeUserHistoryId", referencedColumnName="tapeUserHistoryId")
      */
     private $tapeUserHistory;

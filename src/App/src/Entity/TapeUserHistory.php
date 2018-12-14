@@ -33,7 +33,7 @@ class TapeUserHistory implements CinemaEntity
     /**
      * @var TapeUser
      *
-     * @ORM\ManyToOne(targetEntity="TapeUser", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="TapeUser", inversedBy="history", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapeUserId", referencedColumnName="tapeUserId")
      */
     private $tapeUser;
@@ -45,6 +45,13 @@ class TapeUserHistory implements CinemaEntity
      * @ORM\JoinColumn(name="tapeUserStatusId", referencedColumnName="tapeUserStatusId")
      */
     private $tapeUserStatus;
+
+    /**
+     * @var TapeUserHistoryDetail
+     *
+     * @ORM\OneToMany(targetEntity="TapeUserHistoryDetail", mappedBy="tapeUserHistory")
+     */
+    protected $detail;
 
 
     /**
@@ -91,5 +98,23 @@ class TapeUserHistory implements CinemaEntity
     public function getTapeUserStatus(): TapeUserStatus
     {
         return $this->tapeUserStatus;
+    }
+
+    /**
+     * @param TapeUserHistoryDetail $detail
+     * @return TapeUserHistory
+     */
+    public function setDetail(TapeUserHistoryDetail $detail): TapeUserHistory
+    {
+        $this->detail = $detail->setTapeUserHistory($this);
+        return $this;
+    }
+
+    /**
+     * @return TapeUserHistoryDetail
+     */
+    public function getDetail(): TapeUserHistoryDetail
+    {
+        return $this->detail;
     }
 }
