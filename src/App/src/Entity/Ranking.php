@@ -19,7 +19,16 @@ use Doctrine\ORM\Mapping as ORM;
 class Ranking implements CinemaEntity
 {
 
-    use ObjectRelatedPrimary;
+    use ObjectRelated;
+
+    /**
+     * @var GlobalUniqueObject
+     *
+     * @ORM\Id
+     * @ORM\OneToOne(targetEntity="GlobalUniqueObject", inversedBy="ranking", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="objectId", referencedColumnName="objectId")
+     */
+    protected $object;
 
     /**
      * @var int

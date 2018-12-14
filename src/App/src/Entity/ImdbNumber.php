@@ -13,7 +13,16 @@ use Doctrine\ORM\Mapping as ORM;
 class ImdbNumber implements CinemaEntity
 {
 
-    use ObjectRelatedPrimary;
+    use ObjectRelated;
+
+    /**
+     * @var GlobalUniqueObject
+     *
+     * @ORM\Id
+     * @ORM\OneToOne(targetEntity="GlobalUniqueObject", inversedBy="imdbNumber", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="objectId", referencedColumnName="objectId")
+     */
+    protected $object;
 
     /**
      * @var int

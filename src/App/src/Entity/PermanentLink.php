@@ -13,7 +13,16 @@ use Doctrine\ORM\Mapping as ORM;
 class PermanentLink implements CinemaEntity
 {
 
-    use ObjectRelatedPrimary;
+    use ObjectRelated;
+
+    /**
+     * @var GlobalUniqueObject
+     *
+     * @ORM\Id
+     * @ORM\OneToOne(targetEntity="GlobalUniqueObject", inversedBy="permanentLink", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="objectId", referencedColumnName="objectId")
+     */
+    protected $object;
 
     /**
      * @var string
