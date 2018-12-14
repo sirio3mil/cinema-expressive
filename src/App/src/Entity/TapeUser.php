@@ -103,7 +103,7 @@ class TapeUser implements CinemaEntity
     /**
      * @return TapeUserScore
      */
-    public function getScore(): TapeUserScore
+    public function getScore(): ?TapeUserScore
     {
         return $this->score;
     }
