@@ -64,25 +64,19 @@ class SearchResolver
             $rowType = $object->getRowType();
             $rowTypeId = $rowType->getRowTypeId();
             /** @var ImdbNumber $imdbNumber */
-            $imdbNumber = $entityManager->getRepository(ImdbNumber::class)->findOneBy([
-                "object" => $object
-            ]);
+            $imdbNumber = $object->getImdbNumber();
             $original = null;
             $userObject = [];
             switch ($rowTypeId) {
                 case RowType::ROW_TYPE_PEOPLE:
                     /** @var People $person */
-                    $person = $entityManager->getRepository(People::class)->findOneBy([
-                        "object" => $object
-                    ]);
+                    $person = $object->getPeople();
                     $internalId = $person->getPeopleId();
                     $original = $person->getFullName();
                     break;
                 case RowType::ROW_TYPE_TAPE:
                     /** @var Tape $tape */
-                    $tape = $entityManager->getRepository(Tape::class)->findOneBy([
-                        "object" => $object
-                    ]);
+                    $tape = $object->getTape();
                     $internalId = $tape->getTapeId();
                     $original = $tape->getOriginalTitle();
                     if ($user) {
