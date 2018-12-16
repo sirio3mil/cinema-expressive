@@ -16,11 +16,11 @@ use Doctrine\ORM\Mapping as ORM;
 class TapeUser implements CinemaEntity
 {
 
-    use CreationDate, TapeRelatedColumn;
-    
+    use CreationDate, TapeRelated;
+
     /**
      * @var int
-     * 
+     *
      * @ORM\Id
      * @ORM\Column(
      *     type="bigint",
@@ -31,6 +31,14 @@ class TapeUser implements CinemaEntity
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $tapeUserId;
+
+    /**
+     * @var Tape
+     *
+     * @ORM\ManyToOne(targetEntity="Tape", inversedBy="users", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
+     */
+    protected $tape;
 
     /**
      * @var User
@@ -50,7 +58,7 @@ class TapeUser implements CinemaEntity
     /**
      * @var Collection
      *
-     * @ORM\OneToMany(targetEntity="TapeUserHistory", mappedBy="tapeUser", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="TapeUserHistory", mappedBy="tapeUser", fetch="EXTRA_LAZY", cascade={"persist", "remove"})
      */
     protected $history;
 
@@ -78,7 +86,7 @@ class TapeUser implements CinemaEntity
     public function setUser(User $user): TapeUser
     {
         $this->user = $user;
-    
+
         return $this;
     }
 
@@ -116,7 +124,7 @@ class TapeUser implements CinemaEntity
     {
         $this->history = $history;
         /** @var TapeUserHistory $item */
-        foreach ($history as $item){
+        foreach ($history as $item) {
             $item->setTapeUser($this);
         }
         return $this;

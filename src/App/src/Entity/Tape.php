@@ -159,6 +159,13 @@ class Tape implements CinemaEntity
     protected $tvShowChapter;
 
     /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="TapeUser", mappedBy="tape", fetch="EXTRA_LAZY", cascade={"persist", "remove"})
+     */
+    protected $users;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -170,6 +177,7 @@ class Tape implements CinemaEntity
         $this->producers = new ArrayCollection();
         $this->tags = new ArrayCollection();
         $this->sounds = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -492,5 +500,46 @@ class Tape implements CinemaEntity
     public function getTvShowChapter(): TvShowChapter
     {
         return $this->tvShowChapter;
+    }
+
+    /**
+     * @param Collection $users
+     * @return Tape
+     */
+    public function setUsers(Collection $users): Tape
+    {
+        $this->users = $users;
+        /** @var TapeUser $item */
+        foreach ($users as $item) {
+            $item->setTape($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    /**
+     * @param TapeUser $tapeUser
+     * @return Tape
+     */
+    public function addUser(TapeUser $tapeUser): Tape
+    {
+        $this->users[] = $tapeUser->setTape($this);
+        return $this;
+    }
+
+    /**
+     * @param TapeUser $tapeUser
+     * @return bool
+     */
+    public function removeUser(TapeUser $tapeUser): bool
+    {
+        return $this->users->removeElement($tapeUser);
     }
 }

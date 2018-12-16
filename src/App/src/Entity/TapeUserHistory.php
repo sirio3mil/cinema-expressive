@@ -15,10 +15,10 @@ class TapeUserHistory implements CinemaEntity
 {
 
     use CreationDate;
-    
+
     /**
      * @var int
-     * 
+     *
      * @ORM\Id
      * @ORM\Column(
      *     type="bigint",
@@ -69,7 +69,7 @@ class TapeUserHistory implements CinemaEntity
     public function setTapeUser(TapeUser $tapeUser): TapeUserHistory
     {
         $this->tapeUser = $tapeUser;
-    
+
         return $this;
     }
 
@@ -88,7 +88,7 @@ class TapeUserHistory implements CinemaEntity
     public function setTapeUserStatus(TapeUserStatus $tapeUserStatus): TapeUserHistory
     {
         $this->tapeUserStatus = $tapeUserStatus;
-    
+
         return $this;
     }
 
