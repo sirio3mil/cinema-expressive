@@ -123,40 +123,34 @@ class EditTapeUserResolver
                 $tapeUser = new TapeUser();
                 $tapeUser->setTape($tape);
                 $tapeUser->setUser($user);
-                $entityManager->persist($tapeUser);
-                $entityManager->flush();
             }
             /** @var TapeUserHistory $tapeUserHistory */
             $tapeUserHistory = $tapeUser->getHistoryByStatus($tapeUserStatus);
             if (!$tapeUserHistory) {
                 $tapeUserHistory = new TapeUserHistory();
-                $tapeUserHistory->setTapeUser($tapeUser);
                 $tapeUserHistory->setTapeUserStatus($tapeUserStatus);
-                $entityManager->persist($tapeUserHistory);
-                $entityManager->flush();
+                $tapeUser->addHistory($tapeUserHistory);
             }
             if ($place) {
                 /** @var TapeUserHistoryDetail $tapeUserHistoryDetail */
                 $tapeUserHistoryDetail = $tapeUserHistory->getDetail();
                 if (!$tapeUserHistoryDetail) {
                     $tapeUserHistoryDetail = new TapeUserHistoryDetail();
-                    $tapeUserHistoryDetail->setTapeUserHistory($tapeUserHistory);
                     $tapeUserHistoryDetail->setPlace($place);
-                    $entityManager->persist($tapeUserHistoryDetail);
-                    $entityManager->flush();
+                    $tapeUserHistory->setDetail($tapeUserHistoryDetail);
                 }
                 if ($downloaded) {
                     /** @var TapeUserHistory $tapeUserHistoryDownloaded */
                     $tapeUserHistoryDownloaded = $tapeUser->getHistoryByStatus($tapeUserStatusDownloaded);
                     if (!$tapeUserHistoryDownloaded) {
                         $tapeUserHistoryDownloaded = new TapeUserHistory();
-                        $tapeUserHistoryDownloaded->setTapeUser($tapeUser);
                         $tapeUserHistoryDownloaded->setTapeUserStatus($tapeUserStatusDownloaded);
-                        $entityManager->persist($tapeUserHistoryDownloaded);
-                        $entityManager->flush();
+                        $tapeUser->addHistory($tapeUserHistoryDownloaded);
                     }
                 }
             }
+            $entityManager->persist($tapeUser);
+            $entityManager->flush();
             $tapesUser[] = [
                 'tapeUserId' => $tapeUser->getTapeUserId(),
                 'tapeUserHistoryId' => $tapeUserHistory->getTapeUserHistoryId()
