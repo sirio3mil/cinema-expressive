@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\LazyCriteriaCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -551,9 +552,14 @@ class Tape implements CinemaEntity
     public function getUser(User $user): ?TapeUser
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("user", $user))
+            ->where(Criteria::expr()->eq("userId", $user->getUserId()))
             ->setFirstResult(0)
             ->setMaxResults(1);
-        return $this->getUsers()->matching($criteria);
+        /** @var LazyCriteriaCollection $elements */
+        $elements = $this->getUsers()->matching($criteria);
+        if ($elements->count()) {
+            return $elements->first();
+        }
+        return null;
     }
 }
