@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -541,5 +542,18 @@ class Tape implements CinemaEntity
     public function removeUser(TapeUser $tapeUser): bool
     {
         return $this->users->removeElement($tapeUser);
+    }
+
+    /**
+     * @param User $user
+     * @return TapeUser|null
+     */
+    public function getUser(User $user): ?TapeUser
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("user", $user))
+            ->setFirstResult(0)
+            ->setMaxResults(1);
+        return $this->getUsers()->matching($criteria);
     }
 }

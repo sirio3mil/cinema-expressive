@@ -81,10 +81,7 @@ class SearchResolver
                     $original = $tape->getOriginalTitle();
                     if ($user) {
                         /** @var TapeUser $tapeUser */
-                        $tapeUser = $entityManager->getRepository(TapeUser::class)->findOneBy([
-                            "user" => $user,
-                            "tape" => $tape
-                        ]);
+                        $tapeUser = $tape->getUser($user);
                         if ($tapeUser) {
                             $userObject['objectUserId'] = $tapeUser->getTapeUserId();
                             /** @var TapeUserScore $tapeScore */
