@@ -136,9 +136,9 @@ class EditTapeUserResolver
                 $tapeUserHistoryDetail = $tapeUserHistory->getDetail();
                 if (!$tapeUserHistoryDetail) {
                     $tapeUserHistoryDetail = new TapeUserHistoryDetail();
-                    $tapeUserHistoryDetail->setPlace($place);
                     $tapeUserHistory->setDetail($tapeUserHistoryDetail);
                 }
+                $tapeUserHistoryDetail->setPlace($place);
                 if ($downloaded) {
                     /** @var TapeUserHistory $tapeUserHistoryDownloaded */
                     $tapeUserHistoryDownloaded = $tapeUser->getHistoryByStatus($tapeUserStatusDownloaded);
