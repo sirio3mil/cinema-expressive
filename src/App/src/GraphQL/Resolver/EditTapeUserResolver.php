@@ -78,7 +78,6 @@ class EditTapeUserResolver
      * @param ContainerInterface $container
      * @param array $args
      * @return array
-     * @throws \Doctrine\ORM\NonUniqueResultException
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -87,64 +86,39 @@ class EditTapeUserResolver
 
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);
-
         $tapes = array_unique(EditTapeUserResolver::getTapes($entityManager, $args));
-
         /** @var User $user */
         $user = $entityManager->getRepository(User::class)->find($args['userId']);
-
         if (!$user) {
             throw new \InvalidArgumentException('User not found');
         }
-
         /** @var TapeUserStatus $tapeUserStatus */
         $tapeUserStatus = $entityManager->getRepository(TapeUserStatus::class)->find($args['tapeUserStatusId']);
-
         if (!$tapeUserStatus) {
             throw new \InvalidArgumentException('Tape user status not found');
         }
-
         $place = null;
-
         $downloaded = false;
-
         $tapeUserStatusDownloaded = null;
-
         if (!empty($args['placeId'])) {
-
             /** @var Place $place */
             $place = $entityManager->getRepository(Place::class)->find($args['placeId']);
-
             if (!$place) {
                 throw new \InvalidArgumentException('Place not found');
             }
-
             if ($place->getPlaceId() == Place::DOWNLOADED) {
-
                 /** @var TapeUserStatus $tapeUserStatusDownloaded */
                 $tapeUserStatusDownloaded = $entityManager->getRepository(TapeUserStatus::class)->find(TapeUserStatus::DOWNLOADED);
-
                 if ($tapeUserStatusDownloaded) {
                     $downloaded = true;
                 }
-
             }
-
         }
-
         $tapesUser = [];
-
         /** @var Tape $tape */
         foreach ($tapes as $tape) {
-
-            /** @var Query $query */
-            $query = $entityManager->createQuery('SELECT i FROM App\Entity\TapeUser i WHERE i.tape = :tape AND i.user = :user');
-            $query->setParameters([
-                'tape' => $tape,
-                'user' => $user
-            ]);
             /** @var TapeUser $tapeUser */
-            $tapeUser = $query->getOneOrNullResult();
+            $tapeUser = $tape->getUser($user);
             if (!$tapeUser) {
                 $tapeUser = new TapeUser();
                 $tapeUser->setTape($tape);
@@ -152,15 +126,8 @@ class EditTapeUserResolver
                 $entityManager->persist($tapeUser);
                 $entityManager->flush();
             }
-
-            /** @var Query $query */
-            $query = $entityManager->createQuery('SELECT i FROM App\Entity\TapeUserHistory i WHERE i.tapeUser = :tapeUser AND i.tapeUserStatus = :tapeUserStatus');
-            $query->setParameters([
-                'tapeUser' => $tapeUser,
-                'tapeUserStatus' => $tapeUserStatus
-            ]);
             /** @var TapeUserHistory $tapeUserHistory */
-            $tapeUserHistory = $query->getOneOrNullResult();
+            $tapeUserHistory = $tapeUser->getHistoryByStatus($tapeUserStatus);
             if (!$tapeUserHistory) {
                 $tapeUserHistory = new TapeUserHistory();
                 $tapeUserHistory->setTapeUser($tapeUser);
@@ -168,14 +135,9 @@ class EditTapeUserResolver
                 $entityManager->persist($tapeUserHistory);
                 $entityManager->flush();
             }
-
             if ($place) {
-
                 /** @var TapeUserHistoryDetail $tapeUserHistoryDetail */
-                $tapeUserHistoryDetail = $entityManager->getRepository(TapeUserHistoryDetail::class)->findOneBy([
-                    'tapeUserHistory' => $tapeUserHistory
-                ]);
-
+                $tapeUserHistoryDetail = $tapeUserHistory->getDetail();
                 if (!$tapeUserHistoryDetail) {
                     $tapeUserHistoryDetail = new TapeUserHistoryDetail();
                     $tapeUserHistoryDetail->setTapeUserHistory($tapeUserHistory);
@@ -183,17 +145,9 @@ class EditTapeUserResolver
                     $entityManager->persist($tapeUserHistoryDetail);
                     $entityManager->flush();
                 }
-
                 if ($downloaded) {
-
-                    /** @var Query $query */
-                    $query = $entityManager->createQuery('SELECT i FROM App\Entity\TapeUserHistory i WHERE i.tapeUser = :tapeUser AND i.tapeUserStatus = :tapeUserStatus');
-                    $query->setParameters([
-                        'tapeUser' => $tapeUser,
-                        'tapeUserStatus' => $tapeUserStatusDownloaded
-                    ]);
                     /** @var TapeUserHistory $tapeUserHistoryDownloaded */
-                    $tapeUserHistoryDownloaded = $query->getOneOrNullResult();
+                    $tapeUserHistoryDownloaded = $tapeUser->getHistoryByStatus($tapeUserStatusDownloaded);
                     if (!$tapeUserHistoryDownloaded) {
                         $tapeUserHistoryDownloaded = new TapeUserHistory();
                         $tapeUserHistoryDownloaded->setTapeUser($tapeUser);
@@ -201,17 +155,13 @@ class EditTapeUserResolver
                         $entityManager->persist($tapeUserHistoryDownloaded);
                         $entityManager->flush();
                     }
-
                 }
-
             }
-
             $tapesUser[] = [
                 'tapeUserId' => $tapeUser->getTapeUserId(),
                 'tapeUserHistoryId' => $tapeUserHistory->getTapeUserHistoryId()
             ];
         }
-
         return $tapesUser;
     }
 }

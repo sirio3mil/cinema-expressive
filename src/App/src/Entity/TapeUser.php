@@ -139,6 +139,24 @@ class TapeUser implements CinemaEntity
     }
 
     /**
+     * @param TapeUserStatus $tapeUserStatus
+     * @return TapeUserHistory|null
+     */
+    public function getHistoryByStatus(TapeUserStatus $tapeUserStatus): ?TapeUserHistory
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("tapeUserStatus", $tapeUserStatus))
+            ->setFirstResult(0)
+            ->setMaxResults(1);
+        /** @var LazyCriteriaCollection $elements */
+        $elements = $this->getHistory()->matching($criteria);
+        if ($elements->count()) {
+            return $elements->first();
+        }
+        return null;
+    }
+
+    /**
      * @param TapeUserHistory $history
      * @return TapeUser
      */
