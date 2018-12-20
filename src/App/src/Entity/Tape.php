@@ -552,7 +552,7 @@ class Tape implements CinemaEntity
     public function getUser(User $user): ?TapeUser
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("userId", $user->getUserId()))
+            ->where(Criteria::expr()->eq("user", $user))
             ->setFirstResult(0)
             ->setMaxResults(1);
         /** @var LazyCriteriaCollection $elements */
