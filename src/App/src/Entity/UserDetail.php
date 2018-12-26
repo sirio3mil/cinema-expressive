@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 /**
  * Class UserDetail
@@ -23,7 +24,7 @@ class UserDetail implements CinemaEntity
     private $user;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(
      *     type="datetime",
@@ -83,10 +84,10 @@ class UserDetail implements CinemaEntity
 
 
     /**
-     * @param \DateTime $access
+     * @param DateTime $access
      * @return UserDetail
      */
-    public function setAccess(\DateTime $access): UserDetail
+    public function setAccess(DateTime $access): UserDetail
     {
         $this->access = $access;
     
@@ -94,9 +95,9 @@ class UserDetail implements CinemaEntity
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getAccess(): \DateTime
+    public function getAccess(): DateTime
     {
         return $this->access;
     }

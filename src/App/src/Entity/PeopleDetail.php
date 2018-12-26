@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 /**
  * Class PeopleDetail
@@ -51,7 +52,7 @@ class PeopleDetail implements CinemaEntity
     private $havePhoto = false;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(
      *     type="date",
@@ -62,7 +63,7 @@ class PeopleDetail implements CinemaEntity
     private $birthDate;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(
      *     type="date",
@@ -162,10 +163,10 @@ class PeopleDetail implements CinemaEntity
     }
 
     /**
-     * @param \DateTime|null $birthDate
+     * @param DateTime|null $birthDate
      * @return PeopleDetail
      */
-    public function setBirthDate(?\DateTime $birthDate): PeopleDetail
+    public function setBirthDate(?DateTime $birthDate): PeopleDetail
     {
         $this->birthDate = $birthDate;
     
@@ -173,18 +174,18 @@ class PeopleDetail implements CinemaEntity
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
-    public function getBirthDate(): ?\DateTime
+    public function getBirthDate(): ?DateTime
     {
         return $this->birthDate;
     }
 
     /**
-     * @param \DateTime|null $deathDate
+     * @param DateTime|null $deathDate
      * @return PeopleDetail
      */
-    public function setDeathDate(?\DateTime $deathDate): PeopleDetail
+    public function setDeathDate(?DateTime $deathDate): PeopleDetail
     {
         $this->deathDate = $deathDate;
     
@@ -192,9 +193,9 @@ class PeopleDetail implements CinemaEntity
     }
 
     /**
-     * @return \DateTime|null
+     * @return DateTime|null
      */
-    public function getDeathDate(): ?\DateTime
+    public function getDeathDate(): ?DateTime
     {
         return $this->deathDate;
     }

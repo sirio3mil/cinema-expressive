@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 /**
  * Class Premiere
@@ -31,7 +32,7 @@ class Premiere implements CinemaEntity
     private $premiereId;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(
      *     type="date",
@@ -64,10 +65,10 @@ class Premiere implements CinemaEntity
     }
 
     /**
-     * @param \DateTime $date
+     * @param DateTime $date
      * @return Premiere
      */
-    public function setDate(\DateTime $date): Premiere
+    public function setDate(DateTime $date): Premiere
     {
         $this->date = $date;
     
@@ -75,9 +76,9 @@ class Premiere implements CinemaEntity
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getDate(): \DateTime
+    public function getDate(): DateTime
     {
         return $this->date;
     }
