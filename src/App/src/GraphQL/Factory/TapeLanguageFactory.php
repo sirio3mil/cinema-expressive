@@ -8,6 +8,7 @@
 
 namespace App\GraphQL\Factory;
 
+use App\GraphQL\Resolver\TapeLanguageResolver;
 use GraphQL\Type\Definition\Type;
 use Psr\Container\ContainerInterface;
 
@@ -21,7 +22,7 @@ class TapeLanguageFactory
                 'tapeId' => Type::nonNull(Type::int()),
             ],
             'resolve' => function ($source, $args) use ($container) {
-                return MovieDetailResolver::resolve($container, $args);
+                return TapeLanguageResolver::resolve($container, $args);
             }
         ];
     }
