@@ -8,7 +8,10 @@
 
 namespace App\GraphQL\Factory;
 
+use App\Entity\Language;
 use App\GraphQL\Resolver\TapeLanguageResolver;
+use Doctrine\ORM\EntityManager;
+use GraphQL\Doctrine\Types;
 use GraphQL\Type\Definition\Type;
 use Psr\Container\ContainerInterface;
 
@@ -16,8 +19,13 @@ class TapeLanguageFactory
 {
     public function __invoke(ContainerInterface $container): array
     {
+        /** @var EntityManager $entityManager */
+        $entityManager = $container->get(EntityManager::class);
+
+        $types = new Types($entityManager);
+
         return [
-            'type' => Type::listOf(Type::string()),
+            'type' => Type::listOf($types->getOutput(Language::class)),
             'args' => [
                 'tapeId' => Type::nonNull(Type::int()),
             ],
