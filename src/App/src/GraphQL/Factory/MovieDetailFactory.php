@@ -9,11 +9,11 @@
 namespace App\GraphQL\Factory;
 
 use App\GraphQL\TypeRegistry;
-use App\GraphQL\Resolver\ImdbMovieDetailResolver;
+use App\GraphQL\Resolver\MovieDetailResolver;
 use GraphQL\Type\Definition\Type;
 use Psr\Container\ContainerInterface;
 
-class ImdbMovieDetailFactory
+class MovieDetailFactory
 {
     public function __invoke(ContainerInterface $container): array
     {
@@ -23,10 +23,10 @@ class ImdbMovieDetailFactory
         return [
             'type' => $typeRegistry->get('movie'),
             'args' => [
-                'imdbNumber' => Type::nonNull(Type::int()),
+                'tapeId' => Type::nonNull(Type::int()),
             ],
             'resolve' => function ($source, $args) use ($container) {
-                return ImdbMovieDetailResolver::resolve($container, $args);
+                return MovieDetailResolver::resolve($container, $args);
             }
         ];
     }

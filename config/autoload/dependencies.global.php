@@ -41,7 +41,7 @@ return [
             App\GraphQL\Resolver\ImdbMovieCertificateResolver::class => App\GraphQL\Factory\ImdbMovieCertificateFactory::class,
             App\GraphQL\Resolver\ImdbEpisodeListResolver::class => App\GraphQL\Factory\ImdbEpisodeListFactory::class,
             App\GraphQL\Resolver\SearchResolver::class => App\GraphQL\Factory\SearchFactory::class,
-            App\GraphQL\Resolver\ImdbMovieDetailResolver::class => App\GraphQL\Factory\ImdbMovieDetailFactory::class,
+            App\GraphQL\Resolver\MovieDetailResolver::class => App\GraphQL\Factory\MovieDetailFactory::class,
             App\GraphQL\Resolver\EditTapeUserResolver::class => App\GraphQL\Factory\EditTapeUserFactory::class,
             App\GraphQL\Resolver\ImportImdbMovieResolver::class => App\GraphQL\Factory\ImportImdbMovieFactory::class,
             App\GraphQL\Resolver\ImportImdbEpisodeListResolver::class => App\GraphQL\Factory\ImportImdbEpisodeListFactory::class,

@@ -8,6 +8,7 @@
 
 namespace App\GraphQL\Factory;
 
+use App\GraphQL\Resolver\MovieDetailResolver;
 use App\GraphQL\Type\Query;
 use Psr\Container\ContainerInterface;
 use App\GraphQL\Resolver\SearchResolver;
@@ -18,7 +19,8 @@ class QueryFactory
     {
         return new Query([
             'fields' => [
-                'search' => $container->get(SearchResolver::class)
+                'search' => $container->get(SearchResolver::class),
+                'getMovieDetails' => $container->get(MovieDetailResolver::class)
             ]
         ]);
     }

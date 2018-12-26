@@ -20,23 +20,10 @@ class MovieType extends ObjectType
             'fields' => [
                 'year' => Type::int(),
                 'title' => Type::string(),
-                'languages' => Type::listOf(Type::string()),
                 'duration' => Type::int(),
                 'color' => Type::string(),
-                'recommendations' => Type::listOf(Type::int()),
-                'countries' => Type::listOf(Type::string()),
-                'tvShow' => Type::int(),
-                'haveReleaseInfo' => Type::boolean(),
                 'isTvShow' => Type::boolean(),
-                'isEpisode' => Type::boolean(),
-                'genres' => Type::listOf(Type::string()),
-                'sounds' => Type::listOf(Type::string()),
-                'score' => Type::float(),
-                'votes' => Type::int(),
-                'imdbNumber' => Type::int(),
-                'episodeNumber' => Type::int(),
-                'seasonNumber' => Type::int(),
-                'seasons' => Type::int(),
+                'imdbNumber' => Type::int()
             ]
         ]);
     }
