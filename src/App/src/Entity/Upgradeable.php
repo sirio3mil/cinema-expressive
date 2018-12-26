@@ -9,11 +9,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 trait Upgradeable
 {
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(
      *     type="datetime",
@@ -25,10 +26,10 @@ trait Upgradeable
     protected $updatedAt;
 
     /**
-     * @param \DateTime $updatedAt
+     * @param DateTime $updatedAt
      * @return CinemaEntity
      */
-    public function setUpdatedAt(\DateTime $updatedAt): CinemaEntity
+    public function setUpdatedAt(DateTime $updatedAt): CinemaEntity
     {
         $this->updatedAt = $updatedAt;
 
@@ -36,9 +37,9 @@ trait Upgradeable
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getUpdatedAt(): \DateTime
+    public function getUpdatedAt(): DateTime
     {
         return $this->updatedAt;
     }

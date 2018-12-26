@@ -8,11 +8,13 @@
 
 namespace App\Entity;
 
+use DateTime;
+use DateTimeZone;
 
 class DateGenerator
 {
-    public static function getUtcDateTime(): \DateTime
+    public static function getUtcDateTime(): DateTime
     {
-        return new \DateTime('now', new \DateTimeZone('UTC'));
+        return new DateTime('now', new DateTimeZone('UTC'));
     }
 }
