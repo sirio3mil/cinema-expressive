@@ -22,7 +22,7 @@ class TapeLanguageFactory
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);
 
-        $types = new Types($entityManager);
+        $types = new Types($entityManager, $container);
 
         return [
             'type' => Type::listOf($types->getOutput(Language::class)),
