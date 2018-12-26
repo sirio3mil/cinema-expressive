@@ -9,6 +9,7 @@
 namespace App\GraphQL\Resolver;
 
 use App\Entity\Tape;
+use InvalidArgumentException;
 
 class TapeLanguageResolver
 {
@@ -17,7 +18,7 @@ class TapeLanguageResolver
         /** @var Tape $tape */
         $tape = $args['tapeId']->getEntity();
         if (!$tape) {
-            throw new \InvalidArgumentException('Tape not found');
+            throw new InvalidArgumentException('Tape not found');
         }
         return $tape->getLanguages()->toArray();
     }

@@ -13,7 +13,6 @@ use App\GraphQL\Resolver\MovieDetailResolver;
 use App\GraphQL\Type\MovieType;
 use Doctrine\ORM\EntityManager;
 use GraphQL\Doctrine\Types;
-use GraphQL\Type\Definition\Type;
 use Psr\Container\ContainerInterface;
 
 class MovieDetailFactory

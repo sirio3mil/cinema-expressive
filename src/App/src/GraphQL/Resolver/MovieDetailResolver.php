@@ -10,6 +10,7 @@ namespace App\GraphQL\Resolver;
 
 use App\Entity\Tape;
 use App\Entity\TapeDetail;
+use InvalidArgumentException;
 
 class MovieDetailResolver
 {
@@ -24,7 +25,7 @@ class MovieDetailResolver
         /** @var Tape $tape */
         $tape = $args['tapeId']->getEntity();
         if (!$tape) {
-            throw new \InvalidArgumentException('Tape not found');
+            throw new InvalidArgumentException('Tape not found');
         }
         /** @var TapeDetail $detail */
         $detail = $tape->getDetail();
