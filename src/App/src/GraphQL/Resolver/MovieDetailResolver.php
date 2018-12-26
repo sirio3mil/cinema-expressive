@@ -10,24 +10,19 @@ namespace App\GraphQL\Resolver;
 
 use App\Entity\Tape;
 use App\Entity\TapeDetail;
-use Doctrine\ORM\EntityManager;
-use Psr\Container\ContainerInterface;
 
 class MovieDetailResolver
 {
 
     /**
-     * @param ContainerInterface $container
      * @param array $args
      * @return array
      * @throws \Exception
      */
-    public static function resolve(ContainerInterface $container, array $args): array
+    public static function resolve(array $args): array
     {
-        /** @var EntityManager $entityManager */
-        $entityManager = $container->get(EntityManager::class);
         /** @var Tape $tape */
-        $tape = $entityManager->getRepository(Tape::class)->find($args['tapeId']);
+        $tape = $args['tapeId']->getEntity();
         if (!$tape) {
             throw new \InvalidArgumentException('Tape not found');
         }

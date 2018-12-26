@@ -9,6 +9,7 @@
 namespace App\GraphQL\Factory;
 
 use App\Entity\Language;
+use App\Entity\Tape;
 use App\GraphQL\Resolver\TapeLanguageResolver;
 use Doctrine\ORM\EntityManager;
 use GraphQL\Doctrine\Types;
@@ -27,10 +28,10 @@ class TapeLanguageFactory
         return [
             'type' => Type::listOf($types->getOutput(Language::class)),
             'args' => [
-                'tapeId' => Type::nonNull(Type::int()),
+                'tapeId' => $types->getId(Tape::class),
             ],
-            'resolve' => function ($source, $args) use ($container) {
-                return TapeLanguageResolver::resolve($container, $args);
+            'resolve' => function ($source, $args) {
+                return TapeLanguageResolver::resolve($args);
             }
         ];
     }

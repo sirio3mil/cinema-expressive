@@ -8,8 +8,11 @@
 
 namespace App\GraphQL\Factory;
 
-use App\GraphQL\TypeRegistry;
+use App\Entity\Tape;
 use App\GraphQL\Resolver\MovieDetailResolver;
+use App\GraphQL\Type\MovieType;
+use Doctrine\ORM\EntityManager;
+use GraphQL\Doctrine\Types;
 use GraphQL\Type\Definition\Type;
 use Psr\Container\ContainerInterface;
 
@@ -17,16 +20,18 @@ class MovieDetailFactory
 {
     public function __invoke(ContainerInterface $container): array
     {
-        /** @var TypeRegistry $typeRegistry */
-        $typeRegistry = $container->get(TypeRegistry::class);
+        /** @var EntityManager $entityManager */
+        $entityManager = $container->get(EntityManager::class);
+
+        $types = new Types($entityManager, $container);
 
         return [
-            'type' => $typeRegistry->get('movie'),
+            'type' => $types->getOutput(MovieType::class),
             'args' => [
-                'tapeId' => Type::nonNull(Type::int()),
+                'tapeId' => $types->getId(Tape::class),
             ],
-            'resolve' => function ($source, $args) use ($container) {
-                return MovieDetailResolver::resolve($container, $args);
+            'resolve' => function ($source, $args) {
+                return MovieDetailResolver::resolve($args);
             }
         ];
     }
