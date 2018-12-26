@@ -19,7 +19,7 @@ return [
         // class name.
         'invokables' => [
             App\GraphQL\TypeRegistry::class => App\GraphQL\TypeRegistry::class,
-            DateTime::class => GraphQLTests\Doctrine\Blog\Types\DateTimeType::class
+            DateTime::class => App\GraphQL\Type\DateTimeType::class
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories'  => [
