@@ -25,7 +25,7 @@ class MovieDetailFactory
         $types = new Types($entityManager, $container);
 
         return [
-            'type' => $types->getOutput(MovieType::class),
+            'type' => $types->get(MovieType::class),
             'args' => [
                 'tapeId' => $types->getId(Tape::class),
             ],
