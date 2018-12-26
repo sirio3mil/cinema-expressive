@@ -8,7 +8,7 @@
 
 namespace App\Entity;
 
-
+use GraphQL\Doctrine\Annotation as API;
 use Doctrine\Common\Collections\Collection;
 
 trait TapeCollection
@@ -34,6 +34,8 @@ trait TapeCollection
     }
 
     /**
+     * @API\Exclude
+     *
      * @return Collection
      */
     public function getTapes(): Collection
