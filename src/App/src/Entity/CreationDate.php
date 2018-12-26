@@ -9,12 +9,13 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DateTime;
 
 trait CreationDate
 {
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(
      *     type="datetime",
@@ -26,10 +27,10 @@ trait CreationDate
     protected $createdAt;
 
     /**
-     * @param \DateTime $createdAt
+     * @param DateTime $createdAt
      * @return CinemaEntity
      */
-    public function setCreatedAt(\DateTime $createdAt): CinemaEntity
+    public function setCreatedAt(DateTime $createdAt): CinemaEntity
     {
         $this->createdAt = $createdAt;
 
@@ -37,9 +38,9 @@ trait CreationDate
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
