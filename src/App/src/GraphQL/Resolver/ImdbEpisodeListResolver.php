@@ -14,7 +14,7 @@ use ImdbScraper\Mapper\EpisodeListMapper;
 use ImdbScraper\Model\Episode;
 use Psr\Container\ContainerInterface;
 
-class EpisodeListResolver
+class ImdbEpisodeListResolver
 {
 
     /**

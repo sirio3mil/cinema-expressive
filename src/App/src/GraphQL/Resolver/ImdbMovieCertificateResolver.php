@@ -14,7 +14,7 @@ use ImdbScraper\Mapper\ParentalGuideMapper;
 use ImdbScraper\Model\Certificate;
 use Psr\Container\ContainerInterface;
 
-class MovieCertificateResolver
+class ImdbMovieCertificateResolver
 {
 
     /**

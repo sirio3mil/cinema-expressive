@@ -3,17 +3,17 @@
  * Created by PhpStorm.
  * User: reynier.delarosa
  * Date: 07/12/2018
- * Time: 12:34
+ * Time: 12:36
  */
 
 namespace App\GraphQL\Factory;
 
-use App\GraphQL\Resolver\MovieReleaseResolver;
+use App\GraphQL\Resolver\ImdbMovieKeywordResolver;
 use App\GraphQL\TypeRegistry;
 use Psr\Container\ContainerInterface;
 use GraphQL\Type\Definition\Type;
 
-class MovieReleaseFactory
+class ImdbMovieKeywordFactory
 {
     public function __invoke(ContainerInterface $container): array
     {
@@ -21,12 +21,12 @@ class MovieReleaseFactory
         $typeRegistry = $container->get(TypeRegistry::class);
 
         return [
-            'type' => $typeRegistry->get('release'),
+            'type' => $typeRegistry->get('keywords'),
             'args' => [
                 'imdbNumber' => Type::nonNull(Type::int()),
             ],
             'resolve' => function ($source, $args) use ($container) {
-                return MovieReleaseResolver::resolve($container, $args);
+                return ImdbMovieKeywordResolver::resolve($container, $args);
             }
         ];
     }

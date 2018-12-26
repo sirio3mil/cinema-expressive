@@ -109,7 +109,7 @@ class ImportImdbMovieResolver
             $entityManager->persist($imdbNumber);
         }
         /** @var array $imdbMovieDetails */
-        $imdbMovieDetails = MovieDetailResolver::resolve($container, $args);
+        $imdbMovieDetails = ImdbMovieDetailResolver::resolve($container, $args);
         $tape->setOriginalTitle($imdbMovieDetails['title']);
         $entityManager->persist($tape);
         /** @var SearchValue $searchValue */
@@ -202,7 +202,7 @@ class ImportImdbMovieResolver
         }
         $entityManager->flush();
         /** @var array $imdbMovieKeywords */
-        $imdbMovieKeywords = MovieKeywordResolver::resolve($container, $args);
+        $imdbMovieKeywords = ImdbMovieKeywordResolver::resolve($container, $args);
         if ($imdbMovieKeywords && array_key_exists('keywords', $imdbMovieKeywords)) {
             /** @var KeywordIterator $keywords */
             $keywords = $imdbMovieKeywords['keywords'];
@@ -228,7 +228,7 @@ class ImportImdbMovieResolver
             }
         }
         /** @var array $imdbMovieLocations */
-        $imdbMovieLocations = MovieLocationResolver::resolve($container, $args);
+        $imdbMovieLocations = ImdbMovieLocationResolver::resolve($container, $args);
         if ($imdbMovieLocations) {
             /** @var ArrayCollection $locations */
             $locations = $tape->getLocations();
@@ -322,7 +322,7 @@ class ImportImdbMovieResolver
             $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
         }
         /** @var array $imdbMovieCredits */
-        $imdbMovieCredits = MovieCastResolver::resolve($container, $args);
+        $imdbMovieCredits = ImdbMovieCastResolver::resolve($container, $args);
         /** @var CastIterator $castIterator */
         $castIterator = $imdbMovieCredits['cast'];
         if ($castIterator->getIterator()->count()) {
@@ -615,7 +615,7 @@ class ImportImdbMovieResolver
             }
         }
         /** @var array $imdbMovieReleases */
-        $imdbMovieReleases = MovieReleaseResolver::resolve($container, $args);
+        $imdbMovieReleases = ImdbMovieReleaseResolver::resolve($container, $args);
         /** @var ReleaseIterator $releaseDates */
         $releaseDates = $imdbMovieReleases['dates'];
         if ($releaseDates->getIterator()->count()) {
@@ -709,7 +709,7 @@ class ImportImdbMovieResolver
             }
         }
         /** @var array $imdbMovieCertifications */
-        $imdbMovieCertifications = MovieCertificateResolver::resolve($container, $args);
+        $imdbMovieCertifications = ImdbMovieCertificateResolver::resolve($container, $args);
         if ($imdbMovieCertifications) {
             foreach ($imdbMovieCertifications as $data) {
                 /** @var Country $country */

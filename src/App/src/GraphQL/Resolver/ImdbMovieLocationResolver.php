@@ -14,7 +14,7 @@ use ImdbScraper\Mapper\LocationMapper;
 use ImdbScraper\Model\Location;
 use Psr\Container\ContainerInterface;
 
-class MovieLocationResolver
+class ImdbMovieLocationResolver
 {
 
     /**

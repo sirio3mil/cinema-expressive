@@ -12,7 +12,7 @@ namespace App\GraphQL\Resolver;
 use ImdbScraper\Mapper\HomeMapper;
 use Psr\Container\ContainerInterface;
 
-class MovieDetailResolver
+class ImdbMovieDetailResolver
 {
     
     /**

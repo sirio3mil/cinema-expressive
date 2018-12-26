@@ -3,17 +3,17 @@
  * Created by PhpStorm.
  * User: reynier.delarosa
  * Date: 07/12/2018
- * Time: 12:39
+ * Time: 12:44
  */
 
 namespace App\GraphQL\Factory;
 
+use App\GraphQL\Resolver\ImdbMovieCertificateResolver;
 use App\GraphQL\TypeRegistry;
-use App\GraphQL\Resolver\MovieLocationResolver;
 use Psr\Container\ContainerInterface;
 use GraphQL\Type\Definition\Type;
 
-class MovieLocationFactory
+class ImdbMovieCertificateFactory
 {
     public function __invoke(ContainerInterface $container): array
     {
@@ -21,12 +21,12 @@ class MovieLocationFactory
         $typeRegistry = $container->get(TypeRegistry::class);
 
         return [
-            'type' => Type::listOf($typeRegistry->get('location')),
+            'type' => Type::listOf($typeRegistry->get('certification')),
             'args' => [
                 'imdbNumber' => Type::nonNull(Type::int()),
             ],
             'resolve' => function ($source, $args) use ($container) {
-                return MovieLocationResolver::resolve($container, $args);
+                return ImdbMovieCertificateResolver::resolve($container, $args);
             }
         ];
     }

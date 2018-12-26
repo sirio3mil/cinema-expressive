@@ -39,7 +39,7 @@ class ImportImdbEpisodeListResolver
     {
         $episodes = [];
         /** @var array $imdbEpisodeList */
-        $imdbEpisodeList = EpisodeListResolver::resolve($container, $args);
+        $imdbEpisodeList = ImdbEpisodeListResolver::resolve($container, $args);
         if ($imdbEpisodeList) {
             $episodes = self::importEpisodes($container, $imdbEpisodeList);
         }

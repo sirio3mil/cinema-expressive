@@ -12,7 +12,7 @@ namespace App\GraphQL\Resolver;
 use ImdbScraper\Mapper\CastMapper;
 use Psr\Container\ContainerInterface;
 
-class MovieCastResolver
+class ImdbMovieCastResolver
 {
 
     /**

@@ -3,17 +3,17 @@
  * Created by PhpStorm.
  * User: reynier.delarosa
  * Date: 07/12/2018
- * Time: 12:21
+ * Time: 12:46
  */
 
 namespace App\GraphQL\Factory;
 
+use App\GraphQL\Resolver\ImdbEpisodeListResolver;
 use App\GraphQL\TypeRegistry;
-use App\GraphQL\Resolver\MovieDetailResolver;
-use GraphQL\Type\Definition\Type;
 use Psr\Container\ContainerInterface;
+use GraphQL\Type\Definition\Type;
 
-class MovieDetailFactory
+class ImdbEpisodeListFactory
 {
     public function __invoke(ContainerInterface $container): array
     {
@@ -21,12 +21,13 @@ class MovieDetailFactory
         $typeRegistry = $container->get(TypeRegistry::class);
 
         return [
-            'type' => $typeRegistry->get('movie'),
+            'type' => Type::listOf($typeRegistry->get('episode')),
             'args' => [
                 'imdbNumber' => Type::nonNull(Type::int()),
+                'seasonNumber' => Type::int()
             ],
             'resolve' => function ($source, $args) use ($container) {
-                return MovieDetailResolver::resolve($container, $args);
+                return ImdbEpisodeListResolver::resolve($container, $args);
             }
         ];
     }
