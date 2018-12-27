@@ -12,6 +12,7 @@ namespace App\GraphQL\Factory;
 use App\Entity\Language;
 use App\GraphQL\Type\MovieType;
 use GraphQL\Doctrine\Types;
+use GraphQL\Type\Definition\Type;
 use Psr\Container\ContainerInterface;
 
 class TapeTypeFactory
