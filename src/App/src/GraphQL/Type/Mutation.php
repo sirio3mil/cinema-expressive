@@ -13,9 +13,9 @@ use GraphQL\Type\Definition\ObjectType;
 class Mutation extends ObjectType
 {
 
-    public function __construct(array $fields)
+    public function __construct(array $config)
     {
 
-        parent::__construct($fields);
+        parent::__construct($config);
     }
 }

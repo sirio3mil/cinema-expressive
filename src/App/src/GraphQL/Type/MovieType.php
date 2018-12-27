@@ -10,12 +10,11 @@ namespace App\GraphQL\Type;
 
 
 use GraphQL\Type\Definition\ObjectType;
-use GraphQL\Type\Definition\Type;
 
 class MovieType extends ObjectType
 {
-    public function __construct()
+    public function __construct(array $config)
     {
-        parent::__construct();
+        parent::__construct($config);
     }
 }
