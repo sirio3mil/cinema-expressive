@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\LazyCriteriaCollection;
 use Doctrine\ORM\Mapping as ORM;
+use GraphQL\Doctrine\Annotation as API;
 
 /**
  * Class Tape
@@ -286,6 +287,8 @@ class Tape implements CinemaEntity
     }
 
     /**
+     * @API\Field(type="?Language[]")
+     *
      * @return Collection
      */
     public function getLanguages(): Collection
