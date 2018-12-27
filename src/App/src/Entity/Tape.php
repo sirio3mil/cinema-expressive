@@ -287,6 +287,8 @@ class Tape implements CinemaEntity
     }
 
     /**
+     * @API\Field(type="?Language[]")
+     *
      * @return Collection
      */
     public function getLanguages(): Collection
