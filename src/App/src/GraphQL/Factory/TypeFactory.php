@@ -14,7 +14,7 @@ use Psr\Container\ContainerInterface;
 
 class TypeFactory
 {
-    public function __invoke(ContainerInterface $container): array
+    public function __invoke(ContainerInterface $container): Types
     {
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);
