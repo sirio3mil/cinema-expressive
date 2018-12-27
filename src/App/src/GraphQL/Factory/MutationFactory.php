@@ -20,7 +20,7 @@ class MutationFactory
     {
         return new Mutation([
             'fields' => [
-                'editTapeUser' => $container->get(EditTapeUserResolver::class),
+                /*'editTapeUser' => $container->get(EditTapeUserResolver::class),*/
                 'importImdbMovie' => $container->get(ImportImdbMovieResolver::class),
                 'importImdbEpisodeList' => $container->get(ImportImdbEpisodeListResolver::class)
             ]
