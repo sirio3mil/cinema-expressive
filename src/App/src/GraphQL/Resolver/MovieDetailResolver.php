@@ -35,7 +35,8 @@ class MovieDetailResolver
             'duration' => $detail->getDuration(),
             'color' => $detail->getColor(),
             'isTvShow' => $detail->getIsTvShow(),
-            'imdbNumber' => $tape->getObject()->getImdbNumber()->getImdbNumber()
+            'imdbNumber' => $tape->getObject()->getImdbNumber()->getImdbNumber(),
+            'languages' => $tape->getLanguages()->toArray()
         ];
     }
 }

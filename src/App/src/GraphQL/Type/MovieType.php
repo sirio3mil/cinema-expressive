@@ -16,15 +16,6 @@ class MovieType extends ObjectType
 {
     public function __construct()
     {
-        parent::__construct([
-            'fields' => [
-                'year' => Type::int(),
-                'title' => Type::string(),
-                'duration' => Type::int(),
-                'color' => Type::string(),
-                'isTvShow' => Type::boolean(),
-                'imdbNumber' => Type::int()
-            ]
-        ]);
+        parent::__construct();
     }
 }

@@ -11,7 +11,6 @@ namespace App\GraphQL\Factory;
 use App\Entity\Tape;
 use App\GraphQL\Resolver\MovieDetailResolver;
 use App\GraphQL\Type\MovieType;
-use Doctrine\ORM\EntityManager;
 use GraphQL\Doctrine\Types;
 use Psr\Container\ContainerInterface;
 
@@ -19,11 +18,7 @@ class MovieDetailFactory
 {
     public function __invoke(ContainerInterface $container): array
     {
-        /** @var EntityManager $entityManager */
-        $entityManager = $container->get(EntityManager::class);
-
-        $types = new Types($entityManager, $container);
-
+        $types = $container->get(Types::class);
         return [
             'type' => $types->get(MovieType::class),
             'args' => [
