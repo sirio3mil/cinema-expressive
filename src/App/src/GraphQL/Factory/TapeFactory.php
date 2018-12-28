@@ -9,12 +9,12 @@
 namespace App\GraphQL\Factory;
 
 use App\Entity\Tape;
-use App\GraphQL\Resolver\MovieDetailResolver;
+use App\GraphQL\Resolver\TapeResolver;
 use App\GraphQL\Type\MovieType;
 use GraphQL\Doctrine\Types;
 use Psr\Container\ContainerInterface;
 
-class MovieDetailFactory
+class TapeFactory
 {
     public function __invoke(ContainerInterface $container): array
     {
@@ -25,7 +25,7 @@ class MovieDetailFactory
                 'tapeId' => $types->getId(Tape::class),
             ],
             'resolve' => function ($source, $args) {
-                return MovieDetailResolver::resolve($args);
+                return TapeResolver::resolve($args);
             }
         ];
     }

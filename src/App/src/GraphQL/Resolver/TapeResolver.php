@@ -12,7 +12,7 @@ use App\Entity\Tape;
 use App\Entity\TapeDetail;
 use InvalidArgumentException;
 
-class MovieDetailResolver
+class TapeResolver
 {
 
     /**
