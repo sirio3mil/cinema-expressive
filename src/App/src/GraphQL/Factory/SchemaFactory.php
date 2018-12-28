@@ -10,6 +10,8 @@ namespace App\GraphQL\Factory;
 
 use App\GraphQL\Type\Mutation;
 use App\GraphQL\Type\Query;
+use GraphQL\Doctrine\DefaultFieldResolver;
+use GraphQL\GraphQL;
 use GraphQL\Type\Schema;
 use GraphQL\Type\SchemaConfig;
 use Psr\Container\ContainerInterface;
@@ -18,6 +20,7 @@ class SchemaFactory
 {
     public function __invoke(ContainerInterface $container): Schema
     {
+        GraphQL::setDefaultFieldResolver(new DefaultFieldResolver());
         $config = SchemaConfig::create()
             ->setQuery($container->get(Query::class))
             ->setMutation($container->get(Mutation::class));
