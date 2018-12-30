@@ -9,34 +9,16 @@
 namespace App\GraphQL\Resolver;
 
 use App\Entity\Tape;
-use App\Entity\TapeDetail;
-use InvalidArgumentException;
 
 class TapeResolver
 {
 
     /**
      * @param array $args
-     * @return array
-     * @throws \Exception
+     * @return Tape
      */
-    public static function resolve(array $args): array
+    public static function resolve(array $args): Tape
     {
-        /** @var Tape $tape */
-        $tape = $args['tapeId']->getEntity();
-        if (!$tape) {
-            throw new InvalidArgumentException('Tape not found');
-        }
-        /** @var TapeDetail $detail */
-        $detail = $tape->getDetail();
-        return [
-            'year' => $detail->getYear(),
-            'title' => $tape->getOriginalTitle(),
-            'duration' => $detail->getDuration(),
-            'color' => $detail->getColor(),
-            'isTvShow' => $detail->getIsTvShow(),
-            'imdbNumber' => $tape->getObject()->getImdbNumber()->getImdbNumber(),
-            'languages' => $tape->getLanguages()
-        ];
+        return $args['tapeId']->getEntity();
     }
 }

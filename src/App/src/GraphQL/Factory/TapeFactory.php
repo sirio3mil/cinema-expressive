@@ -10,7 +10,6 @@ namespace App\GraphQL\Factory;
 
 use App\Entity\Tape;
 use App\GraphQL\Resolver\TapeResolver;
-use App\GraphQL\Type\MovieType;
 use GraphQL\Doctrine\Types;
 use Psr\Container\ContainerInterface;
 
@@ -18,9 +17,10 @@ class TapeFactory
 {
     public function __invoke(ContainerInterface $container): array
     {
+        /** @var Types $types */
         $types = $container->get(Types::class);
         return [
-            'type' => $types->get(MovieType::class),
+            'type' => $types->getOutput(Tape::class),
             'args' => [
                 'tapeId' => $types->getId(Tape::class),
             ],

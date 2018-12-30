@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Resolver;
 
-
 use App\Entity\GlobalUniqueObject;
 use App\Entity\ImdbNumber;
 use App\Entity\People;

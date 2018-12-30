@@ -22,7 +22,7 @@ return [
             DateTime::class => App\GraphQL\Type\DateTimeType::class
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
-        'factories'  => [
+        'factories' => [
             Zend\Cache\Storage\Adapter\Memcached::class => App\Factory\MemcachedFactory::class,
             GraphQL\Type\Schema::class => App\GraphQL\Factory\SchemaFactory::class,
             GraphQL\Server\StandardServer::class => App\GraphQL\Factory\StandardServerFactory::class,
@@ -40,7 +40,6 @@ return [
             App\GraphQL\Resolver\EditTapeUserResolver::class => App\GraphQL\Factory\EditTapeUserFactory::class,
             App\GraphQL\Resolver\ImportImdbMovieResolver::class => App\GraphQL\Factory\ImportImdbMovieFactory::class,
             App\GraphQL\Resolver\ImportImdbEpisodeListResolver::class => App\GraphQL\Factory\ImportImdbEpisodeListFactory::class,
-            App\GraphQL\Type\MovieType::class => App\GraphQL\Factory\TapeTypeFactory::class,
             MongoDB\Client::class => App\Factory\MongoDBClientFactory::class,
             GraphQL\Doctrine\Types::class => App\GraphQL\Factory\TypeFactory::class,
             MongoDB\Driver\Manager::class => App\Factory\MongoDBManagerFactory::class,
