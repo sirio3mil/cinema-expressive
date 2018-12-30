@@ -38,14 +38,6 @@ class SearchResolver
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);
 
-        /** @var User|null $user */
-        $user = null;
-        if (array_key_exists('userId', $args) && filter_var($args['userId'], FILTER_VALIDATE_INT)) {
-            $user = $entityManager->getRepository(User::class)->findOneBy([
-                "userId" => $args['userId']
-            ]);
-        }
-
         $sql = "exec dbo.SearchParam ?";
         /** @var ResultSet $stmt */
         $stmt = $adapter->query($sql, [
@@ -65,7 +57,6 @@ class SearchResolver
             /** @var ImdbNumber $imdbNumber */
             $imdbNumber = $object->getImdbNumber();
             $original = null;
-            $userObject = [];
             switch ($rowTypeId) {
                 case RowType::ROW_TYPE_PEOPLE:
                     /** @var People $person */
@@ -78,48 +69,6 @@ class SearchResolver
                     $tape = $object->getTape();
                     $internalId = $tape->getTapeId();
                     $original = $tape->getOriginalTitle();
-                    if ($user) {
-                        /** @var TapeUser $tapeUser */
-                        $tapeUser = $tape->getUser($user);
-                        if ($tapeUser) {
-                            $userObject['objectUserId'] = $tapeUser->getTapeUserId();
-                            /** @var TapeUserScore $tapeScore */
-                            $tapeScore = $tapeUser->getScore();
-                            if ($tapeScore) {
-                                $userObject['score'] = $tapeScore->getScore();
-                                $userObject['scoreDate'] = $tapeScore->getCreatedAt()->format("d/m/Y");
-                            }
-                            /** @var TapeUserHistory[] $history */
-                            $history = $tapeUser->getHistory();
-                            if ($history) {
-                                $items = [];
-                                /** @var TapeUserHistory $tapeUserHistory */
-                                foreach ($history as $tapeUserHistory) {
-                                    $item = [];
-                                    $item['statusId'] = $tapeUserHistory->getTapeUserStatus()->getTapeUserStatusId();
-                                    $item['status'] = $tapeUserHistory->getTapeUserStatus()->getStatusDescription();
-                                    $item['date'] = $tapeUserHistory->getCreatedAt()->format("d/m/Y");
-                                    /** @var TapeUserHistoryDetail $tapeUserHistoryDetail */
-                                    $tapeUserHistoryDetail = $tapeUserHistory->getDetail();
-                                    if ($tapeUserHistoryDetail) {
-                                        $details = [];
-                                        $details['date'] = $tapeUserHistoryDetail->getCreatedAt()->format("d/m/Y");
-                                        $details['visible'] = $tapeUserHistoryDetail->getVisible();
-                                        $details['exported'] = $tapeUserHistoryDetail->getExported();
-                                        /** @var Place $place */
-                                        $place = $tapeUserHistoryDetail->getPlace();
-                                        if ($place) {
-                                            $details['placeId'] = $place->getPlaceId();
-                                            $details['place'] = $place->getDescription();
-                                        }
-                                        $item['details'] = $details;
-                                    }
-                                    $items[] = $item;
-                                }
-                                $userObject['history'] = $items;
-                            }
-                        }
-                    }
                     break;
             }
 
@@ -130,8 +79,7 @@ class SearchResolver
                 'rowType' => $rowType->getDescription(),
                 'internalId' => $internalId,
                 'imdbNumber' => $imdbNumber ? $imdbNumber->getImdbNumber() : 0,
-                'original' => $original,
-                'userObject' => $userObject
+                'original' => $original
             ];
         }
 
