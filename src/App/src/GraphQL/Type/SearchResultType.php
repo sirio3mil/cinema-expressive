@@ -23,7 +23,8 @@ class SearchResultType extends ObjectType
                 'rowType' => Type::string(),
                 'internalId' => Type::int(),
                 'imdbNumber' => Type::int(),
-                'original' => Type::string()
+                'original' => Type::string(),
+                'year' => Type::int()
             ]
         ]);
     }

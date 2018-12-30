@@ -11,18 +11,15 @@ namespace App\GraphQL\Resolver;
 use App\Entity\GlobalUniqueObject;
 use App\Entity\ImdbNumber;
 use App\Entity\People;
-use App\Entity\Place;
+use App\Entity\PeopleDetail;
 use App\Entity\RowType;
 use App\Entity\Tape;
-use App\Entity\TapeUser;
-use App\Entity\TapeUserHistory;
-use App\Entity\TapeUserHistoryDetail;
-use App\Entity\TapeUserScore;
-use App\Entity\User;
+use App\Entity\TapeDetail;
 use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerInterface;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\ResultSet\ResultSet;
+use DateTime;
 
 class SearchResolver
 {
@@ -57,18 +54,30 @@ class SearchResolver
             /** @var ImdbNumber $imdbNumber */
             $imdbNumber = $object->getImdbNumber();
             $original = null;
+            $year = null;
             switch ($rowTypeId) {
                 case RowType::ROW_TYPE_PEOPLE:
                     /** @var People $person */
                     $person = $object->getPeople();
                     $internalId = $person->getPeopleId();
                     $original = $person->getFullName();
+                    /** @var PeopleDetail $detail */
+                    if ($detail = $person->getDetail()) {
+                        /** @var DateTime $birthDate */
+                        if ($birthDate = $detail->getBirthDate()) {
+                            $year = $birthDate->format('Y');
+                        }
+                    }
                     break;
                 case RowType::ROW_TYPE_TAPE:
                     /** @var Tape $tape */
                     $tape = $object->getTape();
                     $internalId = $tape->getTapeId();
                     $original = $tape->getOriginalTitle();
+                    /** @var TapeDetail $detail */
+                    if ($detail = $tape->getDetail()) {
+                        $year = $detail->getYear();
+                    }
                     break;
             }
 
@@ -79,7 +88,8 @@ class SearchResolver
                 'rowType' => $rowType->getDescription(),
                 'internalId' => $internalId,
                 'imdbNumber' => $imdbNumber ? $imdbNumber->getImdbNumber() : 0,
-                'original' => $original
+                'original' => $original,
+                'year' => (int)$year
             ];
         }
 
