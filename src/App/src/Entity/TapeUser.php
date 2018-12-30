@@ -111,7 +111,7 @@ class TapeUser implements CinemaEntity
     }
 
     /**
-     * @return TapeUserScore
+     * @return TapeUserScore|null
      */
     public function getScore(): ?TapeUserScore
     {
