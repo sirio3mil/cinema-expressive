@@ -93,7 +93,7 @@ class TapeUserHistory implements CinemaEntity
     }
 
     /**
-     * @return TapeUserStatus
+     * @return TapeUserStatus|null
      */
     public function getTapeUserStatus(): ?TapeUserStatus
     {
@@ -111,7 +111,7 @@ class TapeUserHistory implements CinemaEntity
     }
 
     /**
-     * @return TapeUserHistoryDetail
+     * @return TapeUserHistoryDetail|null
      */
     public function getDetail(): ?TapeUserHistoryDetail
     {
