@@ -10,7 +10,6 @@ namespace App\GraphQL\Factory;
 
 use App\GraphQL\Resolver\SearchResolver;
 use App\GraphQL\Type\SearchResultType;
-use App\GraphQL\TypeRegistry;
 use GraphQL\Doctrine\Types;
 use GraphQL\Type\Definition\Type;
 use Psr\Container\ContainerInterface;

@@ -151,10 +151,7 @@ class EditTapeUserResolver
             }
             $entityManager->persist($tapeUser);
             $entityManager->flush();
-            $tapesUser[] = [
-                'tapeUserId' => $tapeUser->getTapeUserId(),
-                'tapeUserHistoryId' => $tapeUserHistory->getTapeUserHistoryId()
-            ];
+            $tapesUser[] = $tapeUser;
         }
         return $tapesUser;
     }

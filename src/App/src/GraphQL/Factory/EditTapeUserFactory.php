@@ -8,8 +8,9 @@
 
 namespace App\GraphQL\Factory;
 
+use App\Entity\TapeUser;
 use App\GraphQL\Resolver\EditTapeUserResolver;
-use App\GraphQL\TypeRegistry;
+use GraphQL\Doctrine\Types;
 use Psr\Container\ContainerInterface;
 use GraphQL\Type\Definition\Type;
 
@@ -17,10 +18,10 @@ class EditTapeUserFactory
 {
     public function __invoke(ContainerInterface $container): array
     {
-        /** @var TypeRegistry $typeRegistry */
-        $typeRegistry = $container->get(TypeRegistry::class);
-
+        /** @var Types $types */
+        $types = $container->get(Types::class);
         return [
+            'type' => Type::listOf($types->getOutput(TapeUser::class)),
             'args' => [
                 'userId' => Type::nonNull(Type::int()),
                 'imdbNumbers' => Type::listOf(Type::int()),
@@ -28,7 +29,6 @@ class EditTapeUserFactory
                 'tapeUserStatusId' => Type::nonNull(Type::int()),
                 'placeId' => Type::int()
             ],
-            'type' => Type::listOf($typeRegistry->get('tapeUser')),
             'resolve' => function ($source, $args) use ($container) {
                 return EditTapeUserResolver::resolve($container, $args);
             }
