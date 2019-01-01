@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Resolver;
 
-
 use ImdbScraper\Iterator\LocationIterator;
 use ImdbScraper\Mapper\LocationMapper;
 use ImdbScraper\Model\Location;

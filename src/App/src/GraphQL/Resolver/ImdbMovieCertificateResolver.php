@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Resolver;
 
-
 use ImdbScraper\Iterator\CertificateIterator;
 use ImdbScraper\Mapper\ParentalGuideMapper;
 use ImdbScraper\Model\Certificate;

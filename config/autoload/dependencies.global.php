@@ -20,7 +20,14 @@ return [
         'invokables' => [
             App\GraphQL\TypeRegistry::class => App\GraphQL\TypeRegistry::class,
             DateTime::class => App\GraphQL\Type\DateTimeType::class,
-            App\GraphQL\Type\SearchResultType::class => App\GraphQL\Type\SearchResultType::class
+            App\GraphQL\Type\SearchResultType::class => App\GraphQL\Type\SearchResultType::class,
+            ImdbScraper\Mapper\HomeMapper::class => ImdbScraper\Mapper\HomeMapper::class,
+            ImdbScraper\Mapper\KeywordMapper::class => ImdbScraper\Mapper\KeywordMapper::class,
+            ImdbScraper\Mapper\ReleaseMapper::class => ImdbScraper\Mapper\ReleaseMapper::class,
+            ImdbScraper\Mapper\LocationMapper::class => ImdbScraper\Mapper\LocationMapper::class,
+            ImdbScraper\Mapper\ParentalGuideMapper::class => ImdbScraper\Mapper\ParentalGuideMapper::class,
+            ImdbScraper\Mapper\CastMapper::class => ImdbScraper\Mapper\CastMapper::class,
+            ImdbScraper\Mapper\EpisodeListMapper::class => ImdbScraper\Mapper\EpisodeListMapper::class
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories' => [

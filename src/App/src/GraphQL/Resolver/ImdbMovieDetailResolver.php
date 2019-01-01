@@ -8,13 +8,12 @@
 
 namespace App\GraphQL\Resolver;
 
-
 use ImdbScraper\Mapper\HomeMapper;
 use Psr\Container\ContainerInterface;
 
 class ImdbMovieDetailResolver
 {
-    
+
     /**
      * @param ContainerInterface $container
      * @param array $args

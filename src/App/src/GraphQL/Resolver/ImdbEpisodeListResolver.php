@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Resolver;
 
-
 use ImdbScraper\Iterator\EpisodeIterator;
 use ImdbScraper\Mapper\EpisodeListMapper;
 use ImdbScraper\Model\Episode;
@@ -32,7 +31,7 @@ class ImdbEpisodeListResolver
         /** @var EpisodeIterator $episodeIterator */
         $episodeIterator = $mapper->getEpisodes();
         /** @var Episode $episode */
-        foreach ($episodeIterator as $episode){
+        foreach ($episodeIterator as $episode) {
             $data[] = [
                 'title' => $episode->getTitle(),
                 'date' => $episode->getDate()->format("Y-m-d"),

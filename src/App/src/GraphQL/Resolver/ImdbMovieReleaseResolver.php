@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Resolver;
 
-
 use ImdbScraper\Mapper\ReleaseMapper;
 use Psr\Container\ContainerInterface;
 
