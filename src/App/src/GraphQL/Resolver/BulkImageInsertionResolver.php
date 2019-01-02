@@ -17,7 +17,7 @@ use RecursiveRegexIterator;
 
 class BulkImageInsertionResolver
 {
-    public static function resolve(ContainerInterface $container, array $args): array
+    public static function resolve(ContainerInterface $container, array $args): int
     {
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);
@@ -30,5 +30,7 @@ class BulkImageInsertionResolver
             echo var_dump($file);
             die;
         }
+
+        return 0;
     }
 }
