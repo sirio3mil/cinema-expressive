@@ -160,6 +160,37 @@ class File implements CinemaEntity
     protected $image;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(
+     *     type="string",
+     *     length=100,
+     *     name="mime",
+     *     nullable=false,
+     *     options={"fixed":false}
+     * )
+     */
+    private $mime;
+
+    /**
+     * @param string $mime
+     * @return File
+     */
+    public function setMime(string $mime): File
+    {
+        $this->mime = $mime;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMime(): string
+    {
+        return $this->mime;
+    }
+
+    /**
      * @return Image
      */
     public function getImage(): Image
