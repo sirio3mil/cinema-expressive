@@ -87,7 +87,7 @@ class File implements CinemaEntity
      * @var int
      *
      * @ORM\Column(
-     *     type="int",
+     *     type="bigint",
      *     name="size",
      *     nullable=false,
      *     options={"unsigned":false}

@@ -31,7 +31,7 @@ class Image implements CinemaEntity
      * @var int
      *
      * @ORM\Column(
-     *     type="int",
+     *     type="bigint",
      *     name="height",
      *     nullable=false,
      *     options={"unsigned":false}
@@ -43,7 +43,7 @@ class Image implements CinemaEntity
      * @var int
      *
      * @ORM\Column(
-     *     type="int",
+     *     type="bigint",
      *     name="width",
      *     nullable=false,
      *     options={"unsigned":false}
