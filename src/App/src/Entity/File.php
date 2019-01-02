@@ -160,6 +160,13 @@ class File implements CinemaEntity
     protected $image;
 
     /**
+     * @var FileSeason
+     *
+     * @ORM\OneToOne(targetEntity="FileSeason", mappedBy="file", cascade={"persist", "remove"})
+     */
+    protected $season;
+
+    /**
      * @var string
      *
      * @ORM\Column(
@@ -171,6 +178,24 @@ class File implements CinemaEntity
      * )
      */
     private $mime;
+
+    /**
+     * @param FileSeason $season
+     * @return File
+     */
+    public function setSeason(FileSeason $season): File
+    {
+        $this->season = $season->setFile($this);
+        return $this;
+    }
+
+    /**
+     * @return FileSeason
+     */
+    public function getSeason(): FileSeason
+    {
+        return $this->season;
+    }
 
     /**
      * @param string $mime
