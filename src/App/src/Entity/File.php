@@ -155,7 +155,7 @@ class File implements CinemaEntity
     /**
      * @var Image
      *
-     * @ORM\OneToOne(targetEntity="Image", mappedBy="file")
+     * @ORM\OneToOne(targetEntity="Image", mappedBy="file", cascade={"persist", "remove"})
      */
     protected $image;
 
