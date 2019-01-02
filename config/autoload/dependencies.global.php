@@ -18,7 +18,6 @@ return [
         // not require arguments to the constructor. Map a service name to the
         // class name.
         'invokables' => [
-            App\GraphQL\TypeRegistry::class => App\GraphQL\TypeRegistry::class,
             DateTime::class => App\GraphQL\Type\DateTimeType::class,
             App\GraphQL\Type\SearchResultType::class => App\GraphQL\Type\SearchResultType::class,
             App\GraphQL\Type\ImportedEpisodeType::class => App\GraphQL\Type\ImportedEpisodeType::class,
