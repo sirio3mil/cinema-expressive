@@ -377,4 +377,12 @@ class File implements CinemaEntity
         $this->fileType = $fileType;
         return $this;
     }
+
+    /** @ORM\PrePersist */
+    public function generateDeleted()
+    {
+        if(is_null($this->deleted)) {
+            $this->deleted = false;
+        }
+    }
 }

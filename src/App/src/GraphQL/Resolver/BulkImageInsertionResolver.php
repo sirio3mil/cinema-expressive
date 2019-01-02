@@ -8,6 +8,8 @@
 
 namespace App\GraphQL\Resolver;
 
+use App\Entity\File;
+use App\Entity\Image;
 use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerInterface;
 use RecursiveDirectoryIterator;
@@ -26,11 +28,36 @@ class BulkImageInsertionResolver
         $fileIterator = new RecursiveIteratorIterator($folderIterator);
         $filteredFiles = new RegexIterator($fileIterator, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
 
-        foreach ($filteredFiles as $file){
-            echo var_dump($file);
-            die;
+        $count = 0;
+        $batchSize = 20;
+
+        foreach ($filteredFiles as $filteredFile) {
+            $imageSize = getimagesize($filteredFile[0]);
+            if (!$imageSize) {
+                continue;
+            }
+            $pathInfo = pathinfo($filteredFile[0]);
+            if(!$pathInfo){
+                continue;
+            }
+            $file = new File();
+            $file->setImage((new Image())->setWidth($imageSize[0])->setHeight($imageSize[1]));
+            $file->setMime($imageSize['mime']);
+            $file->setPath($pathInfo['dirname']);
+            $file->setExtension($pathInfo['extension']);
+            $file->setName($pathInfo['filename']);
+            $file->setSize(filesize($filteredFile[0]));
+            $entityManager->persist($file);
+            $count++;
+            if (($count % $batchSize) === 0) {
+                $entityManager->flush();
+                $entityManager->clear();
+            }
         }
 
-        return 0;
+        $entityManager->flush();
+        $entityManager->clear();
+
+        return $count;
     }
 }
