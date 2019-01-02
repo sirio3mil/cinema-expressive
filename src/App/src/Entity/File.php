@@ -89,7 +89,8 @@ class File implements CinemaEntity
      * @ORM\Column(
      *     type="int",
      *     name="size",
-     *     nullable=false
+     *     nullable=false,
+     *     options={"unsigned":false}
      * )
      */
     private $size;
@@ -150,6 +151,31 @@ class File implements CinemaEntity
      * @ORM\JoinColumn(name="fileTypeId", referencedColumnName="fileTypeId")
      */
     private $fileType;
+
+    /**
+     * @var Image
+     *
+     * @ORM\OneToOne(targetEntity="Image", mappedBy="file")
+     */
+    protected $image;
+
+    /**
+     * @return Image
+     */
+    public function getImage(): Image
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param Image $image
+     * @return File
+     */
+    public function setImage(Image $image): File
+    {
+        $this->image = $image->setFile($this);
+        return $this;
+    }
 
     /**
      * @return FileType
