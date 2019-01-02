@@ -8,7 +8,6 @@
 
 namespace App\Handler;
 
-use App\GraphQL\TypeRegistry;
 use GraphQL\Server\StandardServer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,7 +17,7 @@ use Zend\Diactoros\Response\JsonResponse;
 class GraphQLHandler implements RequestHandlerInterface
 {
 
-    /** @var TypeRegistry $standardServer */
+    /** @var StandardServer $standardServer */
     protected $standardServer;
 
     public function __construct(StandardServer $standardServer)

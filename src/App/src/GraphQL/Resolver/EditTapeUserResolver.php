@@ -16,7 +16,6 @@ use App\Entity\TapeUserHistory;
 use App\Entity\TapeUserHistoryDetail;
 use App\Entity\TapeUserStatus;
 use App\Entity\User;
-use App\GraphQL\TypeRegistry;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Interop\Container\ContainerInterface;
