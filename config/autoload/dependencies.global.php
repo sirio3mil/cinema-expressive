@@ -43,7 +43,6 @@ return [
             App\GraphQL\Resolver\EditTapeUserResolver::class => App\GraphQL\Factory\EditTapeUserFactory::class,
             App\GraphQL\Resolver\ImportImdbMovieResolver::class => App\GraphQL\Factory\ImportImdbMovieFactory::class,
             App\GraphQL\Resolver\ImportImdbEpisodeListResolver::class => App\GraphQL\Factory\ImportImdbEpisodeListFactory::class,
-            App\GraphQL\Resolver\BulkImageInsertionResolver::class => App\GraphQL\Factory\BulkImageInsertionFactory::class,
             MongoDB\Client::class => App\Factory\MongoDBClientFactory::class,
             GraphQL\Doctrine\Types::class => App\GraphQL\Factory\TypeFactory::class,
             MongoDB\Driver\Manager::class => App\Factory\MongoDBManagerFactory::class,

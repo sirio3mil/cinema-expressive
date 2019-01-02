@@ -23,8 +23,7 @@ class MutationFactory
             'fields' => [
                 'editTapeUser' => $container->get(EditTapeUserResolver::class),
                 'importImdbMovie' => $container->get(ImportImdbMovieResolver::class),
-                'importImdbEpisodeList' => $container->get(ImportImdbEpisodeListResolver::class),
-                'bulkImageInsertion' => $container->get(BulkImageInsertionResolver::class)
+                'importImdbEpisodeList' => $container->get(ImportImdbEpisodeListResolver::class)
             ]
         ]);
     }
