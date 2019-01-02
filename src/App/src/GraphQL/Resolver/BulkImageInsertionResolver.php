@@ -26,7 +26,7 @@ class BulkImageInsertionResolver
 
         $folderIterator = new RecursiveDirectoryIterator('/usr/share/nginx/html/cinema-expressive/public/photos/');
         $fileIterator = new RecursiveIteratorIterator($folderIterator);
-        $filteredFiles = new RegexIterator($fileIterator, '/^.+\.php$/i', RecursiveRegexIterator::GET_MATCH);
+        $filteredFiles = new RegexIterator($fileIterator, '/^.+\.jpg/i', RecursiveRegexIterator::GET_MATCH);
 
         $count = 0;
         $batchSize = 20;
