@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bec65ad93e4b0943d0a95949d920f5d4",
+    "content-hash": "5dbf7aefcde970b468298571d6e1f5a9",
     "packages": [
         {
             "name": "aura/di",
@@ -532,16 +532,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "v2.9.1",
+            "version": "v2.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "ec74d6e300d78fbc896669c3ca57ef9719adc9c6"
+                "reference": "22800bd651c1d8d2a9719e2a3dc46d5108ebfcc9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/ec74d6e300d78fbc896669c3ca57ef9719adc9c6",
-                "reference": "ec74d6e300d78fbc896669c3ca57ef9719adc9c6",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/22800bd651c1d8d2a9719e2a3dc46d5108ebfcc9",
+                "reference": "22800bd651c1d8d2a9719e2a3dc46d5108ebfcc9",
                 "shasum": ""
             },
             "require": {
@@ -610,7 +610,7 @@
                 "php",
                 "queryobject"
             ],
-            "time": "2018-12-14T04:51:13+00:00"
+            "time": "2018-12-31T03:27:51+00:00"
         },
         {
             "name": "doctrine/event-manager",
@@ -1867,16 +1867,16 @@
         },
         {
             "name": "php-http/discovery",
-            "version": "1.5.0",
+            "version": "1.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-http/discovery.git",
-                "reference": "5e7bf246ec54b28ae543b018d2576579a102ac20"
+                "reference": "ffef11d54171336d841a34816a35bc035fb8cef0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-http/discovery/zipball/5e7bf246ec54b28ae543b018d2576579a102ac20",
-                "reference": "5e7bf246ec54b28ae543b018d2576579a102ac20",
+                "url": "https://api.github.com/repos/php-http/discovery/zipball/ffef11d54171336d841a34816a35bc035fb8cef0",
+                "reference": "ffef11d54171336d841a34816a35bc035fb8cef0",
                 "shasum": ""
             },
             "require": {
@@ -1928,7 +1928,7 @@
                 "message",
                 "psr7"
             ],
-            "time": "2018-12-30T12:07:33+00:00"
+            "time": "2018-12-31T07:31:26+00:00"
         },
         {
             "name": "php-http/guzzle6-adapter",
@@ -5281,17 +5281,6 @@
         {
             "name": "roave/security-advisories",
             "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "5f3e0c82ada2d16fdd637b24e095888f4abac43f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/5f3e0c82ada2d16fdd637b24e095888f4abac43f",
-                "reference": "5f3e0c82ada2d16fdd637b24e095888f4abac43f",
-                "shasum": ""
-            },
             "conflict": {
                 "3f/pygmentize": "<1.2",
                 "adodb/adodb-php": "<5.20.12",
@@ -6612,7 +6601,9 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.1"
+        "php": "^7.1",
+        "ext-imagick": "*",
+        "ext-sqlsrv": "*"
     },
     "platform-dev": []
 }
