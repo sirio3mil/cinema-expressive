@@ -8,6 +8,7 @@
 
 namespace App\GraphQL\Factory;
 
+use App\GraphQL\Resolver\BulkImageInsertionResolver;
 use App\GraphQL\Type\Mutation;
 use Psr\Container\ContainerInterface;
 use App\GraphQL\Resolver\EditTapeUserResolver;
@@ -22,7 +23,8 @@ class MutationFactory
             'fields' => [
                 'editTapeUser' => $container->get(EditTapeUserResolver::class),
                 'importImdbMovie' => $container->get(ImportImdbMovieResolver::class),
-                'importImdbEpisodeList' => $container->get(ImportImdbEpisodeListResolver::class)
+                'importImdbEpisodeList' => $container->get(ImportImdbEpisodeListResolver::class),
+                'bulkImageInsertion' => $container->get(BulkImageInsertionResolver::class)
             ]
         ]);
     }
