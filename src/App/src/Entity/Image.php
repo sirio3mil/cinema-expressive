@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Class Image
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="Image")
+ * @ORM\Table(name="[Image]")
  */
 class Image implements CinemaEntity
 {

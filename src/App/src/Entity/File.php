@@ -15,7 +15,7 @@ use DateTime;
  * Class File
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="File")
+ * @ORM\Table(name="[File]")
  * @ORM\HasLifecycleCallbacks
  */
 class File implements CinemaEntity
