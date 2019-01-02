@@ -8,7 +8,14 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Class Image
+ * @package App\Entity
+ * @ORM\Entity
+ * @ORM\Table(name="Image")
+ */
 class Image implements CinemaEntity
 {
     /**
