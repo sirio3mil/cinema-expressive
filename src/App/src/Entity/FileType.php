@@ -5,19 +5,13 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Class TapeUserStatus
+ * Class FileType
  * @package App\Entity
  * @ORM\Entity
- * @ORM\Table(name="TapeUserStatus")
+ * @ORM\Table(name="FileType")
  */
-class TapeUserStatus implements CinemaEntity
+class FileType implements CinemaEntity
 {
-
-    public const WISH_LIST = 3;
-
-    public const VIEW = 2;
-
-    public const DOWNLOADED = 1;
 
     /**
      * @var int
@@ -25,13 +19,13 @@ class TapeUserStatus implements CinemaEntity
      * @ORM\Id
      * @ORM\Column(
      *     type="smallint",
-     *     name="tapeUserStatusId",
+     *     name="fileTypeId",
      *     nullable=false,
      *     options={"unsigned":false}
      * )
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $tapeUserStatusId;
+    private $fileTypeId;
 
     /**
      * @var string
@@ -50,16 +44,16 @@ class TapeUserStatus implements CinemaEntity
     /**
      * @return int
      */
-    public function getTapeUserStatusId(): int
+    public function getFileTypeId(): int
     {
-        return $this->tapeUserStatusId;
+        return $this->fileTypeId;
     }
 
     /**
      * @param string $description
-     * @return TapeUserStatus
+     * @return FileType
      */
-    public function setDescription(string $description): TapeUserStatus
+    public function setDescription(string $description): FileType
     {
         $this->description = $description;
     
