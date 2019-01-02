@@ -47,6 +47,8 @@
   },
   "require": {
     "php": "^7.1",
+    "ext-imagick": "*",
+    "ext-sqlsrv": "*",
     "devster/ubench": "^2.0",
     "doctrine/orm": "^2.6",
     "ecodev/graphql-doctrine": "^6.0",
