@@ -8,6 +8,7 @@
 
 namespace App\Factory;
 
+use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Tuupola\Middleware\CorsMiddleware;
