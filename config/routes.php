@@ -9,6 +9,10 @@ use Zend\Expressive\MiddlewareFactory;
 /**
  * Setup routes with a single request method:
  *
+ * @param Application $app
+ * @param MiddlewareFactory $factory
+ * @param ContainerInterface $container
+ *
  * $app->get('/', App\Handler\HomePageHandler::class, 'home');
  * $app->post('/album', App\Handler\AlbumCreateHandler::class, 'album.create');
  * $app->put('/album/:id', App\Handler\AlbumUpdateHandler::class, 'album.put');

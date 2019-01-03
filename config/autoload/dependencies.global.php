@@ -47,7 +47,7 @@ return [
             GraphQL\Doctrine\Types::class => App\GraphQL\Factory\TypeFactory::class,
             MongoDB\Driver\Manager::class => App\Factory\MongoDBManagerFactory::class,
             Doctrine\ORM\EntityManager::class => App\Factory\EntityManagerFactory::class,
-            Tuupola\Middleware\Cors::class => App\Factory\CorsMiddlewareFactory::class
+            Tuupola\Middleware\CorsMiddleware::class => App\Factory\CorsMiddlewareFactory::class
         ],
     ],
 ];

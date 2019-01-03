@@ -8,18 +8,25 @@
 
 namespace App\Factory;
 
-use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Tuupola\Middleware\CorsMiddleware;
 use Zend\Diactoros\Response;
-use Zend\Diactoros\Response\JsonResponse;
+use Zend\ProblemDetails\ProblemDetailsResponseFactory;
 use Zend\Stratigility\Middleware\CallableMiddlewareWrapper;
 
 class CorsMiddlewareFactory
 {
+    /** @var ProblemDetailsResponseFactory */
+    protected static $problemDetailsResponseFactory;
+
+    /**
+     * @param ContainerInterface $container
+     * @return CallableMiddlewareWrapper
+     */
     public function __invoke(ContainerInterface $container): CallableMiddlewareWrapper
     {
+        self::$problemDetailsResponseFactory = $container->get(ProblemDetailsResponseFactory::class);
         return new CallableMiddlewareWrapper(
             new CorsMiddleware([
                 "origin" => ["*"],
@@ -38,14 +45,17 @@ class CorsMiddlewareFactory
      * @param RequestInterface $request
      * @param ResponseInterface $response
      * @param $arguments
-     * @return JsonResponse
+     * @return ResponseInterface
      */
-    public static function error(
-        RequestInterface $request,
-        ResponseInterface $response,
-        $arguments
-    ) {
-
-        return new JsonResponse($arguments);
+    public static function error(RequestInterface $request, ResponseInterface $response, $arguments): ResponseInterface
+    {
+        return self::$problemDetailsResponseFactory->createResponse(
+            $request,
+            401,
+            '',
+            $arguments['message'],
+            '',
+            []
+        );
     }
 }

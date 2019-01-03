@@ -71,6 +71,7 @@
     "zendframework/zend-expressive-aurarouter": "^3.0",
     "zendframework/zend-expressive-helpers": "^5.0",
     "zendframework/zend-expressive-twigrenderer": "^2.0",
+    "zendframework/zend-problem-details": "^1.0",
     "zendframework/zend-stdlib": "^3.1"
   },
   "require-dev": {
