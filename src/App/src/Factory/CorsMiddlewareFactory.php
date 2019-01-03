@@ -14,7 +14,7 @@ use Psr\Http\Message\ResponseInterface;
 use Tuupola\Middleware\CorsMiddleware;
 use Zend\Diactoros\Response;
 use Zend\ProblemDetails\ProblemDetailsResponseFactory;
-use Zend\Stratigility\Middleware\CallableMiddlewareWrapper;
+use Zend\Stratigility\Middleware\CallableMiddlewareDecorator;
 
 class CorsMiddlewareFactory
 {
@@ -25,10 +25,10 @@ class CorsMiddlewareFactory
      * @param ContainerInterface $container
      * @return CallableMiddlewareWrapper
      */
-    public function __invoke(ContainerInterface $container): CallableMiddlewareWrapper
+    public function __invoke(ContainerInterface $container): CallableMiddlewareDecorator
     {
         self::$problemDetailsResponseFactory = $container->get(ProblemDetailsResponseFactory::class);
-        return new CallableMiddlewareWrapper(
+        return new CallableMiddlewareDecorator(
             new CorsMiddleware([
                 "origin" => ["*"],
                 "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -37,8 +37,7 @@ class CorsMiddlewareFactory
                 "credentials" => false,
                 "cache" => 0,
                 "error" => [$this, 'error'],
-            ]),
-            new Response()
+            ])
         );
     }
 
