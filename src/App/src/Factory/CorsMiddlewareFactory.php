@@ -12,50 +12,33 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Tuupola\Middleware\CorsMiddleware;
-use Zend\Diactoros\Response;
 use Zend\ProblemDetails\ProblemDetailsResponseFactory;
-use Zend\Stratigility\Middleware\CallableMiddlewareDecorator;
 
 class CorsMiddlewareFactory
 {
-    /** @var ProblemDetailsResponseFactory */
-    protected static $problemDetailsResponseFactory;
-
     /**
      * @param ContainerInterface $container
-     * @return CallableMiddlewareWrapper
+     * @return CorsMiddleware
      */
-    public function __invoke(ContainerInterface $container): CallableMiddlewareDecorator
+    public function __invoke(ContainerInterface $container): CorsMiddleware
     {
-        self::$problemDetailsResponseFactory = $container->get(ProblemDetailsResponseFactory::class);
-        return new CallableMiddlewareDecorator(
-            new CorsMiddleware([
-                "origin" => ["*"],
-                "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
-                "headers.allow" => ["Content-Type", "Accept"],
-                "headers.expose" => [],
-                "credentials" => false,
-                "cache" => 0,
-                "error" => [$this, 'error'],
-            ])
-        );
-    }
-
-    /**
-     * @param RequestInterface $request
-     * @param ResponseInterface $response
-     * @param $arguments
-     * @return ResponseInterface
-     */
-    public static function error(RequestInterface $request, ResponseInterface $response, $arguments): ResponseInterface
-    {
-        return self::$problemDetailsResponseFactory->createResponse(
-            $request,
-            401,
-            '',
-            $arguments['message'],
-            '',
-            []
-        );
+        return new CorsMiddleware([
+            "origin" => ["*"],
+            "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
+            "headers.allow" => ["Content-Type", "Accept"],
+            "headers.expose" => [],
+            "credentials" => false,
+            "cache" => 0,
+            "error" => function (RequestInterface $request, ResponseInterface $response, $arguments) use ($container) {
+                return $container->get(ProblemDetailsResponseFactory::class)->createResponse(
+                    $request,
+                    401,
+                    '',
+                    $arguments['message'],
+                    '',
+                    []
+                );
+            }
+        ]);
     }
 }
