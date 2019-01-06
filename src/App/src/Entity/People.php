@@ -73,7 +73,7 @@ class People implements CinemaEntity
     public function setFullName(string $fullName): People
     {
         $this->fullName = $fullName;
-    
+
         return $this;
     }
 
@@ -96,9 +96,9 @@ class People implements CinemaEntity
     }
 
     /**
-     * @return PeopleDetail
+     * @return PeopleDetail|null
      */
-    public function getDetail(): PeopleDetail
+    public function getDetail(): ?PeopleDetail
     {
         return $this->detail;
     }
