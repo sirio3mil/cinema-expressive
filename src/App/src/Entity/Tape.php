@@ -445,9 +445,9 @@ class Tape implements CinemaEntity
     }
 
     /**
-     * @return TapeDetail
+     * @return TapeDetail|null
      */
-    public function getDetail(): TapeDetail
+    public function getDetail(): ?TapeDetail
     {
         return $this->detail;
     }
@@ -463,9 +463,9 @@ class Tape implements CinemaEntity
     }
 
     /**
-     * @return TapePlot
+     * @return TapePlot|null
      */
-    public function getPlot(): TapePlot
+    public function getPlot(): ?TapePlot
     {
         return $this->plot;
     }
@@ -481,9 +481,9 @@ class Tape implements CinemaEntity
     }
 
     /**
-     * @return TvShow
+     * @return TvShow|null
      */
-    public function getTvShow(): TvShow
+    public function getTvShow(): ?TvShow
     {
         return $this->tvShow;
     }
@@ -500,9 +500,9 @@ class Tape implements CinemaEntity
     }
 
     /**
-     * @return TvShowChapter
+     * @return TvShowChapter|null
      */
-    public function getTvShowChapter(): TvShowChapter
+    public function getTvShowChapter(): ?TvShowChapter
     {
         return $this->tvShowChapter;
     }
