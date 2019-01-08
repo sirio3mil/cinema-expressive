@@ -115,7 +115,7 @@ class File implements CinemaEntity
      *     type="string",
      *     length=150,
      *     name="downloadName",
-     *     nullable=false,
+     *     nullable=true,
      *     options={"fixed":false}
      * )
      */
@@ -258,9 +258,9 @@ class File implements CinemaEntity
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDownloadName(): string
+    public function getDownloadName(): ?string
     {
         return $this->downloadName;
     }
@@ -290,9 +290,9 @@ class File implements CinemaEntity
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getOriginalName(): string
+    public function getOriginalName(): ?string
     {
         return $this->originalName;
     }
