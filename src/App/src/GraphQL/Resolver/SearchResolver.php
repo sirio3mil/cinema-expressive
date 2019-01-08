@@ -29,8 +29,16 @@ class SearchResolver
         $rsm = new ResultSetMapping();
         $rsm->addEntityResult(SearchValue::class, 'sv');
         $rsm->addFieldResult('sv', 'searchValueId', 'searchValueId');
+        $rsm->addFieldResult('sv', 'objectId', 'objectId');
+        $rsm->addFieldResult('sv', 'searchParam', 'searchParam');
+        $rsm->addFieldResult('sv', 'primaryParam', 'primaryParam');
 
-        $sql = "exec dbo.SearchParam ?, ?";
+        $sql = "select sv.searchValueId
+                    ,sv.objectId
+                    ,sv.searchParam
+                    ,sv.primaryParam
+                from dbo.search (?, ?) s
+                INNER JOIN dbo.SearchValue sv on sv.searchValueId = s.searchValueId";
         /** @var NativeQuery $query */
         $query = $entityManager->createNativeQuery($sql, $rsm);
         $query->setParameter(1, $args['pattern']);
