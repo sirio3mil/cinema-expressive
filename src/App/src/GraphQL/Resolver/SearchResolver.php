@@ -8,6 +8,7 @@
 
 namespace App\GraphQL\Resolver;
 
+use App\Entity\SearchValue;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -26,7 +27,7 @@ class SearchResolver
         $entityManager = $container->get(EntityManager::class);
         /** @var ResultSetMapping $rsm */
         $rsm = new ResultSetMapping();
-        $rsm->addEntityResult('SearchValue', 'sv');
+        $rsm->addEntityResult(SearchValue::class, 'sv');
         $rsm->addFieldResult('sv', 'searchValueId', 'searchValueId');
 
         $sql = "exec dbo.SearchParam ?, ?";
