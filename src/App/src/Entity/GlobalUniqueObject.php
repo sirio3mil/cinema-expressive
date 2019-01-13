@@ -132,7 +132,7 @@ class GlobalUniqueObject implements CinemaEntity
     }
 
     /**
-     * @return ImdbNumber
+     * @return ImdbNumber|null
      */
     public function getImdbNumber(): ?ImdbNumber
     {
@@ -168,7 +168,7 @@ class GlobalUniqueObject implements CinemaEntity
     }
 
     /**
-     * @return Ranking
+     * @return Ranking|null
      */
     public function getRanking(): ?Ranking
     {
@@ -186,7 +186,7 @@ class GlobalUniqueObject implements CinemaEntity
     }
 
     /**
-     * @return People
+     * @return People|null
      */
     public function getPeople(): ?People
     {
@@ -204,7 +204,7 @@ class GlobalUniqueObject implements CinemaEntity
     }
 
     /**
-     * @return Tape
+     * @return Tape|null
      */
     public function getTape(): ?Tape
     {
