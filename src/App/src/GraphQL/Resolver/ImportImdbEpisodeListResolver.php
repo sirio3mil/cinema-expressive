@@ -8,33 +8,47 @@
 
 namespace App\GraphQL\Resolver;
 
-
+use App\Entity\Tape;
 use Psr\Container\ContainerInterface;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 
 class ImportImdbEpisodeListResolver
 {
 
-    protected static function importEpisodes(ContainerInterface $container, array $episodeList)
+    /**
+     * @param ContainerInterface $container
+     * @param array $episodeList
+     * @return TvShowChapter[]
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    protected static function importEpisodes(ContainerInterface $container, array $episodeList): array
     {
         $episodes = [];
 
         foreach ($episodeList as $episode) {
-            $result = ImportImdbMovieResolver::resolve($container, $episode);
-            if (!filter_var($result['tapeId'], FILTER_VALIDATE_INT)) {
-                throw new \HttpResponseException('Tape ' . $episode['imdbNumber'] . ' could not be registered');
-            }
-            $episodes[] = [
-                'title' => $episode['title'],
-                'imdbNumber' => $episode['imdbNumber'],
-                'premiere' => $episode['date'],
-                'episodeNumber' => $episode['episodeNumber'],
-                'tapeId' => $result['tapeId']
-            ];
+            /** @var Tape $tape */
+            $tape = ImportImdbMovieResolver::resolve($container, $episode);
+            $episodes[] = $tape->getTvShowChapter();
         }
 
         return $episodes;
     }
 
+    /**
+     * @param ContainerInterface $container
+     * @param array $args
+     * @return TvShowChapter[]
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
     public static function resolve(ContainerInterface $container, array $args): array
     {
         $episodes = [];

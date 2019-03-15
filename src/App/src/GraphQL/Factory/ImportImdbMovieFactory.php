@@ -8,8 +8,8 @@
 
 namespace App\GraphQL\Factory;
 
+use App\Entity\Tape;
 use App\GraphQL\Resolver\ImportImdbMovieResolver;
-use App\GraphQL\Type\ImportImdbMovieOutputType;
 use GraphQL\Doctrine\Types;
 use Psr\Container\ContainerInterface;
 use GraphQL\Type\Definition\Type;
@@ -24,7 +24,7 @@ class ImportImdbMovieFactory
             'args' => [
                 'imdbNumber' => Type::nonNull(Type::int())
             ],
-            'type' => $types->get(ImportImdbMovieOutputType::class),
+            'type' => $types->getOutput(Tape::class),
             'resolve' => function ($source, $args) use ($container) {
                 return ImportImdbMovieResolver::resolve($container, $args);
             }

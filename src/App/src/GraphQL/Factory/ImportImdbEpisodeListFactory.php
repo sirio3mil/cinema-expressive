@@ -8,8 +8,8 @@
 
 namespace App\GraphQL\Factory;
 
+use App\Entity\TvShowChapter;
 use App\GraphQL\Resolver\ImportImdbEpisodeListResolver;
-use App\GraphQL\Type\ImportedEpisodeType;
 use GraphQL\Doctrine\Types;
 use Psr\Container\ContainerInterface;
 use GraphQL\Type\Definition\Type;
@@ -25,7 +25,7 @@ class ImportImdbEpisodeListFactory
                 'imdbNumber' => Type::nonNull(Type::int()),
                 'seasonNumber' => Type::nonNull(Type::int())
             ],
-            'type' => Type::listOf($types->get(ImportedEpisodeType::class)),
+            'type' => Type::listOf($types->getOutput(TvShowChapter::class)),
             'resolve' => function ($source, $args) use ($container) {
                 return ImportImdbEpisodeListResolver::resolve($container, $args);
             }

@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Resolver;
 
-
 use App\Alias\MongoDBClient;
 use App\Entity\Ranking;
 use App\Entity\Country;
@@ -39,6 +38,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\ORMInvalidArgumentException;
+use Doctrine\ORM\OptimisticLockException;
 use ImdbScraper\Iterator\AlsoKnownAsIterator;
 use ImdbScraper\Iterator\CastIterator;
 use ImdbScraper\Iterator\KeywordIterator;
@@ -49,8 +52,6 @@ use ImdbScraper\Model\CastPeople;
 use ImdbScraper\Model\Keyword;
 use ImdbScraper\Model\Release;
 use Interop\Container\ContainerInterface;
-use Zend\Cache\Storage\Adapter\AbstractAdapter;
-use Zend\Cache\Storage\Adapter\Memcached;
 
 class ImportImdbMovieResolver
 {
@@ -58,16 +59,15 @@ class ImportImdbMovieResolver
     /**
      * @param ContainerInterface $container
      * @param array $args
-     * @return array
+     * @return Tape
      * @throws NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws ORMInvalidArgumentException
+     * @throws OptimisticLockException
      */
-    public static function resolve(ContainerInterface $container, array $args): array
+    public static function resolve(ContainerInterface $container, array $args): Tape
     {
-        /** @var AbstractAdapter $cacheStorageAdapter */
-        $cacheStorageAdapter = $container->get(Memcached::class);
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);
         /** @var RowType $tapeRowType */
@@ -81,8 +81,8 @@ class ImportImdbMovieResolver
                 FROM App\Entity\ImdbNumber i 
                 JOIN i.object o 
                 WHERE i.imdbNumber = :imdbNumber 
-                    AND o.rowType = :rowType'
-            );
+                    AND o.rowType = :rowType
+            ');
             $query->setParameters([
                 'imdbNumber' => $args['imdbNumber'],
                 'rowType' => $tapeRowType
@@ -422,9 +422,10 @@ class ImportImdbMovieResolver
                 }
                 if (!empty($person->getCharacter())) {
                     /** @var TapePeopleRoleCharacter $peopleAliasTape */
-                    $tapePeopleRoleCharacter = $entityManager->getRepository(TapePeopleRoleCharacter::class)->findOneBy([
-                        "tapePeopleRole" => $tapePeopleRole
-                    ]);
+                    $tapePeopleRoleCharacter = $entityManager->getRepository(TapePeopleRoleCharacter::class)
+                        ->findOneBy([
+                            "tapePeopleRole" => $tapePeopleRole
+                        ]);
                     if (!$tapePeopleRoleCharacter) {
                         $tapePeopleRoleCharacter = new TapePeopleRoleCharacter();
                         $tapePeopleRoleCharacter->setTapePeopleRole($tapePeopleRole);
@@ -731,8 +732,6 @@ class ImportImdbMovieResolver
                 $entityManager->flush();
             }
         }
-        return [
-            "tapeId" => $tape->getTapeId()
-        ];
+        return $tape;
     }
 }
