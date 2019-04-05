@@ -49,7 +49,7 @@ class Tag implements CinemaEntity
     /**
      * @var Collection
      *
-     * @ORM\ManyToMany(targetEntity="Tape", mappedBy="tags", fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="Tape", mappedBy="tags", fetch="EXTRA_LAZY", cascade={"persist"})
      */
     protected $tapes;
 
@@ -76,7 +76,7 @@ class Tag implements CinemaEntity
     public function setKeyword(string $keyword): Tag
     {
         $this->keyword = $keyword;
-    
+
         return $this;
     }
 

@@ -98,7 +98,7 @@ class Tape implements CinemaEntity
 
     /**
      * @var Collection
-     * @ORM\ManyToMany(targetEntity="Location", inversedBy="tapes", fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="Location", inversedBy="tapes", fetch="EXTRA_LAZY", cascade={"persist"})
      * @ORM\JoinTable(name="TapeLocation",
      *      joinColumns={@ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="locationId", referencedColumnName="locationId")}
@@ -216,7 +216,9 @@ class Tape implements CinemaEntity
      */
     public function addCountry(Country $country): Tape
     {
-        $this->countries[] = $country;
+        if (!$this->countries->contains($country)) {
+            $this->countries[] = $country;
+        }
 
         return $this;
     }
@@ -244,7 +246,9 @@ class Tape implements CinemaEntity
      */
     public function addGenre(Genre $genre): Tape
     {
-        $this->genres[] = $genre;
+        if (!$this->genres->contains($genre)) {
+            $this->genres[] = $genre;
+        }
 
         return $this;
     }
@@ -272,7 +276,9 @@ class Tape implements CinemaEntity
      */
     public function addLanguage(Language $language): Tape
     {
-        $this->languages[] = $language;
+        if (!$this->languages->contains($language)) {
+            $this->languages[] = $language;
+        }
 
         return $this;
     }
@@ -302,7 +308,9 @@ class Tape implements CinemaEntity
      */
     public function addLocation(Location $location): Tape
     {
-        $this->locations[] = $location;
+        if (!$this->locations->contains($location)) {
+            $this->locations[] = $location;
+        }
 
         return $this;
     }
@@ -387,7 +395,9 @@ class Tape implements CinemaEntity
      */
     public function addSound(Sound $sound): Tape
     {
-        $this->sounds[] = $sound;
+        if (!$this->sounds->contains($sound)) {
+            $this->sounds[] = $sound;
+        }
 
         return $this;
     }

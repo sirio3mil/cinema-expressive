@@ -34,7 +34,6 @@ use App\Entity\TapePeopleRoleCharacter;
 use App\Entity\TapeTitle;
 use App\Entity\TvShow;
 use App\Entity\TvShowChapter;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
@@ -236,54 +235,46 @@ class ImportImdbMovieResolver
         $tapeRanking->setScoreFromCalculatedValue($imdbMovieDetails['score']);
         $tapeRanking->setVotes($imdbMovieDetails['votes']);
         $entityManager->persist($tapeRanking);
-        /** @var ArrayCollection $sounds */
-        $sounds = $tape->getSounds();
         if ($imdbMovieDetails['sounds']) {
             foreach ($imdbMovieDetails['sounds'] as $text) {
                 /** @var Sound $sound */
                 $sound = $entityManager->getRepository(Sound::class)->findOneBy([
                     "description" => $text
                 ]);
-                if ($sound && !$sounds->contains($sound)) {
+                if ($sound) {
                     $tape->addSound($sound);
                 }
             }
         }
         if ($imdbMovieDetails['genres']) {
-            /** @var ArrayCollection $genres */
-            $genres = $tape->getGenres();
             foreach ($imdbMovieDetails['genres'] as $text) {
                 /** @var Genre $genre */
                 $genre = $entityManager->getRepository(Genre::class)->findOneBy([
                     "name" => $text
                 ]);
-                if ($genre && !$genres->contains($genre)) {
+                if ($genre) {
                     $tape->addGenre($genre);
                 }
             }
         }
         if ($imdbMovieDetails['languages']) {
-            /** @var ArrayCollection $languages */
-            $languages = $tape->getLanguages();
             foreach ($imdbMovieDetails['languages'] as $text) {
                 /** @var Language $language */
                 $language = $entityManager->getRepository(Language::class)->findOneBy([
                     "name" => $text
                 ]);
-                if ($language && !$languages->contains($language)) {
+                if ($language) {
                     $tape->addLanguage($language);
                 }
             }
         }
         if ($imdbMovieDetails['countries']) {
-            /** @var ArrayCollection $countries */
-            $countries = $tape->getCountries();
             foreach ($imdbMovieDetails['countries'] as $text) {
                 /** @var Country $country */
                 $country = $entityManager->getRepository(Country::class)->findOneBy([
                     "officialName" => $text
                 ]);
-                if ($country && !$countries->contains($country)) {
+                if ($country) {
                     $tape->addCountry($country);
                 }
             }
@@ -315,8 +306,6 @@ class ImportImdbMovieResolver
         /** @var array $imdbMovieLocations */
         $imdbMovieLocations = ImdbMovieLocationResolver::resolve($container, $args);
         if ($imdbMovieLocations) {
-            /** @var ArrayCollection $locations */
-            $locations = $tape->getLocations();
             foreach ($imdbMovieLocations as $data) {
                 /** @var Location $location */
                 $location = $entityManager->getRepository(Location::class)->findOneBy([
@@ -325,9 +314,8 @@ class ImportImdbMovieResolver
                 if (!$location) {
                     $location = new Location();
                     $location->setPlace($data['location']);
-                    $entityManager->persist($location);
                 }
-                if ($locations && !$locations->contains($location)) {
+                if ($location) {
                     $tape->addLocation($location);
                 }
             }
