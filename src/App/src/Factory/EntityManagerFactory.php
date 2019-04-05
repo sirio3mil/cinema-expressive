@@ -11,14 +11,17 @@ namespace App\Factory;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\Common\Cache\MemcachedCache;
 use Psr\Container\ContainerInterface;
+use Memcached;
 
 class EntityManagerFactory
 {
     public function __invoke(ContainerInterface $container): EntityManager
     {
         $config = $container->has('config') ? $container->get('config') : [];
-        $config = $config['db'] ?? [];
+        $dbConfig = $config['db'] ?? [];
+        $cacheConfig = $config['zend-cache'] ?? [];
 
         $paths = [
             __DIR__ . "/src/App/src/Entity"
@@ -26,17 +29,23 @@ class EntityManagerFactory
         $isDevMode = true;
 
         $dbParams = [
-            'driver'   => $config['driver'],
-            'user'     => $config['username'],
-            'password' => $config['password'],
-            'dbname'   => $config['database'],
-            'host'     => $config['hostname'],
-            'charset'  => $config['charset']
+            'driver'   => $dbConfig['driver'],
+            'user'     => $dbConfig['username'],
+            'password' => $dbConfig['password'],
+            'dbname'   => $dbConfig['database'],
+            'host'     => $dbConfig['hostname'],
+            'charset'  => $dbConfig['charset']
         ];
 
         Type::addType('uuid', 'Ramsey\Uuid\Doctrine\UuidType');
 
-        $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, null, null, false);
+        /** @var Memcached $memcached */
+        $memcached = new Memcached();
+        $memcached->addServer($cacheConfig['adapter']['options']['servers'][0], 11211);
+        $cacheDriver = new MemcachedCache();
+        $cacheDriver->setMemcached($memcached);
+
+        $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, null, $cacheDriver, false);
 
         return EntityManager::create($dbParams, $config);
     }
