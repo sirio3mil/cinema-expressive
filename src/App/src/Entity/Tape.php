@@ -118,7 +118,7 @@ class Tape implements CinemaEntity
 
     /**
      * @var Collection
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="tapes", fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="tapes", fetch="EXTRA_LAZY", cascade={"persist"})
      * @ORM\JoinTable(name="TapeTag",
      *      joinColumns={@ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="tagId", referencedColumnName="tagId")}
@@ -358,8 +358,9 @@ class Tape implements CinemaEntity
      */
     public function addTag(Tag $tag): Tape
     {
-        $this->tags[] = $tag;
-
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+        }
         return $this;
     }
 

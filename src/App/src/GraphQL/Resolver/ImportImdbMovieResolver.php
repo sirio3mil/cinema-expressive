@@ -294,8 +294,6 @@ class ImportImdbMovieResolver
         if ($imdbMovieKeywords && array_key_exists('keywords', $imdbMovieKeywords)) {
             /** @var KeywordIterator $keywords */
             $keywords = $imdbMovieKeywords['keywords'];
-            /** @var ArrayCollection $tags */
-            $tags = $tape->getTags();
             if ($keywords->getIterator()->count()) {
                 /** @var Keyword $data */
                 foreach ($keywords as $data) {
@@ -308,7 +306,7 @@ class ImportImdbMovieResolver
                         $tag->setKeyword($data->getKeyword());
                         $entityManager->persist($tag);
                     }
-                    if ($tag && !$tags->contains($tag)) {
+                    if ($tag) {
                         $tape->addTag($tag);
                     }
                 }
