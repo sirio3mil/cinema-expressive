@@ -79,6 +79,7 @@ class ImportImdbMovieResolver
         $query->setParameters([
             'imdbNumber' => $person->getImdbNumber()
         ]);
+        $query->useQueryCache(true);
         return $query->getOneOrNullResult();
     }
 
@@ -105,6 +106,7 @@ class ImportImdbMovieResolver
             'role' => $role,
             'tape' => $tape
         ]);
+        $query->useQueryCache(true);
         /** @var array $result */
         $dqlQueryResult = $query->getResult();
         $cast = [];
@@ -165,6 +167,7 @@ class ImportImdbMovieResolver
                 'imdbNumber' => $args['imdbNumber'],
                 'rowType' => $tapeRowType
             ]);
+            $query->useQueryCache(true);
             /** @var ImdbNumber $imdbNumber */
             $imdbNumber = $query->getSingleResult();
             /** @var Tape $tape */
@@ -359,6 +362,7 @@ class ImportImdbMovieResolver
                     'imdbNumber' => $imdbMovieDetails['tvShow'],
                     'rowType' => $tapeRowType
                 ]);
+                $query->useQueryCache(true);
                 /** @var TvShow $tvShow */
                 $tvShow = $query->getSingleResult();
                 $tvShowChapter = new TvShowChapter();
