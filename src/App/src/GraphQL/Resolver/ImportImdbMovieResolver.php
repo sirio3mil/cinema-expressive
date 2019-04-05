@@ -51,10 +51,88 @@ use ImdbScraper\Model\AlsoKnownAs;
 use ImdbScraper\Model\CastPeople;
 use ImdbScraper\Model\Keyword;
 use ImdbScraper\Model\Release;
+use ImdbScraper\Model\People as Person;
 use Interop\Container\ContainerInterface;
 
 class ImportImdbMovieResolver
 {
+
+    /** @var RowType */
+    public static $peopleRowType;
+
+    /**
+     * @param EntityManager $entityManager
+     * @param Person $person
+     * @return People|null
+     * @throws NonUniqueResultException
+     */
+    public static function getPeopleByImdbNumber(EntityManager $entityManager, Person $person): ?People
+    {
+        /** @var Query $query */
+        $query = $entityManager->createQuery('
+            SELECT p 
+            FROM App\Entity\People p 
+            JOIN App\Entity\ImdbNumber i 
+                WITH i.object = p.object 
+            WHERE i.imdbNumber = :imdbNumber
+        ');
+        $query->setParameters([
+            'imdbNumber' => $person->getImdbNumber()
+        ]);
+        return $query->getOneOrNullResult();
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     * @param Role $role
+     * @param Tape $tape
+     * @return array
+     */
+    public static function getPeopleByTapeAndRole(EntityManager $entityManager, Role $role, Tape $tape): array
+    {
+        /** @var Query $query */
+        $query = $entityManager->createQuery('
+            SELECT r tapePeopleRole
+              ,i.imdbNumber
+            FROM App\Entity\TapePeopleRole r
+            JOIN r.people p
+            JOIN App\Entity\ImdbNumber i 
+              WITH i.object = p.object
+            WHERE r.role = :role 
+              AND r.tape = :tape
+        ');
+        $query->setParameters([
+            'role' => $role,
+            'tape' => $tape
+        ]);
+        /** @var array $result */
+        $dqlQueryResult = $query->getResult();
+        $cast = [];
+        foreach ($dqlQueryResult as $row) {
+            $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
+        }
+        return $cast;
+    }
+
+    /**
+     * @param EntityManager $entityManager
+     * @param Person $person
+     * @throws ORMException
+     */
+    public static function createPeopleFromPerson(EntityManager $entityManager, Person $person): void
+    {
+        $object = new GlobalUniqueObject();
+        $object->setRowType(self::$peopleRowType);
+        $entityManager->persist($object);
+        $people = new People();
+        $people->setObject($object);
+        $people->setFullName($person->getFullName());
+        $entityManager->persist($people);
+        $imdbNumber = new ImdbNumber();
+        $imdbNumber->setImdbNumber($person->getImdbNumber());
+        $imdbNumber->setObject($object);
+        $entityManager->persist($imdbNumber);
+    }
 
     /**
      * @param ContainerInterface $container
@@ -296,31 +374,11 @@ class ImportImdbMovieResolver
         $castRole = $entityManager->getRepository(Role::class)->findOneBy([
             "roleId" => ROLE::ROLE_CAST
         ]);
-        /** @var RowType $peopleRowType */
-        $peopleRowType = $entityManager->getRepository(RowType::class)->findOneBy([
+        /** @var RowType peopleRowType */
+        self::$peopleRowType = $entityManager->getRepository(RowType::class)->findOneBy([
             "rowTypeId" => RowType::ROW_TYPE_PEOPLE
         ]);
-        /** @var Query $query */
-        $query = $entityManager->createQuery('
-            SELECT r tapePeopleRole
-              ,i.imdbNumber
-            FROM App\Entity\TapePeopleRole r
-            JOIN r.people p
-            JOIN App\Entity\ImdbNumber i 
-              WITH i.object = p.object
-            WHERE r.role = :role 
-              AND r.tape = :tape
-        ');
-        $query->setParameters([
-            'role' => $castRole,
-            'tape' => $tape
-        ]);
-        /** @var array $result */
-        $dqlQueryResult = $query->getResult();
-        $cast = [];
-        foreach ($dqlQueryResult as $row) {
-            $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
-        }
+        $cast = self::getPeopleByTapeAndRole($entityManager, $castRole, $tape);
         /** @var array $imdbMovieCredits */
         $imdbMovieCredits = ImdbMovieCastResolver::resolve($container, $args);
         /** @var CastIterator $castIterator */
@@ -337,31 +395,10 @@ class ImportImdbMovieResolver
                     $people = $tapePeopleRole->getPeople();
                 }
                 if (!$people) {
-                    /** @var Query $query */
-                    $query = $entityManager->createQuery('
-                                        SELECT p 
-                                        FROM App\Entity\People p 
-                                        JOIN App\Entity\ImdbNumber i 
-                                          WITH i.object = p.object 
-                                        WHERE i.imdbNumber = :imdbNumber
-                                    ');
-                    $query->setParameters([
-                        'imdbNumber' => $person->getImdbNumber()
-                    ]);
-                    $people = $query->getOneOrNullResult();
+                    $people = self::getPeopleByImdbNumber($entityManager, $person);
                 }
                 if (!$people) {
-                    $object = new GlobalUniqueObject();
-                    $object->setRowType($peopleRowType);
-                    $entityManager->persist($object);
-                    $people = new People();
-                    $people->setObject($object);
-                    $people->setFullName($person->getFullName());
-                    $entityManager->persist($people);
-                    $imdbNumber = new ImdbNumber();
-                    $imdbNumber->setImdbNumber($person->getImdbNumber());
-                    $imdbNumber->setObject($object);
-                    $entityManager->persist($imdbNumber);
+                    self::createPeopleFromPerson($entityManager, $person);
                 }
                 /** @var SearchValue $searchValue */
                 $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
@@ -440,31 +477,11 @@ class ImportImdbMovieResolver
         $directorRole = $entityManager->getRepository(Role::class)->findOneBy([
             "roleId" => ROLE::ROLE_DIRECTOR
         ]);
-        /** @var Query $query */
-        $query = $entityManager->createQuery('
-                            SELECT r tapePeopleRole
-                              ,i.imdbNumber
-                            FROM App\Entity\TapePeopleRole r
-                            JOIN r.people p
-                            JOIN App\Entity\ImdbNumber i 
-                              WITH i.object = p.object
-                            WHERE r.role = :role 
-                              AND r.tape = :tape
-                        ');
-        $query->setParameters([
-            'role' => $directorRole,
-            'tape' => $tape
-        ]);
-        /** @var array $result */
-        $dqlQueryResult = $query->getResult();
-        $cast = [];
-        foreach ($dqlQueryResult as $row) {
-            $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
-        }
+        $cast = self::getPeopleByTapeAndRole($entityManager, $directorRole, $tape);
         /** @var PersonIterator $directors */
         $directors = $imdbMovieCredits['directors'];
         if ($directors->getIterator()->count()) {
-            /** @var \ImdbScraper\Model\People $person */
+            /** @var Person $person */
             foreach ($directors as $person) {
                 /** @var TapePeopleRole $tapePeopleRole */
                 $tapePeopleRole = null;
@@ -475,31 +492,10 @@ class ImportImdbMovieResolver
                     $people = $tapePeopleRole->getPeople();
                 }
                 if (!$people) {
-                    /** @var Query $query */
-                    $query = $entityManager->createQuery('
-                                        SELECT p 
-                                        FROM App\Entity\People p 
-                                        JOIN App\Entity\ImdbNumber i 
-                                          WITH i.object = p.object 
-                                        WHERE i.imdbNumber = :imdbNumber
-                                    ');
-                    $query->setParameters([
-                        'imdbNumber' => $person->getImdbNumber()
-                    ]);
-                    $people = $query->getOneOrNullResult();
+                    $people = self::getPeopleByImdbNumber($entityManager, $person);
                 }
                 if (!$people) {
-                    $object = new GlobalUniqueObject();
-                    $object->setRowType($peopleRowType);
-                    $entityManager->persist($object);
-                    $people = new People();
-                    $people->setObject($object);
-                    $people->setFullName($person->getFullName());
-                    $entityManager->persist($people);
-                    $imdbNumber = new ImdbNumber();
-                    $imdbNumber->setImdbNumber($person->getImdbNumber());
-                    $imdbNumber->setObject($object);
-                    $entityManager->persist($imdbNumber);
+                    self::createPeopleFromPerson($entityManager, $person);
                 }
                 /** @var SearchValue $searchValue */
                 $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
@@ -527,32 +523,12 @@ class ImportImdbMovieResolver
         $writerRole = $entityManager->getRepository(Role::class)->findOneBy([
             "roleId" => ROLE::ROLE_WRITER
         ]);
-        /** @var Query $query */
-        $query = $entityManager->createQuery('
-                            SELECT r tapePeopleRole
-                              ,i.imdbNumber
-                            FROM App\Entity\TapePeopleRole r
-                            JOIN r.people p
-                            JOIN App\Entity\ImdbNumber i 
-                              WITH i.object = p.object
-                            WHERE r.role = :role 
-                              AND r.tape = :tape
-                        ');
-        $query->setParameters([
-            'role' => $writerRole,
-            'tape' => $tape
-        ]);
-        /** @var array $result */
-        $dqlQueryResult = $query->getResult();
-        $cast = [];
-        foreach ($dqlQueryResult as $row) {
-            $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
-        }
+        $cast = self::getPeopleByTapeAndRole($entityManager, $writerRole, $tape);
         /** @var PersonIterator $writers */
         $writers = $imdbMovieCredits['writers'];
         if ($writers->getIterator()->count()) {
             $peopleChecked = [];
-            /** @var \ImdbScraper\Model\People $person */
+            /** @var Person $person */
             foreach ($writers as $person) {
                 if (in_array($person->getImdbNumber(), $peopleChecked)) {
                     continue;
@@ -567,31 +543,10 @@ class ImportImdbMovieResolver
                     $people = $tapePeopleRole->getPeople();
                 }
                 if (!$people) {
-                    /** @var Query $query */
-                    $query = $entityManager->createQuery('
-                                        SELECT p 
-                                        FROM App\Entity\People p 
-                                        JOIN App\Entity\ImdbNumber i 
-                                          WITH i.object = p.object 
-                                        WHERE i.imdbNumber = :imdbNumber
-                                    ');
-                    $query->setParameters([
-                        'imdbNumber' => $person->getImdbNumber()
-                    ]);
-                    $people = $query->getOneOrNullResult();
+                    $people = self::getPeopleByImdbNumber($entityManager, $person);
                 }
                 if (!$people) {
-                    $object = new GlobalUniqueObject();
-                    $object->setRowType($peopleRowType);
-                    $entityManager->persist($object);
-                    $people = new People();
-                    $people->setObject($object);
-                    $people->setFullName($person->getFullName());
-                    $entityManager->persist($people);
-                    $imdbNumber = new ImdbNumber();
-                    $imdbNumber->setImdbNumber($person->getImdbNumber());
-                    $imdbNumber->setObject($object);
-                    $entityManager->persist($imdbNumber);
+                    self::createPeopleFromPerson($entityManager, $person);
                 }
                 /** @var SearchValue $searchValue */
                 $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
