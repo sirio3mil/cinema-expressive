@@ -20,31 +20,34 @@ class EntityManagerFactory
     public function __invoke(ContainerInterface $container): EntityManager
     {
         $config = $container->has('config') ? $container->get('config') : [];
+        $isDevMode = $config['debug'];
         $dbConfig = $config['db'] ?? [];
         $cacheConfig = $config['zend-cache'] ?? [];
 
         $paths = [
             __DIR__ . "/src/App/src/Entity"
         ];
-        $isDevMode = true;
 
         $dbParams = [
-            'driver'   => $dbConfig['driver'],
-            'user'     => $dbConfig['username'],
+            'driver' => $dbConfig['driver'],
+            'user' => $dbConfig['username'],
             'password' => $dbConfig['password'],
-            'dbname'   => $dbConfig['database'],
-            'host'     => $dbConfig['hostname'],
-            'charset'  => $dbConfig['charset']
+            'dbname' => $dbConfig['database'],
+            'host' => $dbConfig['hostname'],
+            'charset' => $dbConfig['charset']
         ];
 
         Type::addType('uuid', 'Ramsey\Uuid\Doctrine\UuidType');
 
-        /** @var Memcached $memcached */
-        $memcached = new Memcached();
-        $memcached->addServer($cacheConfig['adapter']['options']['servers'][0], 11211);
-        $cacheDriver = new MemcachedCache();
-        $cacheDriver->setMemcached($memcached);
-
+        if (!$isDevMode) {
+            /** @var Memcached $memcached */
+            $memcached = new Memcached();
+            $memcached->addServer($cacheConfig['adapter']['options']['servers'][0], 11211);
+            $cacheDriver = new MemcachedCache();
+            $cacheDriver->setMemcached($memcached);
+        } else {
+            $cacheDriver = null;
+        }
         $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, null, $cacheDriver, false);
 
         return EntityManager::create($dbParams, $config);
