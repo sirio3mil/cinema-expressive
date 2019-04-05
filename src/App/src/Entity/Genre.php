@@ -75,7 +75,7 @@ class Genre implements CinemaEntity
     public function setName(string $name): Genre
     {
         $this->name = $name;
-    
+
         return $this;
     }
 

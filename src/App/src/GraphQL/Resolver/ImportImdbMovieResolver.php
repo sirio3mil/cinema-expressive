@@ -119,9 +119,10 @@ class ImportImdbMovieResolver
     /**
      * @param EntityManager $entityManager
      * @param Person $person
+     * @return People
      * @throws ORMException
      */
-    public static function createPeopleFromPerson(EntityManager $entityManager, Person $person): void
+    public static function createPeopleFromPerson(EntityManager $entityManager, Person $person): People
     {
         $object = new GlobalUniqueObject();
         $object->setRowType(self::$peopleRowType);
@@ -134,6 +135,12 @@ class ImportImdbMovieResolver
         $imdbNumber->setImdbNumber($person->getImdbNumber());
         $imdbNumber->setObject($object);
         $entityManager->persist($imdbNumber);
+        $searchValue = new SearchValue();
+        $searchValue->setObject($people->getObject());
+        $searchValue->setSearchParam($person->getFullName());
+        $searchValue->setPrimaryParam(true);
+        $entityManager->persist($searchValue);
+        return $people;
     }
 
     /**
@@ -402,19 +409,7 @@ class ImportImdbMovieResolver
                     $people = self::getPeopleByImdbNumber($entityManager, $person);
                 }
                 if (!$people) {
-                    self::createPeopleFromPerson($entityManager, $person);
-                }
-                /** @var SearchValue $searchValue */
-                $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
-                    'object' => $people->getObject(),
-                    'searchParam' => $person->getFullName()
-                ]);
-                if (!$searchValue) {
-                    $searchValue = new SearchValue();
-                    $searchValue->setObject($people->getObject());
-                    $searchValue->setSearchParam($person->getFullName());
-                    $searchValue->setPrimaryParam(true);
-                    $entityManager->persist($searchValue);
+                    $people = self::createPeopleFromPerson($entityManager, $person);
                 }
                 if (!$tapePeopleRole) {
                     $tapePeopleRole = new TapePeopleRole();
@@ -499,19 +494,7 @@ class ImportImdbMovieResolver
                     $people = self::getPeopleByImdbNumber($entityManager, $person);
                 }
                 if (!$people) {
-                    self::createPeopleFromPerson($entityManager, $person);
-                }
-                /** @var SearchValue $searchValue */
-                $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
-                    'object' => $people->getObject(),
-                    'searchParam' => $person->getFullName()
-                ]);
-                if (!$searchValue) {
-                    $searchValue = new SearchValue();
-                    $searchValue->setObject($people->getObject());
-                    $searchValue->setSearchParam($person->getFullName());
-                    $searchValue->setPrimaryParam(true);
-                    $entityManager->persist($searchValue);
+                    $people = self::createPeopleFromPerson($entityManager, $person);
                 }
                 if (!$tapePeopleRole) {
                     $tapePeopleRole = new TapePeopleRole();
@@ -550,19 +533,7 @@ class ImportImdbMovieResolver
                     $people = self::getPeopleByImdbNumber($entityManager, $person);
                 }
                 if (!$people) {
-                    self::createPeopleFromPerson($entityManager, $person);
-                }
-                /** @var SearchValue $searchValue */
-                $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
-                    'object' => $people->getObject(),
-                    'searchParam' => $person->getFullName()
-                ]);
-                if (!$searchValue) {
-                    $searchValue = new SearchValue();
-                    $searchValue->setObject($people->getObject());
-                    $searchValue->setSearchParam($person->getFullName());
-                    $searchValue->setPrimaryParam(true);
-                    $entityManager->persist($searchValue);
+                    $people = self::createPeopleFromPerson($entityManager, $person);
                 }
                 if (!$tapePeopleRole) {
                     $tapePeopleRole = new TapePeopleRole();
