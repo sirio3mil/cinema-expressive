@@ -304,7 +304,6 @@ class ImportImdbMovieResolver
                     if (!$tag) {
                         $tag = new Tag();
                         $tag->setKeyword($data->getKeyword());
-                        $entityManager->persist($tag);
                     }
                     if ($tag) {
                         $tape->addTag($tag);
