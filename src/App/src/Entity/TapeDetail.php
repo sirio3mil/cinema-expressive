@@ -20,7 +20,7 @@ class TapeDetail implements CinemaEntity
      * @var Tape
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="Tape", inversedBy="detail", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="Tape", inversedBy="detail", fetch="EXTRA_LAZY", cascade={"all"})
      * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
      */
     protected $tape;

@@ -60,7 +60,7 @@ class TapeUser implements CinemaEntity
     /**
      * @var Collection
      *
-     * @ORM\OneToMany(targetEntity="TapeUserHistory", mappedBy="tapeUser", fetch="EXTRA_LAZY", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="TapeUserHistory", mappedBy="tapeUser", fetch="EXTRA_LAZY", cascade={"all"})
      */
     protected $history;
 

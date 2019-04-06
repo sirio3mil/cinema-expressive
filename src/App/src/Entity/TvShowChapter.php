@@ -28,7 +28,7 @@ class TvShowChapter implements CinemaEntity
     /**
      * @@var TvShow
      *
-     * @ORM\ManyToOne(targetEntity="TvShow", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="TvShow", inversedBy="chapters", fetch="EXTRA_LAZY", cascade={"all"})
      * @ORM\JoinColumn(name="tvShowTapeId", referencedColumnName="tapeId")
      */
     private $tvShow;

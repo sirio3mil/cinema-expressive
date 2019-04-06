@@ -218,13 +218,12 @@ class ImportImdbMovieResolver
         ]);
         if (!$tapeDetail) {
             $tapeDetail = new TapeDetail();
-            $tapeDetail->setTape($tape);
+            $tape->setDetail($tapeDetail);
         }
         $tapeDetail->setDuration($imdbMovieDetails['duration']);
         $tapeDetail->setYear($imdbMovieDetails['year']);
         $tapeDetail->setColor($imdbMovieDetails['color']);
         $tapeDetail->setIsTvShow($imdbMovieDetails['isTvShow']);
-        $entityManager->persist($tapeDetail);
         /** @var Ranking $ranking */
         $ranking = $entityManager->getRepository(Ranking::class)->findOneBy([
             'object' => $tape->getObject()
@@ -235,7 +234,6 @@ class ImportImdbMovieResolver
         }
         $ranking->setScoreFromCalculatedValue($imdbMovieDetails['score']);
         $ranking->setVotes($imdbMovieDetails['votes']);
-        $entityManager->persist($ranking);
         if ($imdbMovieDetails['sounds']) {
             /** @var EntityRepository $soundRepository */
             $soundRepository = $entityManager->getRepository(Sound::class);
@@ -341,8 +339,7 @@ class ImportImdbMovieResolver
             ]);
             if (!$tvShow) {
                 $tvShow = new TvShow();
-                $tvShow->setTape($tape);
-                $entityManager->persist($tvShow);
+                $tape->setTvShow($tvShow);
                 $entityManager->flush();
             }
         }
@@ -371,12 +368,11 @@ class ImportImdbMovieResolver
                 /** @var TvShow $tvShow */
                 $tvShow = $query->getSingleResult();
                 $tvShowChapter = new TvShowChapter();
-                $tvShowChapter->setTape($tape);
-                $tvShowChapter->setTvShow($tvShow);
+                $tvShow->addChapter($tvShowChapter);
+                $tape->setTvShowChapter($tvShowChapter);
             }
             $tvShowChapter->setSeason($imdbMovieDetails['seasonNumber']);
             $tvShowChapter->setChapter($imdbMovieDetails['episodeNumber']);
-            $entityManager->persist($tvShowChapter);
         }
         $entityManager->flush();
         /** @var Role $castRole */

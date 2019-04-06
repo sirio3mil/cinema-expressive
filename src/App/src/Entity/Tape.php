@@ -136,7 +136,7 @@ class Tape implements CinemaEntity
     /**
      * @var TapeDetail
      *
-     * @ORM\OneToOne(targetEntity="TapeDetail", mappedBy="tape")
+     * @ORM\OneToOne(targetEntity="TapeDetail", mappedBy="tape", cascade={"all"})
      */
     protected $detail;
 
@@ -150,7 +150,7 @@ class Tape implements CinemaEntity
     /**
      * @var TvShow
      *
-     * @ORM\OneToOne(targetEntity="TvShow", mappedBy="tape")
+     * @ORM\OneToOne(targetEntity="TvShow", mappedBy="tape", cascade={"all"})
      */
     protected $tvShow;
 
@@ -164,7 +164,7 @@ class Tape implements CinemaEntity
     /**
      * @var Collection
      *
-     * @ORM\OneToMany(targetEntity="TapeUser", mappedBy="tape", fetch="EXTRA_LAZY", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="TapeUser", mappedBy="tape", fetch="EXTRA_LAZY", cascade={"all"})
      */
     protected $users;
 
