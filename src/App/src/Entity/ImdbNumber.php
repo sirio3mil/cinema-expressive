@@ -19,7 +19,7 @@ class ImdbNumber implements CinemaEntity
      * @var GlobalUniqueObject
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="GlobalUniqueObject", inversedBy="imdbNumber", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="GlobalUniqueObject", inversedBy="imdbNumber", fetch="EXTRA_LAZY", cascade={"all"})
      * @ORM\JoinColumn(name="objectId", referencedColumnName="objectId")
      */
     protected $object;

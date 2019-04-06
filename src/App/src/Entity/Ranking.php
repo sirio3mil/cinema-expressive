@@ -25,7 +25,7 @@ class Ranking implements CinemaEntity
      * @var GlobalUniqueObject
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="GlobalUniqueObject", inversedBy="ranking", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="GlobalUniqueObject", inversedBy="ranking", fetch="EXTRA_LAZY", cascade={"all"})
      * @ORM\JoinColumn(name="objectId", referencedColumnName="objectId")
      */
     protected $object;

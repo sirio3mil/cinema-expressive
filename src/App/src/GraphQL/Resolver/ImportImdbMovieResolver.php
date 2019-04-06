@@ -35,6 +35,7 @@ use App\Entity\TapeTitle;
 use App\Entity\TvShow;
 use App\Entity\TvShowChapter;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\NonUniqueResultException;
@@ -187,20 +188,20 @@ class ImportImdbMovieResolver
         } catch (NoResultException $e) {
             $object = new GlobalUniqueObject();
             $object->setRowType($tapeRowType);
-            $entityManager->persist($object);
-            $tape = new Tape();
-            $tape->setObject($object);
             $imdbNumber = new ImdbNumber();
             $imdbNumber->setImdbNumber($args['imdbNumber']);
-            $imdbNumber->setObject($tape->getObject());
-            $entityManager->persist($imdbNumber);
+            $object->setImdbNumber($imdbNumber);
+            $tape = new Tape();
+            $tape->setObject($object);
         }
         /** @var array $imdbMovieDetails */
         $imdbMovieDetails = ImdbMovieDetailResolver::resolve($container, $args);
         $tape->setOriginalTitle($imdbMovieDetails['title']);
         $entityManager->persist($tape);
+        /** @var EntityRepository $searchValueRepository */
+        $searchValueRepository = $entityManager->getRepository(SearchValue::class);
         /** @var SearchValue $searchValue */
-        $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
+        $searchValue = $searchValueRepository->findOneBy([
             'object' => $tape->getObject(),
             'searchParam' => $imdbMovieDetails['title']
         ]);
@@ -224,21 +225,23 @@ class ImportImdbMovieResolver
         $tapeDetail->setColor($imdbMovieDetails['color']);
         $tapeDetail->setIsTvShow($imdbMovieDetails['isTvShow']);
         $entityManager->persist($tapeDetail);
-        /** @var Ranking $tapeRanking */
-        $tapeRanking = $entityManager->getRepository(Ranking::class)->findOneBy([
+        /** @var Ranking $ranking */
+        $ranking = $entityManager->getRepository(Ranking::class)->findOneBy([
             'object' => $tape->getObject()
         ]);
-        if (!$tapeRanking) {
-            $tapeRanking = new Ranking();
-            $tapeRanking->setObject($tape->getObject());
+        if (!$ranking) {
+            $ranking = new Ranking();
+            $tape->getObject()->setRanking($ranking);
         }
-        $tapeRanking->setScoreFromCalculatedValue($imdbMovieDetails['score']);
-        $tapeRanking->setVotes($imdbMovieDetails['votes']);
-        $entityManager->persist($tapeRanking);
+        $ranking->setScoreFromCalculatedValue($imdbMovieDetails['score']);
+        $ranking->setVotes($imdbMovieDetails['votes']);
+        $entityManager->persist($ranking);
         if ($imdbMovieDetails['sounds']) {
+            /** @var EntityRepository $soundRepository */
+            $soundRepository = $entityManager->getRepository(Sound::class);
             foreach ($imdbMovieDetails['sounds'] as $text) {
                 /** @var Sound $sound */
-                $sound = $entityManager->getRepository(Sound::class)->findOneBy([
+                $sound = $soundRepository->findOneBy([
                     "description" => $text
                 ]);
                 if ($sound) {
@@ -247,9 +250,11 @@ class ImportImdbMovieResolver
             }
         }
         if ($imdbMovieDetails['genres']) {
+            /** @var EntityRepository $genreRepository */
+            $genreRepository = $entityManager->getRepository(Genre::class);
             foreach ($imdbMovieDetails['genres'] as $text) {
                 /** @var Genre $genre */
-                $genre = $entityManager->getRepository(Genre::class)->findOneBy([
+                $genre = $genreRepository->findOneBy([
                     "name" => $text
                 ]);
                 if ($genre) {
@@ -258,9 +263,11 @@ class ImportImdbMovieResolver
             }
         }
         if ($imdbMovieDetails['languages']) {
+            /** @var EntityRepository $languageRepository */
+            $languageRepository = $entityManager->getRepository(Language::class);
             foreach ($imdbMovieDetails['languages'] as $text) {
                 /** @var Language $language */
-                $language = $entityManager->getRepository(Language::class)->findOneBy([
+                $language = $languageRepository->findOneBy([
                     "name" => $text
                 ]);
                 if ($language) {
@@ -268,10 +275,12 @@ class ImportImdbMovieResolver
                 }
             }
         }
+        /** @var EntityRepository $countryRepository */
+        $countryRepository = $entityManager->getRepository(Country::class);
         if ($imdbMovieDetails['countries']) {
             foreach ($imdbMovieDetails['countries'] as $text) {
                 /** @var Country $country */
-                $country = $entityManager->getRepository(Country::class)->findOneBy([
+                $country = $countryRepository->findOneBy([
                     "officialName" => $text
                 ]);
                 if ($country) {
@@ -286,10 +295,12 @@ class ImportImdbMovieResolver
             /** @var KeywordIterator $keywords */
             $keywords = $imdbMovieKeywords['keywords'];
             if ($keywords->getIterator()->count()) {
+                /** @var EntityRepository $tagRepository */
+                $tagRepository = $entityManager->getRepository(Tag::class);
                 /** @var Keyword $data */
                 foreach ($keywords as $data) {
                     /** @var Tag $tag */
-                    $tag = $entityManager->getRepository(Tag::class)->findOneBy([
+                    $tag = $tagRepository->findOneBy([
                         'keyword' => $data->getKeyword()
                     ]);
                     if (!$tag) {
@@ -306,9 +317,11 @@ class ImportImdbMovieResolver
         /** @var array $imdbMovieLocations */
         $imdbMovieLocations = ImdbMovieLocationResolver::resolve($container, $args);
         if ($imdbMovieLocations) {
+            /** @var EntityRepository $locationRepository */
+            $locationRepository = $entityManager->getRepository(Location::class);
             foreach ($imdbMovieLocations as $data) {
                 /** @var Location $location */
-                $location = $entityManager->getRepository(Location::class)->findOneBy([
+                $location = $locationRepository->findOneBy([
                     'place' => $data['location']
                 ]);
                 if (!$location) {
@@ -418,7 +431,7 @@ class ImportImdbMovieResolver
                         $entityManager->flush();
                     }
                     /** @var SearchValue $searchValue */
-                    $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
+                    $searchValue = $searchValueRepository->findOneBy([
                         'object' => $people->getObject(),
                         'searchParam' => $person->getAlias()
                     ]);
@@ -542,7 +555,7 @@ class ImportImdbMovieResolver
                 }
                 /** @var Country $country */
                 if ($data->getCountry()) {
-                    $country = $entityManager->getRepository(Country::class)->findOneBy([
+                    $country = $countryRepository->findOneBy([
                         'officialName' => $data->getCountry()
                     ]);
                 } else {
@@ -587,7 +600,7 @@ class ImportImdbMovieResolver
             foreach ($titles as $data) {
                 /** @var Country $country */
                 if ($data->getCountry()) {
-                    $country = $entityManager->getRepository(Country::class)->findOneBy([
+                    $country = $countryRepository->findOneBy([
                         'officialName' => $data->getCountry()
                     ]);
                 } else {
@@ -611,7 +624,7 @@ class ImportImdbMovieResolver
                 $tapeTitle->setObservations($data->getDescription());
                 $entityManager->persist($tapeTitle);
                 /** @var SearchValue $searchValue */
-                $searchValue = $entityManager->getRepository(SearchValue::class)->findOneBy([
+                $searchValue = $searchValueRepository->findOneBy([
                     'object' => $tape->getObject(),
                     'searchParam' => $data->getTitle()
                 ]);
@@ -629,7 +642,7 @@ class ImportImdbMovieResolver
         if ($imdbMovieCertifications) {
             foreach ($imdbMovieCertifications as $data) {
                 /** @var Country $country */
-                $country = $entityManager->getRepository(Country::class)->findOneBy([
+                $country = $countryRepository->findOneBy([
                     'officialName' => $data['country']
                 ]);
                 /** @var TapeCertification $tapeCertification */

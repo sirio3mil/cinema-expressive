@@ -49,7 +49,7 @@ class GlobalUniqueObject implements CinemaEntity
     /**
      * @var ImdbNumber
      *
-     * @ORM\OneToOne(targetEntity="ImdbNumber", mappedBy="object")
+     * @ORM\OneToOne(targetEntity="ImdbNumber", mappedBy="object", cascade={"all"})
      */
     protected $imdbNumber;
 
@@ -63,7 +63,7 @@ class GlobalUniqueObject implements CinemaEntity
     /**
      * @var Ranking
      *
-     * @ORM\OneToOne(targetEntity="Ranking", mappedBy="object")
+     * @ORM\OneToOne(targetEntity="Ranking", mappedBy="object", cascade={"all"})
      */
     protected $ranking;
 
@@ -77,14 +77,14 @@ class GlobalUniqueObject implements CinemaEntity
     /**
      * @var Tape
      *
-     * @ORM\OneToOne(targetEntity="Tape", mappedBy="object")
+     * @ORM\OneToOne(targetEntity="Tape", mappedBy="object", cascade={"all"})
      */
     protected $tape;
 
     /**
      * @var Collection
      *
-     * @ORM\OneToMany(targetEntity="File", mappedBy="object", fetch="EXTRA_LAZY", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="File", mappedBy="object", fetch="EXTRA_LAZY", cascade={"all"})
      */
     protected $files;
 

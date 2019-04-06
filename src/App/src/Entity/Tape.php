@@ -38,7 +38,7 @@ class Tape implements CinemaEntity
     /**
      * @var GlobalUniqueObject
      *
-     * @ORM\OneToOne(targetEntity="GlobalUniqueObject", inversedBy="tape")
+     * @ORM\OneToOne(targetEntity="GlobalUniqueObject", inversedBy="tape", cascade={"all"})
      * @ORM\JoinColumn(name="objectId", referencedColumnName="objectId")
      */
     protected $object;
@@ -98,7 +98,7 @@ class Tape implements CinemaEntity
 
     /**
      * @var Collection
-     * @ORM\ManyToMany(targetEntity="Location", inversedBy="tapes", fetch="EXTRA_LAZY", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Location", inversedBy="tapes", fetch="EXTRA_LAZY", cascade={"all"})
      * @ORM\JoinTable(name="TapeLocation",
      *      joinColumns={@ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="locationId", referencedColumnName="locationId")}
@@ -118,7 +118,7 @@ class Tape implements CinemaEntity
 
     /**
      * @var Collection
-     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="tapes", fetch="EXTRA_LAZY", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Tag", inversedBy="tapes", fetch="EXTRA_LAZY", cascade={"all"})
      * @ORM\JoinTable(name="TapeTag",
      *      joinColumns={@ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="tagId", referencedColumnName="tagId")}

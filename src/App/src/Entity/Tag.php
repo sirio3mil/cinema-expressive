@@ -49,7 +49,7 @@ class Tag implements CinemaEntity
     /**
      * @var Collection
      *
-     * @ORM\ManyToMany(targetEntity="Tape", mappedBy="tags", fetch="EXTRA_LAZY", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Tape", mappedBy="tags", fetch="EXTRA_LAZY", cascade={"all"})
      */
     protected $tapes;
 

@@ -48,7 +48,7 @@ class Location implements CinemaEntity
     /**
      * @var Collection
      *
-     * @ORM\ManyToMany(targetEntity="Tape", mappedBy="locations", fetch="EXTRA_LAZY", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="Tape", mappedBy="locations", fetch="EXTRA_LAZY", cascade={"all"})
      */
     protected $tapes;
 
