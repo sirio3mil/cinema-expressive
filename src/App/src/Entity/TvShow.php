@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use GraphQL\Doctrine\Annotation as API;
 
 /**
  * Class TvShow
@@ -94,6 +95,8 @@ class TvShow implements CinemaEntity
     }
 
     /**
+     * @API\Field(type="?TvShowChapter[]")
+     *
      * @return Collection
      */
     public function getChapters(): Collection
