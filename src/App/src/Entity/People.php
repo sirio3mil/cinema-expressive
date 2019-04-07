@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use GraphQL\Doctrine\Annotation as API;
 
 /**
  * Class People
@@ -132,6 +133,8 @@ class People implements CinemaEntity
     }
 
     /**
+     * @API\Field(type="?PeopleAlias[]")
+     *
      * @return Collection
      */
     public function getAliases(): Collection

@@ -620,6 +620,8 @@ class Tape implements CinemaEntity
     }
 
     /**
+     * @API\Field(type="?TapePeopleRole[]")
+     *
      * @return Collection
      */
     public function getPeople(): Collection
