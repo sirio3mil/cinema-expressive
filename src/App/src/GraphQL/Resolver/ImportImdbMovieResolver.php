@@ -85,39 +85,6 @@ class ImportImdbMovieResolver
 
     /**
      * @param EntityManager $entityManager
-     * @param Role $role
-     * @param Tape $tape
-     * @return array
-     */
-    public static function getPeopleByTapeAndRole(EntityManager $entityManager, Role $role, Tape $tape): array
-    {
-        /** @var Query $query */
-        $query = $entityManager->createQuery('
-            SELECT r tapePeopleRole
-              ,i.imdbNumber
-            FROM App\Entity\TapePeopleRole r
-            JOIN r.people p
-            JOIN App\Entity\ImdbNumber i 
-              WITH i.object = p.object
-            WHERE r.role = :role 
-              AND r.tape = :tape
-        ');
-        $query->setParameters([
-            'role' => $role,
-            'tape' => $tape
-        ]);
-        $query->useQueryCache(true);
-        /** @var array $result */
-        $dqlQueryResult = $query->getResult();
-        $cast = [];
-        foreach ($dqlQueryResult as $row) {
-            $cast[intval($row['imdbNumber'])] = $row['tapePeopleRole'];
-        }
-        return $cast;
-    }
-
-    /**
-     * @param EntityManager $entityManager
      * @param Person $person
      * @return People
      * @throws ORMException
@@ -377,7 +344,6 @@ class ImportImdbMovieResolver
         self::$peopleRowType = $entityManager->getRepository(RowType::class)->findOneBy([
             "rowTypeId" => RowType::ROW_TYPE_PEOPLE
         ]);
-        $cast = self::getPeopleByTapeAndRole($entityManager, $castRole, $tape);
         /** @var array $imdbMovieCredits */
         $imdbMovieCredits = ImdbMovieCastResolver::resolve($container, $args);
         /** @var CastIterator $castIterator */
@@ -385,21 +351,12 @@ class ImportImdbMovieResolver
         if ($castIterator->getIterator()->count()) {
             /** @var CastPeople $person */
             foreach ($castIterator as $person) {
-                /** @var TapePeopleRole $tapePeopleRole */
-                $tapePeopleRole = null;
                 /** @var People $people */
-                $people = null;
-                if (array_key_exists($person->getImdbNumber(), $cast)) {
-                    $tapePeopleRole = $cast[$person->getImdbNumber()];
-                    $people = $tapePeopleRole->getPeople();
-                }
-                if (!$people) {
-                    $people = self::getPeopleByImdbNumber($entityManager, $person);
-                }
-                if (!$people) {
+                if (!$people = self::getPeopleByImdbNumber($entityManager, $person)) {
                     $people = self::createPeopleFromPerson($entityManager, $person);
                 }
-                if (!$tapePeopleRole) {
+                /** @var TapePeopleRole $tapePeopleRole */
+                if (!$tapePeopleRole = $tape->getTapePeopleRole($people, $castRole)) {
                     $tapePeopleRole = new TapePeopleRole();
                     $tapePeopleRole->setRole($castRole);
                     $tapePeopleRole->setPeople($people);
@@ -459,27 +416,17 @@ class ImportImdbMovieResolver
         $directorRole = $entityManager->getRepository(Role::class)->findOneBy([
             "roleId" => ROLE::ROLE_DIRECTOR
         ]);
-        $cast = self::getPeopleByTapeAndRole($entityManager, $directorRole, $tape);
         /** @var PersonIterator $directors */
         $directors = $imdbMovieCredits['directors'];
         if ($directors->getIterator()->count()) {
             /** @var Person $person */
             foreach ($directors as $person) {
-                /** @var TapePeopleRole $tapePeopleRole */
-                $tapePeopleRole = null;
                 /** @var People $people */
-                $people = null;
-                if (array_key_exists($person->getImdbNumber(), $cast)) {
-                    $tapePeopleRole = $cast[$person->getImdbNumber()];
-                    $people = $tapePeopleRole->getPeople();
-                }
-                if (!$people) {
-                    $people = self::getPeopleByImdbNumber($entityManager, $person);
-                }
-                if (!$people) {
+                if (!$people = self::getPeopleByImdbNumber($entityManager, $person)) {
                     $people = self::createPeopleFromPerson($entityManager, $person);
                 }
-                if (!$tapePeopleRole) {
+                /** @var TapePeopleRole $tapePeopleRole */
+                if (!$tapePeopleRole = $tape->getTapePeopleRole($people, $directorRole)) {
                     $tapePeopleRole = new TapePeopleRole();
                     $tapePeopleRole->setRole($directorRole);
                     $tapePeopleRole->setPeople($people);
@@ -492,7 +439,6 @@ class ImportImdbMovieResolver
         $writerRole = $entityManager->getRepository(Role::class)->findOneBy([
             "roleId" => ROLE::ROLE_WRITER
         ]);
-        $cast = self::getPeopleByTapeAndRole($entityManager, $writerRole, $tape);
         /** @var PersonIterator $writers */
         $writers = $imdbMovieCredits['writers'];
         if ($writers->getIterator()->count()) {
@@ -503,21 +449,12 @@ class ImportImdbMovieResolver
                     continue;
                 }
                 $peopleChecked[] = $person->getImdbNumber();
-                /** @var TapePeopleRole $tapePeopleRole */
-                $tapePeopleRole = null;
                 /** @var People $people */
-                $people = null;
-                if (array_key_exists($person->getImdbNumber(), $cast)) {
-                    $tapePeopleRole = $cast[$person->getImdbNumber()];
-                    $people = $tapePeopleRole->getPeople();
-                }
-                if (!$people) {
-                    $people = self::getPeopleByImdbNumber($entityManager, $person);
-                }
-                if (!$people) {
+                if (!$people = self::getPeopleByImdbNumber($entityManager, $person)) {
                     $people = self::createPeopleFromPerson($entityManager, $person);
                 }
-                if (!$tapePeopleRole) {
+                /** @var TapePeopleRole $tapePeopleRole */
+                if (!$tapePeopleRole = $tape->getTapePeopleRole($people, $writerRole)) {
                     $tapePeopleRole = new TapePeopleRole();
                     $tapePeopleRole->setRole($writerRole);
                     $tapePeopleRole->setPeople($people);

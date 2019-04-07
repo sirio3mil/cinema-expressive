@@ -586,6 +586,26 @@ class Tape implements CinemaEntity
     }
 
     /**
+     * @param People $people
+     * @param Role $role
+     * @return TapePeopleRole|null
+     */
+    public function getTapePeopleRole(People $people, Role $role): ?TapePeopleRole
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("people", $people))
+            ->andWhere(Criteria::expr()->eq("role", $role))
+            ->setFirstResult(0)
+            ->setMaxResults(1);
+        /** @var LazyCriteriaCollection $elements */
+        $elements = $this->getPeople()->matching($criteria);
+        if ($elements->count()) {
+            return $elements->first();
+        }
+        return null;
+    }
+
+    /**
      * @param Collection $people
      * @return Tape
      */
