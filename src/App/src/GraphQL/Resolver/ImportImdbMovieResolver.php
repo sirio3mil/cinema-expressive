@@ -368,7 +368,6 @@ class ImportImdbMovieResolver
             $tvShowChapter->setSeason($imdbMovieDetails['seasonNumber']);
             $tvShowChapter->setChapter($imdbMovieDetails['episodeNumber']);
         }
-        $entityManager->flush();
         /** @var Role $castRole */
         $castRole = $entityManager->getRepository(Role::class)->findOneBy([
             "roleId" => ROLE::ROLE_CAST
@@ -421,7 +420,6 @@ class ImportImdbMovieResolver
                         $entityManager->persist($peopleAliasTape);
                     }
                 }
-                $entityManager->flush();
             }
         }
         /** @var Role $directorRole */
@@ -435,7 +433,6 @@ class ImportImdbMovieResolver
             foreach ($directors as $person) {
                 self::addTapePeople($entityManager, $person, $directorRole, $tape);
             }
-            $entityManager->flush();
         }
         /** @var Role $writerRole */
         $writerRole = $entityManager->getRepository(Role::class)->findOneBy([
@@ -453,8 +450,8 @@ class ImportImdbMovieResolver
                 $peopleChecked[] = $person->getImdbNumber();
                 self::addTapePeople($entityManager, $person, $writerRole, $tape);
             }
-            $entityManager->flush();
         }
+        $entityManager->flush();
         /** @var array $imdbMovieReleases */
         $imdbMovieReleases = ImdbMovieReleaseResolver::resolve($container, $args);
         /** @var ReleaseIterator $releaseDates */
