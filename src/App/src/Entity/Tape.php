@@ -169,6 +169,13 @@ class Tape implements CinemaEntity
     protected $users;
 
     /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="TapePeopleRole", mappedBy="tape", fetch="EXTRA_LAZY", cascade={"all"})
+     */
+    protected $people;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -181,6 +188,7 @@ class Tape implements CinemaEntity
         $this->tags = new ArrayCollection();
         $this->sounds = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->people = new ArrayCollection();
     }
 
     /**
@@ -575,5 +583,46 @@ class Tape implements CinemaEntity
             return $elements->first();
         }
         return null;
+    }
+
+    /**
+     * @param Collection $people
+     * @return Tape
+     */
+    public function setPeople(Collection $people): Tape
+    {
+        $this->people = $people;
+        /** @var TapePeopleRole $item */
+        foreach ($people as $item) {
+            $item->setTape($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getPeople(): Collection
+    {
+        return $this->people;
+    }
+
+    /**
+     * @param TapePeopleRole $tapePeopleRole
+     * @return Tape
+     */
+    public function addPeople(TapePeopleRole $tapePeopleRole): Tape
+    {
+        $this->people[] = $tapePeopleRole->setTape($this);
+        return $this;
+    }
+
+    /**
+     * @param TapePeopleRole $tapePeopleRole
+     * @return bool
+     */
+    public function removePeople(TapePeopleRole $tapePeopleRole): bool
+    {
+        return $this->people->removeElement($tapePeopleRole);
     }
 }

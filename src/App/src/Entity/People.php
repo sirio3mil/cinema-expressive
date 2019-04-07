@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -59,6 +61,18 @@ class People implements CinemaEntity
     protected $detail;
 
     /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="PeopleAlias", mappedBy="people", fetch="EXTRA_LAZY", cascade={"all"})
+     */
+    protected $aliases;
+
+    public function __construct()
+    {
+        $this->aliases = new ArrayCollection();
+    }
+
+    /**
      * @return int
      */
     public function getPeopleId(): int
@@ -101,5 +115,46 @@ class People implements CinemaEntity
     public function getDetail(): ?PeopleDetail
     {
         return $this->detail;
+    }
+
+    /**
+     * @param Collection $aliases
+     * @return People
+     */
+    public function setAliases(Collection $aliases): People
+    {
+        $this->aliases = $aliases;
+        /** @var PeopleAlias $item */
+        foreach ($aliases as $item) {
+            $item->setPeople($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getAliases(): Collection
+    {
+        return $this->aliases;
+    }
+
+    /**
+     * @param PeopleAlias $peopleAlias
+     * @return People
+     */
+    public function addAlias(PeopleAlias $peopleAlias): People
+    {
+        $this->aliases[] = $peopleAlias->setPeople($this);
+        return $this;
+    }
+
+    /**
+     * @param PeopleAlias $peopleAlias
+     * @return bool
+     */
+    public function removePeople(PeopleAlias $peopleAlias): bool
+    {
+        return $this->aliases->removeElement($peopleAlias);
     }
 }

@@ -401,12 +401,10 @@ class ImportImdbMovieResolver
                 }
                 if (!$tapePeopleRole) {
                     $tapePeopleRole = new TapePeopleRole();
-                    $tapePeopleRole->setTape($tape);
                     $tapePeopleRole->setRole($castRole);
                     $tapePeopleRole->setPeople($people);
-                    $entityManager->persist($tapePeopleRole);
+                    $tape->addPeople($tapePeopleRole);
                 }
-                $entityManager->flush();
                 if (!empty($person->getAlias())) {
                     /** @var PeopleAlias $peopleAlias */
                     $peopleAlias = $entityManager->getRepository(PeopleAlias::class)->findOneBy([
@@ -415,10 +413,8 @@ class ImportImdbMovieResolver
                     ]);
                     if (!$peopleAlias) {
                         $peopleAlias = new PeopleAlias();
-                        $peopleAlias->setPeople($people);
                         $peopleAlias->setAlias($person->getAlias());
-                        $entityManager->persist($peopleAlias);
-                        $entityManager->flush();
+                        $people->addAlias($peopleAlias);
                     }
                     /** @var SearchValue $searchValue */
                     $searchValue = $searchValueRepository->findOneBy([
@@ -440,9 +436,9 @@ class ImportImdbMovieResolver
                         $peopleAliasTape->setTape($tape);
                         $peopleAliasTape->setPeopleAlias($peopleAlias);
                         $entityManager->persist($peopleAliasTape);
-                        $entityManager->flush();
                     }
                 }
+                $entityManager->flush();
                 if (!empty($person->getCharacter())) {
                     /** @var TapePeopleRoleCharacter $peopleAliasTape */
                     $tapePeopleRoleCharacter = $entityManager->getRepository(TapePeopleRoleCharacter::class)
@@ -485,10 +481,9 @@ class ImportImdbMovieResolver
                 }
                 if (!$tapePeopleRole) {
                     $tapePeopleRole = new TapePeopleRole();
-                    $tapePeopleRole->setTape($tape);
                     $tapePeopleRole->setRole($directorRole);
                     $tapePeopleRole->setPeople($people);
-                    $entityManager->persist($tapePeopleRole);
+                    $tape->addPeople($tapePeopleRole);
                 }
                 $entityManager->flush();
             }
@@ -524,10 +519,9 @@ class ImportImdbMovieResolver
                 }
                 if (!$tapePeopleRole) {
                     $tapePeopleRole = new TapePeopleRole();
-                    $tapePeopleRole->setTape($tape);
                     $tapePeopleRole->setRole($writerRole);
                     $tapePeopleRole->setPeople($people);
-                    $entityManager->persist($tapePeopleRole);
+                    $tape->addPeople($tapePeopleRole);
                 }
                 $entityManager->flush();
             }

@@ -42,7 +42,7 @@ class PeopleAlias implements CinemaEntity
     /**
      * @var People
      *
-     * @ORM\ManyToOne(targetEntity="People", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="People", inversedBy="aliases", fetch="EXTRA_LAZY", cascade={"all"})
      * @ORM\JoinColumn(name="peopleId", referencedColumnName="peopleId")
      */
     private $people;
@@ -63,7 +63,7 @@ class PeopleAlias implements CinemaEntity
     public function setAlias(string $alias): PeopleAlias
     {
         $this->alias = $alias;
-    
+
         return $this;
     }
 
@@ -82,7 +82,7 @@ class PeopleAlias implements CinemaEntity
     public function setPeople(People $people): PeopleAlias
     {
         $this->people = $people;
-    
+
         return $this;
     }
 
