@@ -20,7 +20,7 @@ class TapePeopleRoleCharacter implements CinemaEntity
      * @var TapePeopleRole
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="TapePeopleRole", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="TapePeopleRole", inversedBy="character", fetch="EXTRA_LAZY", cascade={"all"})
      * @ORM\JoinColumn(name="tapePeopleRoleId", referencedColumnName="tapePeopleRoleId")
      */
     private $tapePeopleRole;
@@ -45,7 +45,7 @@ class TapePeopleRoleCharacter implements CinemaEntity
     public function setCharacter(string $character): TapePeopleRoleCharacter
     {
         $this->character = $character;
-    
+
         return $this;
     }
 
@@ -64,7 +64,7 @@ class TapePeopleRoleCharacter implements CinemaEntity
     public function setTapePeopleRole(TapePeopleRole $tapePeopleRole): TapePeopleRoleCharacter
     {
         $this->tapePeopleRole = $tapePeopleRole;
-    
+
         return $this;
     }
 

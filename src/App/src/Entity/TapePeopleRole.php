@@ -28,7 +28,7 @@ class TapePeopleRole implements CinemaEntity
      * )
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $tapePeopleRoleId;
+    protected $tapePeopleRoleId;
 
     /**
      * @var Tape
@@ -44,7 +44,7 @@ class TapePeopleRole implements CinemaEntity
      * @ORM\ManyToOne(targetEntity="People", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="peopleId", referencedColumnName="peopleId")
      */
-    private $people;
+    protected $people;
 
     /**
      * @var Role
@@ -52,7 +52,19 @@ class TapePeopleRole implements CinemaEntity
      * @ORM\ManyToOne(targetEntity="Role", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="roleId", referencedColumnName="roleId")
      */
-    private $role;
+    protected $role;
+
+    /**
+     * @var TapePeopleRoleCharacter
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="TapePeopleRoleCharacter",
+     *     mappedBy="tapePeopleRole",
+     *     fetch="EXTRA_LAZY",
+     *     cascade={"all"}
+     * )
+     */
+    private $character;
 
 
     /**
@@ -99,5 +111,23 @@ class TapePeopleRole implements CinemaEntity
     public function getRole(): Role
     {
         return $this->role;
+    }
+
+    /**
+     * @param TapePeopleRoleCharacter $character
+     * @return TapePeopleRole
+     */
+    public function setCharacter(TapePeopleRoleCharacter $character): TapePeopleRole
+    {
+        $this->character = $character->setTapePeopleRole($this);
+        return $this;
+    }
+
+    /**
+     * @return TapePeopleRoleCharacter|null
+     */
+    public function getCharacter(): ?TapePeopleRoleCharacter
+    {
+        return $this->character;
     }
 }

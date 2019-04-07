@@ -83,7 +83,7 @@ class TapeUserHistoryDetail implements CinemaEntity
     public function setVisible(bool $visible): TapeUserHistoryDetail
     {
         $this->visible = $visible;
-    
+
         return $this;
     }
 
@@ -102,7 +102,7 @@ class TapeUserHistoryDetail implements CinemaEntity
     public function setExported(bool $exported): TapeUserHistoryDetail
     {
         $this->exported = $exported;
-    
+
         return $this;
     }
 
@@ -121,7 +121,7 @@ class TapeUserHistoryDetail implements CinemaEntity
     public function setPlace(?Place $place): TapeUserHistoryDetail
     {
         $this->place = $place;
-    
+
         return $this;
     }
 
@@ -136,7 +136,7 @@ class TapeUserHistoryDetail implements CinemaEntity
     /** @ORM\PrePersist */
     public function generateVisibleFlag()
     {
-        if(is_null($this->visible)) {
+        if (is_null($this->visible)) {
             $this->setVisible(true);
         }
     }
@@ -144,7 +144,7 @@ class TapeUserHistoryDetail implements CinemaEntity
     /** @ORM\PrePersist */
     public function generateExportedFlag()
     {
-        if(is_null($this->exported)) {
+        if (is_null($this->exported)) {
             $this->setExported(false);
         }
     }
