@@ -39,7 +39,7 @@ class File implements CinemaEntity
     /**
      * @var GlobalUniqueObject
      *
-     * @ORM\ManyToOne(targetEntity="GlobalUniqueObject", inversedBy="files")
+     * @ORM\ManyToOne(targetEntity="GlobalUniqueObject", inversedBy="files", cascade={"all"})
      * @ORM\JoinColumn(name="objectId", referencedColumnName="objectId")
      */
     protected $object;

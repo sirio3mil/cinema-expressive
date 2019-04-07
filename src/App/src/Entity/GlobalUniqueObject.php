@@ -12,6 +12,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\UuidInterface;
+use GraphQL\Doctrine\Annotation as API;
 
 /**
  * Class Object
@@ -88,9 +89,17 @@ class GlobalUniqueObject implements CinemaEntity
      */
     protected $files;
 
+    /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="SearchValue", mappedBy="object", fetch="EXTRA_LAZY", cascade={"all"})
+     */
+    protected $searchValues;
+
     public function __construct()
     {
         $this->files = new ArrayCollection();
+        $this->searchValues = new ArrayCollection();
     }
 
 
@@ -212,6 +221,8 @@ class GlobalUniqueObject implements CinemaEntity
     }
 
     /**
+     * @API\Field(type="?File[]")
+     *
      * @return Collection
      */
     public function getFiles(): Collection
@@ -250,5 +261,48 @@ class GlobalUniqueObject implements CinemaEntity
     public function removeFile(File $file): bool
     {
         return $this->files->removeElement($file);
+    }
+
+    /**
+     * @API\Field(type="?SearchValue[]")
+     *
+     * @return Collection
+     */
+    public function getSearchValues(): Collection
+    {
+        return $this->searchValues;
+    }
+
+    /**
+     * @param Collection $searchValues
+     * @return GlobalUniqueObject
+     */
+    public function setSearchValues(Collection $searchValues): GlobalUniqueObject
+    {
+        $this->searchValues = $searchValues;
+        /** @var SearchValue $item */
+        foreach ($searchValues as $item) {
+            $item->setObject($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @param SearchValue $searchValue
+     * @return GlobalUniqueObject
+     */
+    public function addSearchValue(SearchValue $searchValue): GlobalUniqueObject
+    {
+        $this->searchValues[] = $searchValue->setObject($this);
+        return $this;
+    }
+
+    /**
+     * @param SearchValue $searchValue
+     * @return bool
+     */
+    public function removeSearchValue(SearchValue $searchValue): bool
+    {
+        return $this->searchValues->removeElement($searchValue);
     }
 }

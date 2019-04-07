@@ -45,7 +45,7 @@ class SearchValue implements CinemaEntity
     /**
      * @var GlobalUniqueObject
      *
-     * @ORM\ManyToOne(targetEntity="GlobalUniqueObject", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="GlobalUniqueObject", inversedBy="searchValues", fetch="EXTRA_LAZY", cascade={"all"})
      * @ORM\JoinColumn(name="objectId", referencedColumnName="objectId")
      */
     protected $object;
@@ -78,7 +78,7 @@ class SearchValue implements CinemaEntity
     public function setSearchParam(string $searchParam): SearchValue
     {
         $this->searchParam = $searchParam;
-    
+
         return $this;
     }
 

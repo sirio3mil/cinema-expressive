@@ -184,9 +184,9 @@ class Tape implements CinemaEntity
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getTapeId(): int
+    public function getTapeId(): ?int
     {
         return $this->tapeId;
     }

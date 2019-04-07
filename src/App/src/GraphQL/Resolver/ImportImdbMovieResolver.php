@@ -136,10 +136,9 @@ class ImportImdbMovieResolver
         $imdbNumber->setObject($object);
         $entityManager->persist($imdbNumber);
         $searchValue = new SearchValue();
-        $searchValue->setObject($people->getObject());
         $searchValue->setSearchParam($person->getFullName());
         $searchValue->setPrimaryParam(true);
-        $entityManager->persist($searchValue);
+        $people->getObject()->addSearchValue($searchValue);
         return $people;
     }
 
@@ -183,7 +182,7 @@ class ImportImdbMovieResolver
             ]);
             if (!$tape) {
                 $tape = new Tape();
-                $tape->setObject($imdbNumber->getObject());
+                $imdbNumber->getObject()->setTape($tape);
             }
         } catch (NoResultException $e) {
             $object = new GlobalUniqueObject();
@@ -192,12 +191,11 @@ class ImportImdbMovieResolver
             $imdbNumber->setImdbNumber($args['imdbNumber']);
             $object->setImdbNumber($imdbNumber);
             $tape = new Tape();
-            $tape->setObject($object);
+            $object->setTape($tape);
         }
         /** @var array $imdbMovieDetails */
         $imdbMovieDetails = ImdbMovieDetailResolver::resolve($container, $args);
         $tape->setOriginalTitle($imdbMovieDetails['title']);
-        $entityManager->persist($tape);
         /** @var EntityRepository $searchValueRepository */
         $searchValueRepository = $entityManager->getRepository(SearchValue::class);
         /** @var SearchValue $searchValue */
@@ -207,10 +205,9 @@ class ImportImdbMovieResolver
         ]);
         if (!$searchValue) {
             $searchValue = new SearchValue();
-            $searchValue->setObject($tape->getObject());
             $searchValue->setSearchParam($imdbMovieDetails['title']);
             $searchValue->setPrimaryParam(true);
-            $entityManager->persist($searchValue);
+            $tape->getObject()->addSearchValue($searchValue);
         }
         /** @var TapeDetail $tapeDetail */
         $tapeDetail = $entityManager->getRepository(TapeDetail::class)->findOneBy([
@@ -247,6 +244,7 @@ class ImportImdbMovieResolver
                 }
             }
         }
+        $entityManager->persist($tape);
         if ($imdbMovieDetails['genres']) {
             /** @var EntityRepository $genreRepository */
             $genreRepository = $entityManager->getRepository(Genre::class);
@@ -286,7 +284,6 @@ class ImportImdbMovieResolver
                 }
             }
         }
-        $entityManager->flush();
         /** @var array $imdbMovieKeywords */
         $imdbMovieKeywords = ImdbMovieKeywordResolver::resolve($container, $args);
         if ($imdbMovieKeywords && array_key_exists('keywords', $imdbMovieKeywords)) {
@@ -309,7 +306,6 @@ class ImportImdbMovieResolver
                         $tape->addTag($tag);
                     }
                 }
-                $entityManager->flush();
             }
         }
         /** @var array $imdbMovieLocations */
@@ -330,7 +326,6 @@ class ImportImdbMovieResolver
                     $tape->addLocation($location);
                 }
             }
-            $entityManager->flush();
         }
         if ($tapeDetail->getIsTvShow()) {
             /** @var TvShow $tvShow */
@@ -340,7 +335,6 @@ class ImportImdbMovieResolver
             if (!$tvShow) {
                 $tvShow = new TvShow();
                 $tape->setTvShow($tvShow);
-                $entityManager->flush();
             }
         }
         if ($imdbMovieDetails['isEpisode']) {
@@ -433,9 +427,8 @@ class ImportImdbMovieResolver
                     ]);
                     if (!$searchValue) {
                         $searchValue = new SearchValue();
-                        $searchValue->setObject($people->getObject());
                         $searchValue->setSearchParam($person->getAlias());
-                        $entityManager->persist($searchValue);
+                        $people->getObject()->addSearchValue($searchValue);
                     }
                     /** @var PeopleAliasTape $peopleAliasTape */
                     $peopleAliasTape = $entityManager->getRepository(PeopleAliasTape::class)->findOneBy([
@@ -626,9 +619,8 @@ class ImportImdbMovieResolver
                 ]);
                 if (!$searchValue) {
                     $searchValue = new SearchValue();
-                    $searchValue->setObject($tape->getObject());
                     $searchValue->setSearchParam($data->getTitle());
-                    $entityManager->persist($searchValue);
+                    $tape->getObject()->addSearchValue($searchValue);
                 }
                 $entityManager->flush();
             }
