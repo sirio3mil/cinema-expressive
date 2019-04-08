@@ -176,6 +176,13 @@ class Tape implements CinemaEntity
     protected $people;
 
     /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="PeopleAliasTape", mappedBy="tape", fetch="EXTRA_LAZY", cascade={"all"})
+     */
+    protected $aliases;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -189,6 +196,7 @@ class Tape implements CinemaEntity
         $this->sounds = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->people = new ArrayCollection();
+        $this->aliases = new ArrayCollection();
     }
 
     /**
@@ -646,5 +654,73 @@ class Tape implements CinemaEntity
     public function removePeople(TapePeopleRole $tapePeopleRole): bool
     {
         return $this->people->removeElement($tapePeopleRole);
+    }
+
+    /**
+     *
+     * @param Collection $aliases
+     * @return Tape
+     */
+    public function setAliases(Collection $aliases): Tape
+    {
+        $this->aliases = $aliases;
+        /** @var PeopleAliasTape $item */
+        foreach ($aliases as $item) {
+            $item->setTape($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @API\Field(type="?PeopleAliasTape[]")
+     *
+     * @return Collection
+     */
+    public function getAliases(): Collection
+    {
+        return $this->aliases;
+    }
+
+    /**
+     * @param PeopleAliasTape $peopleAliasTape
+     * @return Tape
+     */
+    public function addPeopleAliasTape(PeopleAliasTape $peopleAliasTape): Tape
+    {
+        $this->aliases[] = $peopleAliasTape->setTape($this);
+        return $this;
+    }
+
+    /**
+     * @param PeopleAlias $peopleAlias
+     * @return Tape
+     */
+    public function addPeopleAlias(PeopleAlias $peopleAlias): Tape
+    {
+        $this->aliases[] = (new PeopleAliasTape())->setPeopleAlias($peopleAlias)->setTape($this);
+        return $this;
+    }
+
+    /**
+     * @param PeopleAliasTape $peopleAliasTape
+     * @return bool
+     */
+    public function removePeopleAliasTape(PeopleAliasTape $peopleAliasTape): bool
+    {
+        return $this->aliases->removeElement($peopleAliasTape);
+    }
+
+    public function getPeopleAliasTape(PeopleAlias $peopleAlias): ?PeopleAliasTape
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("peopleAlias", $peopleAlias))
+            ->setFirstResult(0)
+            ->setMaxResults(1);
+        /** @var LazyCriteriaCollection $elements */
+        $elements = $this->getAliases()->matching($criteria);
+        if ($elements->count()) {
+            return $elements->first();
+        }
+        return null;
     }
 }

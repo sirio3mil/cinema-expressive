@@ -383,7 +383,6 @@ class ImportImdbMovieResolver
         if ($castIterator->getIterator()->count()) {
             /** @var EntityRepository $peopleAliasRepository */
             $peopleAliasRepository = $entityManager->getRepository(PeopleAlias::class);
-            $peopleAliasTapeRepository = $entityManager->getRepository(PeopleAliasTape::class);
             /** @var CastPeople $person */
             foreach ($castIterator as $person) {
                 $people = self::addTapePeople($entityManager, $person, $castRole, $tape);
@@ -409,15 +408,8 @@ class ImportImdbMovieResolver
                         $people->getObject()->addSearchValue($searchValue);
                     }
                     /** @var PeopleAliasTape $peopleAliasTape */
-                    $peopleAliasTape = $peopleAliasTapeRepository->findOneBy([
-                        "peopleAlias" => $peopleAlias,
-                        "tape" => $tape
-                    ]);
-                    if (!$peopleAliasTape) {
-                        $peopleAliasTape = new PeopleAliasTape();
-                        $peopleAliasTape->setTape($tape);
-                        $peopleAliasTape->setPeopleAlias($peopleAlias);
-                        $entityManager->persist($peopleAliasTape);
+                    if (!$peopleAliasTape = $tape->getPeopleAliasTape($peopleAlias)) {
+                        $tape->addPeopleAlias($peopleAlias);
                     }
                 }
             }

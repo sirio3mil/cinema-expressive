@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class PeopleAliasTape implements CinemaEntity
 {
 
-    use CreationDate, TapeRelatedColumn;
+    use CreationDate, TapeRelated;
 
     /**
      * @var int
@@ -37,6 +37,14 @@ class PeopleAliasTape implements CinemaEntity
      * @ORM\JoinColumn(name="peopleAliasId", referencedColumnName="peopleAliasId")
      */
     private $peopleAlias;
+
+    /**
+     * @var Tape
+     *
+     * @ORM\ManyToOne(targetEntity="Tape", inversedBy="aliases", fetch="EXTRA_LAZY", cascade={"all"})
+     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
+     */
+    protected $tape;
 
     /**
      * @return int
