@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\LazyCriteriaCollection;
 use Doctrine\ORM\Mapping as ORM;
 use GraphQL\Doctrine\Annotation as API;
+use DateTime;
 
 /**
  * Class Tape
@@ -183,6 +184,13 @@ class Tape implements CinemaEntity
     protected $aliases;
 
     /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="Premiere", mappedBy="tape", fetch="EXTRA_LAZY", cascade={"all"})
+     */
+    protected $premieres;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -197,6 +205,7 @@ class Tape implements CinemaEntity
         $this->users = new ArrayCollection();
         $this->people = new ArrayCollection();
         $this->aliases = new ArrayCollection();
+        $this->premieres = new ArrayCollection();
     }
 
     /**
@@ -697,8 +706,7 @@ class Tape implements CinemaEntity
      */
     public function addPeopleAlias(PeopleAlias $peopleAlias): Tape
     {
-        $this->aliases[] = (new PeopleAliasTape())->setPeopleAlias($peopleAlias)->setTape($this);
-        return $this;
+        return $this->addPeopleAliasTape((new PeopleAliasTape())->setPeopleAlias($peopleAlias));
     }
 
     /**
@@ -710,6 +718,10 @@ class Tape implements CinemaEntity
         return $this->aliases->removeElement($peopleAliasTape);
     }
 
+    /**
+     * @param PeopleAlias $peopleAlias
+     * @return PeopleAliasTape|null
+     */
     public function getPeopleAliasTape(PeopleAlias $peopleAlias): ?PeopleAliasTape
     {
         $criteria = Criteria::create()
@@ -718,6 +730,69 @@ class Tape implements CinemaEntity
             ->setMaxResults(1);
         /** @var LazyCriteriaCollection $elements */
         $elements = $this->getAliases()->matching($criteria);
+        if ($elements->count()) {
+            return $elements->first();
+        }
+        return null;
+    }
+
+    /**
+     * @param Collection $premieres
+     * @return Tape
+     */
+    public function setPremieres(Collection $premieres): Tape
+    {
+        $this->premieres = $premieres;
+        /** @var Premiere $item */
+        foreach ($premieres as $item) {
+            $item->setTape($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @API\Field(type="?Premiere[]")
+     *
+     * @return Collection
+     */
+    public function getPremieres(): Collection
+    {
+        return $this->premieres;
+    }
+
+    /**
+     * @param Premiere $premiere
+     * @return Tape
+     */
+    public function addPremiere(Premiere $premiere): Tape
+    {
+        $this->premieres[] = $premiere->setTape($this);
+        return $this;
+    }
+
+    /**
+     * @param Premiere $premiere
+     * @return bool
+     */
+    public function removePremiere(Premiere $premiere): bool
+    {
+        return $this->premieres->removeElement($premiere);
+    }
+
+    /**
+     * @param Country|null $country
+     * @param DateTime $date
+     * @return Premiere|null
+     */
+    public function getPremiere(?Country $country, DateTime $date): ?Premiere
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("date", $date))
+            ->andWhere(Criteria::expr()->eq("country", $country))
+            ->setFirstResult(0)
+            ->setMaxResults(1);
+        /** @var LazyCriteriaCollection $elements */
+        $elements = $this->getPremieres()->matching($criteria);
         if ($elements->count()) {
             return $elements->first();
         }

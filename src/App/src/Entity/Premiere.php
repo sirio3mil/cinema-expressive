@@ -2,7 +2,12 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\LazyCriteriaCollection;
 use Doctrine\ORM\Mapping as ORM;
+use GraphQL\Doctrine\Annotation as API;
 use DateTime;
 
 /**
@@ -15,7 +20,7 @@ use DateTime;
 class Premiere implements CinemaEntity
 {
 
-    use TapeRelatedColumn, CountryRelated, CreationDate;
+    use TapeRelated, CountryRelated, CreationDate;
 
     /**
      * @var int
@@ -29,7 +34,7 @@ class Premiere implements CinemaEntity
      * )
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $premiereId;
+    protected $premiereId;
 
     /**
      * @var DateTime
@@ -40,7 +45,7 @@ class Premiere implements CinemaEntity
      *     nullable=false
      * )
      */
-    private $date;
+    protected $date;
 
     /**
      * @var string
@@ -53,8 +58,27 @@ class Premiere implements CinemaEntity
      *     options={"fixed":false,"default":"Movie"}
      * )
      */
-    private $place;
+    protected $place;
 
+    /**
+     * @var Tape
+     *
+     * @ORM\ManyToOne(targetEntity="Tape", inversedBy="premieres", fetch="EXTRA_LAZY", cascade={"all"})
+     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
+     */
+    protected $tape;
+
+    /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="PremiereDetail", mappedBy="premiere", fetch="EXTRA_LAZY", cascade={"all"})
+     */
+    protected $details;
+
+    public function __construct()
+    {
+        $this->details = new ArrayCollection();
+    }
 
     /**
      * @return int
@@ -71,7 +95,7 @@ class Premiere implements CinemaEntity
     public function setDate(DateTime $date): Premiere
     {
         $this->date = $date;
-    
+
         return $this;
     }
 
@@ -90,7 +114,7 @@ class Premiere implements CinemaEntity
     public function setPlace(string $place): Premiere
     {
         $this->place = $place;
-    
+
         return $this;
     }
 
@@ -105,8 +129,78 @@ class Premiere implements CinemaEntity
     /** @ORM\PrePersist */
     public function generatePlace()
     {
-        if(is_null($this->place)) {
+        if (is_null($this->place)) {
             $this->place = "Movie";
         }
+    }
+
+    /**
+     * @param Collection $details
+     * @return Premiere
+     */
+    public function setDetails(Collection $details): Premiere
+    {
+        $this->details = $details;
+        /** @var PremiereDetail $item */
+        foreach ($details as $item) {
+            $item->setPremiere($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @API\Field(type="?PremiereDetail[]")
+     *
+     * @return Collection
+     */
+    public function getDetails(): Collection
+    {
+        return $this->details;
+    }
+
+    /**
+     * @param PremiereDetail $detail
+     * @return Premiere
+     */
+    public function addDetail(PremiereDetail $detail): Premiere
+    {
+        $this->details[] = $detail->setPremiere($this);
+        return $this;
+    }
+
+    /**
+     * @param string $observation
+     * @return Premiere
+     */
+    public function addObservation(string $observation): Premiere
+    {
+        return $this->addDetail((new PremiereDetail())->setObservation($observation));
+    }
+
+    /**
+     * @param PremiereDetail $detail
+     * @return bool
+     */
+    public function removeDetail(PremiereDetail $detail): bool
+    {
+        return $this->details->removeElement($detail);
+    }
+
+    /**
+     * @param string $observation
+     * @return PremiereDetail|null
+     */
+    public function getDetail(string $observation): ?PremiereDetail
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("observation", $observation))
+            ->setFirstResult(0)
+            ->setMaxResults(1);
+        /** @var LazyCriteriaCollection $elements */
+        $elements = $this->getDetails()->matching($criteria);
+        if ($elements->count()) {
+            return $elements->first();
+        }
+        return null;
     }
 }

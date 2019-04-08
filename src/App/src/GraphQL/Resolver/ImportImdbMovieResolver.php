@@ -443,7 +443,6 @@ class ImportImdbMovieResolver
                 self::addTapePeople($entityManager, $person, $writerRole, $tape);
             }
         }
-        $entityManager->flush();
         /** @var array $imdbMovieReleases */
         $imdbMovieReleases = ImdbMovieReleaseResolver::resolve($container, $args);
         /** @var ReleaseIterator $releaseDates */
@@ -463,37 +462,23 @@ class ImportImdbMovieResolver
                     $country = null;
                 }
                 /** @var Premiere $premiere */
-                $premiere = $entityManager->getRepository(Premiere::class)->findOneBy([
-                    'tape' => $tape,
-                    'date' => $data->getDate(),
-                    'country' => $country
-                ]);
-                if (!$premiere) {
+                if (!$premiere = $tape->getPremiere($country, $data->getDate())) {
                     $premiere = new Premiere();
-                    $premiere->setTape($tape);
                     $premiere->setDate($data->getDate());
                     $premiere->setCountry($country);
-                    $entityManager->persist($premiere);
-                    $entityManager->flush();
+                    $tape->addPremiere($premiere);
                 }
                 if ($data->getDetails()) {
                     foreach ($data->getDetails() as $detail) {
                         /** @var PremiereDetail $premiereDetail */
-                        $premiereDetail = $entityManager->getRepository(PremiereDetail::class)->findOneBy([
-                            'premiere' => $premiere,
-                            'observation' => $detail
-                        ]);
-                        if (!$premiereDetail) {
-                            $premiereDetail = new PremiereDetail();
-                            $premiereDetail->setPremiere($premiere);
-                            $premiereDetail->setObservation($detail);
-                            $entityManager->persist($premiereDetail);
-                            $entityManager->flush();
+                        if (!$premiereDetail = $premiere->getDetail($detail)) {
+                            $premiere->addObservation($detail);
                         }
                     }
                 }
             }
         }
+        $entityManager->flush();
         /** @var AlsoKnownAsIterator $titles */
         $titles = $imdbMovieReleases['titles'];
         if ($titles->getIterator()->count()) {

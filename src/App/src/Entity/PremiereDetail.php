@@ -52,7 +52,7 @@ class PremiereDetail implements CinemaEntity
     /**
      * @var Premiere
      *
-     * @ORM\ManyToOne(targetEntity="Premiere", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="Premiere", inversedBy="details", fetch="EXTRA_LAZY", cascade={"all"})
      * @ORM\JoinColumn(name="premiereId", referencedColumnName="premiereId")
      */
     private $premiere;
