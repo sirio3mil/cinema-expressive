@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Resolver;
 
-
 use App\Entity\Place;
 use App\Entity\Tape;
 use App\Entity\TapeUser;
@@ -18,8 +17,11 @@ use App\Entity\TapeUserStatus;
 use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\ORMException;
 use Interop\Container\ContainerInterface;
 use Doctrine\ORM\Query;
+use InvalidArgumentException;
+use Doctrine\ORM\OptimisticLockException;
 
 class EditTapeUserResolver
 {
@@ -28,7 +30,7 @@ class EditTapeUserResolver
      * @param EntityManager $entityManager
      * @param array $args
      * @return array
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public static function getTapes(EntityManager $entityManager, array $args): array
     {
@@ -67,7 +69,7 @@ class EditTapeUserResolver
         }
 
         if (!$tapes) {
-            throw new \InvalidArgumentException('Tapes not found');
+            throw new InvalidArgumentException('Tapes not found');
         }
 
         return $tapes;
@@ -77,8 +79,8 @@ class EditTapeUserResolver
      * @param ContainerInterface $container
      * @param array $args
      * @return array
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public static function resolve(ContainerInterface $container, array $args): array
     {
@@ -89,12 +91,12 @@ class EditTapeUserResolver
         /** @var User $user */
         $user = $entityManager->getRepository(User::class)->find($args['userId']);
         if (!$user) {
-            throw new \InvalidArgumentException('User not found');
+            throw new InvalidArgumentException('User not found');
         }
         /** @var TapeUserStatus $tapeUserStatus */
         $tapeUserStatus = $entityManager->getRepository(TapeUserStatus::class)->find($args['tapeUserStatusId']);
         if (!$tapeUserStatus) {
-            throw new \InvalidArgumentException('Tape user status not found');
+            throw new InvalidArgumentException('Tape user status not found');
         }
         $place = null;
         $downloaded = false;
@@ -103,11 +105,13 @@ class EditTapeUserResolver
             /** @var Place $place */
             $place = $entityManager->getRepository(Place::class)->find($args['placeId']);
             if (!$place) {
-                throw new \InvalidArgumentException('Place not found');
+                throw new InvalidArgumentException('Place not found');
             }
             if ($place->getPlaceId() == Place::DOWNLOADED) {
                 /** @var TapeUserStatus $tapeUserStatusDownloaded */
-                $tapeUserStatusDownloaded = $entityManager->getRepository(TapeUserStatus::class)->find(TapeUserStatus::DOWNLOADED);
+                $tapeUserStatusDownloaded = $entityManager
+                    ->getRepository(TapeUserStatus::class)
+                    ->find(TapeUserStatus::DOWNLOADED);
                 if ($tapeUserStatusDownloaded) {
                     $downloaded = true;
                 }
@@ -149,9 +153,9 @@ class EditTapeUserResolver
                 }
             }
             $entityManager->persist($tapeUser);
-            $entityManager->flush();
             $tapesUser[] = $tapeUser;
         }
+        $entityManager->flush();
         return $tapesUser;
     }
 }
