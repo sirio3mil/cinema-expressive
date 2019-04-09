@@ -63,6 +63,14 @@ class TapeTitle implements CinemaEntity
      */
     private $language;
 
+    /**
+     * @var Tape
+     *
+     * @ORM\ManyToOne(targetEntity="Tape", inversedBy="titles", fetch="EXTRA_LAZY", cascade={"all"})
+     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
+     */
+    protected $tape;
+
 
     /**
      * @return int

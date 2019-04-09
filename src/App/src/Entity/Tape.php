@@ -191,6 +191,13 @@ class Tape implements CinemaEntity
     protected $premieres;
 
     /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="TapeTitle", mappedBy="tape", fetch="EXTRA_LAZY", cascade={"all"})
+     */
+    protected $titles;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -206,6 +213,7 @@ class Tape implements CinemaEntity
         $this->people = new ArrayCollection();
         $this->aliases = new ArrayCollection();
         $this->premieres = new ArrayCollection();
+        $this->titles = new ArrayCollection();
     }
 
     /**
@@ -793,6 +801,69 @@ class Tape implements CinemaEntity
             ->setMaxResults(1);
         /** @var LazyCriteriaCollection $elements */
         $elements = $this->getPremieres()->matching($criteria);
+        if ($elements->count()) {
+            return $elements->first();
+        }
+        return null;
+    }
+
+    /**
+     * @param Collection $titles
+     * @return Tape
+     */
+    public function setTitles(Collection $titles): Tape
+    {
+        $this->titles = $titles;
+        /** @var TapeTitle $item */
+        foreach ($titles as $item) {
+            $item->setTape($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @API\Field(type="?TapeTitle[]")
+     *
+     * @return Collection
+     */
+    public function getTitles(): Collection
+    {
+        return $this->titles;
+    }
+
+    /**
+     * @param TapeTitle $tapeTitle
+     * @return Tape
+     */
+    public function addTitle(TapeTitle $tapeTitle): Tape
+    {
+        $this->titles[] = $tapeTitle->setTape($this);
+        return $this;
+    }
+
+    /**
+     * @param TapeTitle $tapeTitle
+     * @return bool
+     */
+    public function removeTitle(TapeTitle $tapeTitle): bool
+    {
+        return $this->titles->removeElement($tapeTitle);
+    }
+
+    /**
+     * @param Country|null $country
+     * @param string $title
+     * @return TapeTitle|null
+     */
+    public function getTitle(?Country $country, string $title): ?TapeTitle
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("title", $title))
+            ->andWhere(Criteria::expr()->eq("country", $country))
+            ->setFirstResult(0)
+            ->setMaxResults(1);
+        /** @var LazyCriteriaCollection $elements */
+        $elements = $this->getTitles()->matching($criteria);
         if ($elements->count()) {
             return $elements->first();
         }

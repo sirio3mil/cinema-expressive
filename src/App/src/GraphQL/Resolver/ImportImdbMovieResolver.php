@@ -478,7 +478,6 @@ class ImportImdbMovieResolver
                 }
             }
         }
-        $entityManager->flush();
         /** @var AlsoKnownAsIterator $titles */
         $titles = $imdbMovieReleases['titles'];
         if ($titles->getIterator()->count()) {
@@ -493,22 +492,16 @@ class ImportImdbMovieResolver
                     $country = null;
                 }
                 /** @var TapeTitle $tapeTitle */
-                $tapeTitle = $entityManager->getRepository(TapeTitle::class)->findOneBy([
-                    'tape' => $tape,
-                    'title' => $data->getTitle(),
-                    'country' => $country
-                ]);
-                if (!$tapeTitle) {
+                if (!$tapeTitle = $tape->getTitle($country, $data->getTitle())) {
                     $tapeTitle = new TapeTitle();
-                    $tapeTitle->setTape($tape);
                     $tapeTitle->setCountry($country);
                     $tapeTitle->setTitle($data->getTitle());
-                    if ($country) {
+                    if ($country && $country->getLanguage()) {
                         $tapeTitle->setLanguage($country->getLanguage());
                     }
+                    $tape->addTitle($tapeTitle);
                 }
                 $tapeTitle->setObservations($data->getDescription());
-                $entityManager->persist($tapeTitle);
                 /** @var SearchValue $searchValue */
                 $searchValue = $searchValueRepository->findOneBy([
                     'object' => $tape->getObject(),
@@ -519,9 +512,9 @@ class ImportImdbMovieResolver
                     $searchValue->setSearchParam($data->getTitle());
                     $tape->getObject()->addSearchValue($searchValue);
                 }
-                $entityManager->flush();
             }
         }
+        $entityManager->flush();
         /** @var array $imdbMovieCertifications */
         $imdbMovieCertifications = ImdbMovieCertificateResolver::resolve($container, $args);
         if ($imdbMovieCertifications) {
