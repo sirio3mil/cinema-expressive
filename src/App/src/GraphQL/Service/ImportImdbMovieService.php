@@ -711,12 +711,11 @@ class ImportImdbMovieService
     }
 
     /**
-     * @return Tape
      * @throws NoResultException
      * @throws NonUniqueResultException
      * @throws ORMException
      */
-    public function import(): Tape
+    public function import(): void
     {
         $this->setTape();
         $this->setDetails();
