@@ -373,6 +373,7 @@ class ImportImdbMovieService
     }
 
     /**
+     * @throws Exception
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
@@ -503,6 +504,7 @@ class ImportImdbMovieService
     }
 
     /**
+     * @throws Exception
      * @throws NonUniqueResultException
      * @throws ORMException
      */
@@ -711,6 +713,7 @@ class ImportImdbMovieService
     }
 
     /**
+     * @throws Exception
      * @throws NoResultException
      * @throws NonUniqueResultException
      * @throws ORMException
