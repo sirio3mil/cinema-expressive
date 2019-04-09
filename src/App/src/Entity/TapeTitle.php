@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TapeTitle implements CinemaEntity
 {
 
-    use TapeRelatedColumn, CountryRelated;
+    use TapeRelated, CountryRelated;
 
     /**
      * @var int
@@ -27,7 +27,7 @@ class TapeTitle implements CinemaEntity
      * )
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $tapeTitleId;
+    protected $tapeTitleId;
 
     /**
      * @var string
@@ -40,7 +40,7 @@ class TapeTitle implements CinemaEntity
      *     options={"fixed":false}
      * )
      */
-    private $title;
+    protected $title;
 
     /**
      * @var string|null
@@ -53,7 +53,7 @@ class TapeTitle implements CinemaEntity
      *     options={"fixed":false}
      * )
      */
-    private $observations;
+    protected $observations;
 
     /**
      * @var Language
@@ -61,7 +61,7 @@ class TapeTitle implements CinemaEntity
      * @ORM\ManyToOne(targetEntity="Language", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="languageId", referencedColumnName="languageId")
      */
-    private $language;
+    protected $language;
 
     /**
      * @var Tape

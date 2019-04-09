@@ -198,6 +198,13 @@ class Tape implements CinemaEntity
     protected $titles;
 
     /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="TapeCertification", mappedBy="tape", fetch="EXTRA_LAZY", cascade={"all"})
+     */
+    protected $certifications;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -214,6 +221,7 @@ class Tape implements CinemaEntity
         $this->aliases = new ArrayCollection();
         $this->premieres = new ArrayCollection();
         $this->titles = new ArrayCollection();
+        $this->certifications = new ArrayCollection();
     }
 
     /**
@@ -864,6 +872,67 @@ class Tape implements CinemaEntity
             ->setMaxResults(1);
         /** @var LazyCriteriaCollection $elements */
         $elements = $this->getTitles()->matching($criteria);
+        if ($elements->count()) {
+            return $elements->first();
+        }
+        return null;
+    }
+
+    /**
+     * @param Collection $certifications
+     * @return Tape
+     */
+    public function setCertifications(Collection $certifications): Tape
+    {
+        $this->certifications = $certifications;
+        /** @var TapeCertification $item */
+        foreach ($certifications as $item) {
+            $item->setTape($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @API\Field(type="?TapeCertification[]")
+     *
+     * @return Collection
+     */
+    public function getCertifications(): Collection
+    {
+        return $this->certifications;
+    }
+
+    /**
+     * @param TapeCertification $tapeCertification
+     * @return Tape
+     */
+    public function addCertification(TapeCertification $tapeCertification): Tape
+    {
+        $this->certifications[] = $tapeCertification->setTape($this);
+        return $this;
+    }
+
+    /**
+     * @param TapeCertification $tapeCertification
+     * @return bool
+     */
+    public function removeCertification(TapeCertification $tapeCertification): bool
+    {
+        return $this->certifications->removeElement($tapeCertification);
+    }
+
+    /**
+     * @param Country $country
+     * @return TapeCertification|null
+     */
+    public function getCertification(Country $country): ?TapeCertification
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("country", $country))
+            ->setFirstResult(0)
+            ->setMaxResults(1);
+        /** @var LazyCriteriaCollection $elements */
+        $elements = $this->getCertifications()->matching($criteria);
         if ($elements->count()) {
             return $elements->first();
         }

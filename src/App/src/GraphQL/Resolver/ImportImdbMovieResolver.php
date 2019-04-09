@@ -514,7 +514,6 @@ class ImportImdbMovieResolver
                 }
             }
         }
-        $entityManager->flush();
         /** @var array $imdbMovieCertifications */
         $imdbMovieCertifications = ImdbMovieCertificateResolver::resolve($container, $args);
         if ($imdbMovieCertifications) {
@@ -523,21 +522,18 @@ class ImportImdbMovieResolver
                 $country = $countryRepository->findOneBy([
                     'officialName' => $data['country']
                 ]);
-                /** @var TapeCertification $tapeCertification */
-                $tapeCertification = $entityManager->getRepository(TapeCertification::class)->findOneBy([
-                    'tape' => $tape,
-                    'country' => $country
-                ]);
-                if (!$tapeCertification) {
-                    $tapeCertification = new TapeCertification();
-                    $tapeCertification->setTape($tape);
-                    $tapeCertification->setCountry($country);
+                if ($country) {
+                    /** @var TapeCertification $tapeCertification */
+                    if (!$tapeCertification = $tape->getCertification($country)) {
+                        $tapeCertification = new TapeCertification();
+                        $tapeCertification->setCountry($country);
+                    }
+                    $tapeCertification->setCertification($data['certification']);
+                    $tape->addCertification($tapeCertification);
                 }
-                $tapeCertification->setCertification($data['certification']);
-                $entityManager->persist($tapeCertification);
-                $entityManager->flush();
             }
         }
+        $entityManager->flush();
         return $tape;
     }
 }

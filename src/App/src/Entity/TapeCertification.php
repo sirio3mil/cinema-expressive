@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TapeCertification implements CinemaEntity
 {
 
-    use TapeRelatedColumn, CountryRelated, CreationDate;
+    use TapeRelated, CountryRelated, CreationDate;
 
     /**
      * @var int
@@ -28,7 +28,7 @@ class TapeCertification implements CinemaEntity
      * )
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $tapeCertificationId;
+    protected $tapeCertificationId;
 
     /**
      * @var string|null
@@ -41,7 +41,15 @@ class TapeCertification implements CinemaEntity
      *     options={"fixed":false}
      * )
      */
-    private $certification;
+    protected $certification;
+
+    /**
+     * @var Tape
+     *
+     * @ORM\ManyToOne(targetEntity="Tape", inversedBy="certifications", fetch="EXTRA_LAZY", cascade={"all"})
+     * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
+     */
+    protected $tape;
 
 
     /**
