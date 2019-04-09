@@ -35,8 +35,10 @@ class ImportImdbMovieResolver
         $entityManager = $container->get(EntityManager::class);
         /** @var ImportImdbMovieService $importImdbMovieService */
         $importImdbMovieService = new ImportImdbMovieService($container);
+        $importImdbMovieService->setImdbNumber($args['imdbNumber']);
+        $importImdbMovieService->import();
         /** @var Tape $tape */
-        $tape = $importImdbMovieService->import($args);
+        $tape = $importImdbMovieService->getTape();
         $entityManager->persist($tape);
         $entityManager->flush();
         return $tape;

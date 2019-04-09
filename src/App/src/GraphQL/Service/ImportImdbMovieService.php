@@ -28,33 +28,34 @@ use App\Entity\TapePeopleRoleCharacter;
 use App\Entity\TapeTitle;
 use App\Entity\TvShow;
 use App\Entity\TvShowChapter;
-use App\GraphQL\Resolver\ImdbMovieCastResolver;
-use App\GraphQL\Resolver\ImdbMovieCertificateResolver;
-use App\GraphQL\Resolver\ImdbMovieDetailResolver;
-use App\GraphQL\Resolver\ImdbMovieKeywordResolver;
-use App\GraphQL\Resolver\ImdbMovieLocationResolver;
-use App\GraphQL\Resolver\ImdbMovieReleaseResolver;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
-use Doctrine\ORM\ORMInvalidArgumentException;
-use Doctrine\ORM\OptimisticLockException;
 use ImdbScraper\Iterator\AlsoKnownAsIterator;
 use ImdbScraper\Iterator\CastIterator;
+use ImdbScraper\Iterator\CertificateIterator;
 use ImdbScraper\Iterator\KeywordIterator;
+use ImdbScraper\Iterator\LocationIterator;
 use ImdbScraper\Iterator\PersonIterator;
 use ImdbScraper\Iterator\ReleaseIterator;
+use ImdbScraper\Mapper\CastMapper;
+use ImdbScraper\Mapper\HomeMapper;
+use ImdbScraper\Mapper\KeywordMapper;
+use ImdbScraper\Mapper\LocationMapper;
+use ImdbScraper\Mapper\ParentalGuideMapper;
+use ImdbScraper\Mapper\ReleaseMapper;
 use ImdbScraper\Model\AlsoKnownAs;
 use ImdbScraper\Model\CastPeople;
+use ImdbScraper\Model\Certificate;
 use ImdbScraper\Model\Keyword;
+use ImdbScraper\Model\Location as Place;
 use ImdbScraper\Model\Release;
 use ImdbScraper\Model\People as Person;
 use Interop\Container\ContainerInterface;
 use Exception;
-use phpDocumentor\Reflection\Types\Void_;
 
 class ImportImdbMovieService
 {
@@ -79,6 +80,9 @@ class ImportImdbMovieService
     /** @var Tape */
     protected $tape;
 
+    /** @var int */
+    protected $imdbNumber;
+
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
@@ -98,6 +102,22 @@ class ImportImdbMovieService
         $this->countryRepository = $this->entityManager->getRepository(Country::class);
         /** @var EntityRepository $searchValueRepository */
         $this->searchValueRepository = $this->entityManager->getRepository(SearchValue::class);
+    }
+
+    /**
+     * @param int $imdbNumber
+     */
+    public function setImdbNumber(int $imdbNumber): void
+    {
+        $this->imdbNumber = $imdbNumber;
+    }
+
+    /**
+     * @return int
+     */
+    public function getImdbNumber(): int
+    {
+        return $this->imdbNumber;
     }
 
     /**
@@ -205,10 +225,9 @@ class ImportImdbMovieService
     }
 
     /**
-     * @param int $number
      * @throws NonUniqueResultException
      */
-    protected function setTape(int $number): void
+    protected function setTape(): void
     {
         try {
             /** @var Query $query */
@@ -220,7 +239,7 @@ class ImportImdbMovieService
                     AND o.rowType = :rowType
             ');
             $query->setParameters([
-                'imdbNumber' => $number,
+                'imdbNumber' => $this->imdbNumber,
                 'rowType' => $this->tapeRowType
             ]);
             $query->useQueryCache(true);
@@ -238,7 +257,7 @@ class ImportImdbMovieService
             $object = new GlobalUniqueObject();
             $object->setRowType($this->tapeRowType);
             $imdbNumber = new ImdbNumber();
-            $imdbNumber->setImdbNumber($number);
+            $imdbNumber->setImdbNumber($this->imdbNumber);
             $object->setImdbNumber($imdbNumber);
             $this->tape = new Tape();
             $object->setTape($this->tape);
@@ -316,11 +335,11 @@ class ImportImdbMovieService
     }
 
     /**
-     * @param array $data
+     * @param HomeMapper $mapper
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    protected function setTvShowChapter(array $data): void
+    protected function setTvShowChapter(HomeMapper $mapper): void
     {
         /** @var TvShowChapter $tvShowChapter */
         $tvShowChapter = $this->entityManager->getRepository(TvShowChapter::class)->findOneBy([
@@ -339,7 +358,7 @@ class ImportImdbMovieService
                         AND o.rowType = :rowType
                 ');
             $query->setParameters([
-                'imdbNumber' => $data['tvShow'],
+                'imdbNumber' => $mapper->getTvShow(),
                 'rowType' => $this->tapeRowType
             ]);
             $query->useQueryCache(true);
@@ -349,28 +368,28 @@ class ImportImdbMovieService
             $tvShow->addChapter($tvShowChapter);
             $this->tape->setTvShowChapter($tvShowChapter);
         }
-        $tvShowChapter->setSeason($data['seasonNumber']);
-        $tvShowChapter->setChapter($data['episodeNumber']);
+        $tvShowChapter->setSeason($mapper->getSeasonNumber());
+        $tvShowChapter->setChapter($mapper->getEpisodeNumber());
     }
 
     /**
-     * @param array $args
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    protected function setDetails(array $args): void
+    protected function setDetails(): void
     {
-        /** @var array $imdbMovieDetails */
-        $imdbMovieDetails = ImdbMovieDetailResolver::resolve($this->container, $args);
-        $this->tape->setOriginalTitle($imdbMovieDetails['title']);
+        /** @var HomeMapper $mapper */
+        $mapper = $this->container->get(HomeMapper::class);
+        $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
+        $this->tape->setOriginalTitle($mapper->getTitle());
         /** @var SearchValue $searchValue */
         $searchValue = $this->searchValueRepository->findOneBy([
             'object' => $this->tape->getObject(),
-            'searchParam' => $imdbMovieDetails['title']
+            'searchParam' => $mapper->getTitle()
         ]);
         if (!$searchValue) {
             $searchValue = new SearchValue();
-            $searchValue->setSearchParam($imdbMovieDetails['title']);
+            $searchValue->setSearchParam($mapper->getTitle());
             $searchValue->setPrimaryParam(true);
             $this->tape->getObject()->addSearchValue($searchValue);
         }
@@ -382,10 +401,10 @@ class ImportImdbMovieService
             $tapeDetail = new TapeDetail();
             $this->tape->setDetail($tapeDetail);
         }
-        $tapeDetail->setDuration($imdbMovieDetails['duration']);
-        $tapeDetail->setYear($imdbMovieDetails['year']);
-        $tapeDetail->setColor($imdbMovieDetails['color']);
-        $tapeDetail->setIsTvShow($imdbMovieDetails['isTvShow']);
+        $tapeDetail->setDuration($mapper->getDuration());
+        $tapeDetail->setYear($mapper->getYear());
+        $tapeDetail->setColor($mapper->getColor());
+        $tapeDetail->setIsTvShow($mapper->isTvShow());
         if ($tapeDetail->getIsTvShow()) {
             /** @var TvShow $tvShow */
             $tvShow = $this->entityManager->getRepository(TvShow::class)->findOneBy([
@@ -404,76 +423,77 @@ class ImportImdbMovieService
             $ranking = new Ranking();
             $this->tape->getObject()->setRanking($ranking);
         }
-        $ranking->setScoreFromCalculatedValue($imdbMovieDetails['score']);
-        $ranking->setVotes($imdbMovieDetails['votes']);
-        if ($imdbMovieDetails['isEpisode']) {
-            $this->setTvShowChapter($imdbMovieDetails);
+        $ranking->setScoreFromCalculatedValue($mapper->getScore());
+        $ranking->setVotes($mapper->getVotes());
+        if ($mapper->isEpisode()) {
+            $this->setTvShowChapter($mapper);
         }
-        if ($imdbMovieDetails['sounds']) {
-            $this->setSounds($imdbMovieDetails['sounds']);
+        if ($sounds = $mapper->getSounds()) {
+            $this->setSounds($sounds);
         }
-        if ($imdbMovieDetails['genres']) {
-            $this->setGenres($imdbMovieDetails['genres']);
+        if ($genres = $mapper->getGenres()) {
+            $this->setGenres($genres);
         }
-        if ($imdbMovieDetails['languages']) {
-            $this->setLanguages($imdbMovieDetails['languages']);
+        if ($languages = $mapper->getLanguages()) {
+            $this->setLanguages($languages);
         }
-        if ($imdbMovieDetails['countries']) {
-            $this->setCountries($imdbMovieDetails['countries']);
+        if ($countries = $mapper->getCountries()) {
+            $this->setCountries($countries);
         }
     }
 
     /**
-     * @param array $args
      * @throws Exception
      */
-    protected function setKeywords(array $args): void
+    protected function setKeywords(): void
     {
-        /** @var array $imdbMovieKeywords */
-        $imdbMovieKeywords = ImdbMovieKeywordResolver::resolve($this->container, $args);
-        if ($imdbMovieKeywords && array_key_exists('keywords', $imdbMovieKeywords)) {
-            /** @var KeywordIterator $keywords */
-            $keywords = $imdbMovieKeywords['keywords'];
-            if ($keywords->getIterator()->count()) {
-                /** @var EntityRepository $tagRepository */
-                $tagRepository = $this->entityManager->getRepository(Tag::class);
-                /** @var Keyword $data */
-                foreach ($keywords as $data) {
-                    /** @var Tag $tag */
-                    $tag = $tagRepository->findOneBy([
-                        'keyword' => $data->getKeyword()
-                    ]);
-                    if (!$tag) {
-                        $tag = new Tag();
-                        $tag->setKeyword($data->getKeyword());
-                    }
-                    if ($tag) {
-                        $this->tape->addTag($tag);
-                    }
+        /** @var KeywordMapper $mapper */
+        $mapper = $this->container->get(KeywordMapper::class);
+        $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
+        /** @var KeywordIterator $keywords */
+        $keywords = $mapper->getKeywords();
+        if ($keywords->getIterator()->count()) {
+            /** @var EntityRepository $tagRepository */
+            $tagRepository = $this->entityManager->getRepository(Tag::class);
+            /** @var Keyword $data */
+            foreach ($keywords as $data) {
+                /** @var Tag $tag */
+                $tag = $tagRepository->findOneBy([
+                    'keyword' => $data->getKeyword()
+                ]);
+                if (!$tag) {
+                    $tag = new Tag();
+                    $tag->setKeyword($data->getKeyword());
+                }
+                if ($tag) {
+                    $this->tape->addTag($tag);
                 }
             }
         }
     }
 
     /**
-     * @param array $args
      * @throws Exception
      */
-    protected function setLocations(array $args): void
+    protected function setLocations(): void
     {
-        /** @var array $imdbMovieLocations */
-        $imdbMovieLocations = ImdbMovieLocationResolver::resolve($this->container, $args);
-        if ($imdbMovieLocations) {
+        /** @var LocationMapper $mapper */
+        $mapper = $this->container->get(LocationMapper::class);
+        $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
+        /** @var LocationIterator $places */
+        $places = $mapper->getLocations();
+        if ($places->getIterator()->count()) {
             /** @var EntityRepository $locationRepository */
             $locationRepository = $this->entityManager->getRepository(Location::class);
-            foreach ($imdbMovieLocations as $data) {
+            /** @var Place $place */
+            foreach ($places as $place) {
                 /** @var Location $location */
                 $location = $locationRepository->findOneBy([
-                    'place' => $data['location']
+                    'place' => $place->getLocation()
                 ]);
                 if (!$location) {
                     $location = new Location();
-                    $location->setPlace($data['location']);
+                    $location->setPlace($place->getLocation());
                 }
                 if ($location) {
                     $this->tape->addLocation($location);
@@ -483,11 +503,10 @@ class ImportImdbMovieService
     }
 
     /**
-     * @param array $args
      * @throws NonUniqueResultException
      * @throws ORMException
      */
-    protected function setCast(array $args): void
+    protected function setCast(): void
     {
         /** @var EntityRepository $roleRepository */
         $roleRepository = $this->entityManager->getRepository(Role::class);
@@ -495,10 +514,11 @@ class ImportImdbMovieService
         $castRole = $roleRepository->findOneBy([
             "roleId" => ROLE::ROLE_CAST
         ]);
-        /** @var array $imdbMovieCredits */
-        $imdbMovieCredits = ImdbMovieCastResolver::resolve($this->container, $args);
+        /** @var CastMapper $mapper */
+        $mapper = $this->container->get(CastMapper::class);
+        $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
         /** @var CastIterator $castIterator */
-        $castIterator = $imdbMovieCredits['cast'];
+        $castIterator = $mapper->getCast();
         if ($castIterator->getIterator()->count()) {
             /** @var EntityRepository $peopleAliasRepository */
             $peopleAliasRepository = $this->entityManager->getRepository(PeopleAlias::class);
@@ -538,7 +558,7 @@ class ImportImdbMovieService
             "roleId" => ROLE::ROLE_DIRECTOR
         ]);
         /** @var PersonIterator $directors */
-        $directors = $imdbMovieCredits['directors'];
+        $directors = $mapper->getDirectors();
         if ($directors->getIterator()->count()) {
             /** @var Person $person */
             foreach ($directors as $person) {
@@ -550,7 +570,7 @@ class ImportImdbMovieService
             "roleId" => ROLE::ROLE_WRITER
         ]);
         /** @var PersonIterator $writers */
-        $writers = $imdbMovieCredits['writers'];
+        $writers = $mapper->getWriters();
         if ($writers->getIterator()->count()) {
             $peopleChecked = [];
             /** @var Person $person */
@@ -644,38 +664,46 @@ class ImportImdbMovieService
     }
 
     /**
-     * @param array $args
      * @throws Exception
      */
-    protected function setPremieresAndTitles(array $args): void
+    protected function setPremieresAndTitles(): void
     {
-        /** @var array $imdbMovieReleases */
-        $imdbMovieReleases = ImdbMovieReleaseResolver::resolve($this->container, $args);
-        $this->setPremieres($imdbMovieReleases['dates']);
-        $this->setTitles($imdbMovieReleases['titles']);
+        /** @var ReleaseMapper $mapper */
+        $mapper = $this->container->get(ReleaseMapper::class);
+        $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
+        $this->setPremieres($mapper->getReleaseDates());
+        $this->setTitles($mapper->getAlsoKnownAs());
     }
 
     /**
-     * @param array $args
      * @throws Exception
      */
-    protected function setCertifications(array $args): void
+    protected function setCertifications(): void
     {
-        /** @var array $imdbMovieCertifications */
-        $imdbMovieCertifications = ImdbMovieCertificateResolver::resolve($this->container, $args);
-        if ($imdbMovieCertifications) {
-            foreach ($imdbMovieCertifications as $data) {
+        /** @var ParentalGuideMapper $mapper */
+        $mapper = $this->container->get(ParentalGuideMapper::class);
+        $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
+        /** @var CertificateIterator $certificates */
+        $certificates = $mapper->getCertificates();
+        if ($certificates->getIterator()->count()) {
+            /** @var Certificate $certificate */
+            foreach ($certificates as $certificate) {
                 /** @var Country $country */
                 $country = $this->countryRepository->findOneBy([
-                    'officialName' => $data['country']
+                    'officialName' => $certificate->getCountryName()
                 ]);
+                if (!$country && $certificate->getIsoCountryCode()) {
+                    $country = $this->countryRepository->findOneBy([
+                        'isoCode' => $certificate->getIsoCountryCode()
+                    ]);
+                }
                 if ($country) {
                     /** @var TapeCertification $tapeCertification */
                     if (!$tapeCertification = $this->tape->getCertification($country)) {
                         $tapeCertification = new TapeCertification();
                         $tapeCertification->setCountry($country);
                     }
-                    $tapeCertification->setCertification($data['certification']);
+                    $tapeCertification->setCertification($certificate->getCertification());
                     $this->tape->addCertification($tapeCertification);
                 }
             }
@@ -683,21 +711,19 @@ class ImportImdbMovieService
     }
 
     /**
-     * @param array $args
      * @return Tape
      * @throws NoResultException
      * @throws NonUniqueResultException
      * @throws ORMException
      */
-    public function import(array $args): Tape
+    public function import(): Tape
     {
-        $this->setTape($args['imdbNumber']);
-        $this->setDetails($args);
-        $this->setKeywords($args);
-        $this->setLocations($args);
-        $this->setCast($args);
-        $this->setPremieresAndTitles($args);
-        $this->setCertifications($args);
-        return $this->tape;
+        $this->setTape();
+        $this->setDetails();
+        $this->setKeywords();
+        $this->setLocations();
+        $this->setCast();
+        $this->setPremieresAndTitles();
+        $this->setCertifications();
     }
 }
