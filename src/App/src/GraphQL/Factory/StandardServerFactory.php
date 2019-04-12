@@ -17,10 +17,11 @@ class StandardServerFactory
     public function __invoke(ContainerInterface $container): StandardServer
     {
         $schema = $container->get(Schema::class);
+        $config = $container->has('config') ? $container->get('config') : [];
         return new StandardServer([
             'schema' => $schema,
             'queryBatching' => true,
-            'debug' => true
+            'debug' => $config['debug']
         ]);
     }
 }
