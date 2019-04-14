@@ -12,9 +12,6 @@ return [
         // Use 'aliases' to alias a service name to another service. The
         // key is the alias name, the value is the service to which it points.
         'aliases' => [
-            App\Alias\MongoDBClient::class => MongoDB\Client::class,
-            App\Alias\MongoDBManager::class => MongoDB\Driver\Manager::class,
-            App\Alias\EntityManager::class => Doctrine\ORM\EntityManager::class,
             Authentication\AuthenticationInterface::class => Authentication\OAuth2\OAuth2Adapter::class,
         ],
         // Use 'invokables' for constructor-less services, or services that do
@@ -45,7 +42,8 @@ return [
             App\GraphQL\Resolver\TapeLanguageResolver::class => App\GraphQL\Factory\TapeLanguageFactory::class,
             App\GraphQL\Resolver\EditTapeUserResolver::class => App\GraphQL\Factory\EditTapeUserFactory::class,
             App\GraphQL\Resolver\ImportImdbMovieResolver::class => App\GraphQL\Factory\ImportImdbMovieFactory::class,
-            App\GraphQL\Resolver\ImportImdbEpisodeListResolver::class => App\GraphQL\Factory\ImportImdbEpisodeListFactory::class,
+            App\GraphQL\Resolver\ImportImdbEpisodeListResolver::class
+                => App\GraphQL\Factory\ImportImdbEpisodeListFactory::class,
             MongoDB\Client::class => App\Factory\MongoDBClientFactory::class,
             GraphQL\Doctrine\Types::class => App\GraphQL\Factory\TypeFactory::class,
             MongoDB\Driver\Manager::class => App\Factory\MongoDBManagerFactory::class,
