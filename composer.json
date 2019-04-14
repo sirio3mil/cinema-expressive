@@ -69,6 +69,7 @@
     "zendframework/zend-diactoros": "^1.7",
     "zendframework/zend-expressive": "^3.0",
     "zendframework/zend-expressive-aurarouter": "^3.0",
+    "zendframework/zend-expressive-authentication-oauth2": "^1.1",
     "zendframework/zend-expressive-helpers": "^5.0",
     "zendframework/zend-expressive-twigrenderer": "^2.0",
     "zendframework/zend-problem-details": "^1.0",
