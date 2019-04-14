@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a82ef643cb48cfa343a21468f28ab731",
+    "content-hash": "2cb92edb9b0cf2fcf44d941bbaeec470",
     "packages": [
         {
             "name": "aura/di",
@@ -301,6 +301,60 @@
                 "micro"
             ],
             "time": "2017-11-02T16:41:47+00:00"
+        },
+        {
+            "name": "dflydev/fig-cookies",
+            "version": "v2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dflydev/dflydev-fig-cookies.git",
+                "reference": "a59857139b9e30978b5b802b3631b5eaf34e8c66"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/dflydev/dflydev-fig-cookies/zipball/a59857139b9e30978b5b802b3631b5eaf34e8c66",
+                "reference": "a59857139b9e30978b5b802b3631b5eaf34e8c66",
+                "shasum": ""
+            },
+            "require": {
+                "ext-pcre": "*",
+                "php": "^7.2",
+                "psr/http-message": "^1"
+            },
+            "require-dev": {
+                "doctrine/coding-standard": "^4",
+                "phpstan/phpstan": "^0.10.1",
+                "phpunit/phpunit": "^7.2.6",
+                "squizlabs/php_codesniffer": "^3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Dflydev\\FigCookies\\": "src/Dflydev/FigCookies"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Beau Simensen",
+                    "email": "beau@dflydev.com"
+                }
+            ],
+            "description": "Cookies for PSR-7 HTTP Message Interface.",
+            "keywords": [
+                "cookies",
+                "psr-7",
+                "psr7"
+            ],
+            "time": "2018-07-11T06:54:37+00:00"
         },
         {
             "name": "doctrine/annotations",
@@ -4757,6 +4811,129 @@
             "time": "2018-11-19T14:43:19+00:00"
         },
         {
+            "name": "zendframework/zend-expressive-csrf",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/zend-expressive-csrf.git",
+                "reference": "07beb03eb0a0fb3771e699774cf2164a3523d6bc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/zend-expressive-csrf/zipball/07beb03eb0a0fb3771e699774cf2164a3523d6bc",
+                "reference": "07beb03eb0a0fb3771e699774cf2164a3523d6bc",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "psr/container": "^1.0",
+                "psr/http-server-middleware": "^1.0",
+                "zendframework/zend-expressive-session": "^1.0"
+            },
+            "conflict": {
+                "phpspec/prophecy": "<1.7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.0.2",
+                "zendframework/zend-coding-standard": "~1.0.0",
+                "zendframework/zend-expressive-flash": "^1.0"
+            },
+            "suggest": {
+                "zendframework/zend-expressive-flash": "^1.0.0alpha1 || ^1.0 To back CSRF tokens using flash messages"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev",
+                    "dev-develop": "1.1.x-dev"
+                },
+                "zf": {
+                    "config-provider": "Zend\\Expressive\\Csrf\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\Expressive\\Csrf\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "CSRF token generation and validation for PSR-7 and PSR-15 applications using zend-expressive-session",
+            "keywords": [
+                "ZendFramework",
+                "csrf",
+                "expressive",
+                "psr-15",
+                "psr-7",
+                "security",
+                "session",
+                "zend-expressive",
+                "zf"
+            ],
+            "time": "2018-03-15T14:59:38+00:00"
+        },
+        {
+            "name": "zendframework/zend-expressive-flash",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/zend-expressive-flash.git",
+                "reference": "5c64af69a7669e097e4f859430513a19303661bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/zend-expressive-flash/zipball/5c64af69a7669e097e4f859430513a19303661bb",
+                "reference": "5c64af69a7669e097e4f859430513a19303661bb",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "psr/http-server-middleware": "^1.0",
+                "zendframework/zend-expressive-session": "^1.0"
+            },
+            "conflict": {
+                "phpspec/prophecy": "<1.7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.0.2",
+                "zendframework/zend-coding-standard": "~1.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev",
+                    "dev-develop": "1.1.x-dev"
+                },
+                "zf": {
+                    "config-provider": "Zend\\Expressive\\Flash\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\Expressive\\Flash\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Flash messages for PSR-7 and PSR-15 applications using zend-expressive-session",
+            "keywords": [
+                "ZendFramework",
+                "expressive",
+                "flash",
+                "middleware",
+                "psr-15",
+                "psr-7",
+                "session",
+                "zend-expressive",
+                "zf"
+            ],
+            "time": "2018-03-15T14:52:49+00:00"
+        },
+        {
             "name": "zendframework/zend-expressive-helpers",
             "version": "5.3.0",
             "source": {
@@ -4878,6 +5055,127 @@
                 "zf"
             ],
             "time": "2018-06-05T15:28:00+00:00"
+        },
+        {
+            "name": "zendframework/zend-expressive-session",
+            "version": "1.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/zend-expressive-session.git",
+                "reference": "b869aaaf2de4d734b1955bf6f79b6da25ab5ad9c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/zend-expressive-session/zipball/b869aaaf2de4d734b1955bf6f79b6da25ab5ad9c",
+                "reference": "b869aaaf2de4d734b1955bf6f79b6da25ab5ad9c",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "psr/container": "^1.0",
+                "psr/http-server-middleware": "^1.0"
+            },
+            "conflict": {
+                "phpspec/prophecy": "<1.7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.5.5",
+                "zendframework/zend-coding-standard": "~1.0.0"
+            },
+            "suggest": {
+                "zendframework/zend-expressive-csrf": "^1.0 || ^1.0-dev for CSRF protection capabilities",
+                "zendframework/zend-expressive-flash": "^1.0 || ^1.0-dev for flash message capabilities",
+                "zendframework/zend-expressive-session-ext": "^1.0 || ^1.0-dev for an ext-session persistence adapter"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev",
+                    "dev-develop": "1.3.x-dev"
+                },
+                "zf": {
+                    "config-provider": "Zend\\Expressive\\Session\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\Expressive\\Session\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Session container and middleware for PSR-7 applications",
+            "keywords": [
+                "ZendFramework",
+                "expressive",
+                "middleware",
+                "psr-7",
+                "session",
+                "zend-expressive",
+                "zf"
+            ],
+            "time": "2019-03-05T20:57:32+00:00"
+        },
+        {
+            "name": "zendframework/zend-expressive-session-ext",
+            "version": "1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/zend-expressive-session-ext.git",
+                "reference": "11d05b5cc8cbe3cad6c7d5b531cdd7e9e41d8677"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/zend-expressive-session-ext/zipball/11d05b5cc8cbe3cad6c7d5b531cdd7e9e41d8677",
+                "reference": "11d05b5cc8cbe3cad6c7d5b531cdd7e9e41d8677",
+                "shasum": ""
+            },
+            "require": {
+                "dflydev/fig-cookies": "^1.0 || ^2.0",
+                "ext-session": "*",
+                "php": "^7.1",
+                "zendframework/zend-expressive-session": "^1.2"
+            },
+            "conflict": {
+                "phpspec/prophecy": "<1.7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^7.0.2",
+                "zendframework/zend-coding-standard": "~1.0.0",
+                "zendframework/zend-diactoros": "^1.6"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.6.x-dev",
+                    "dev-develop": "1.7.x-dev"
+                },
+                "zf": {
+                    "config-provider": "Zend\\Expressive\\Session\\Ext\\ConfigProvider"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\Expressive\\Session\\Ext\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "ext-session persistence adapter for zend-expressive-session",
+            "keywords": [
+                "ZendFramework",
+                "components",
+                "ext-session",
+                "psr-7",
+                "session",
+                "zend-expressive",
+                "zf"
+            ],
+            "time": "2019-02-28T18:47:31+00:00"
         },
         {
             "name": "zendframework/zend-expressive-template",

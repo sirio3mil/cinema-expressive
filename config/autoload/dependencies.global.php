@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Zend\Expressive\Authentication;
+
 return [
     // Provides application-wide services.
     // We recommend using fully-qualified class names whenever possible as
@@ -13,6 +15,7 @@ return [
             App\Alias\MongoDBClient::class => MongoDB\Client::class,
             App\Alias\MongoDBManager::class => MongoDB\Driver\Manager::class,
             App\Alias\EntityManager::class => Doctrine\ORM\EntityManager::class,
+            Authentication\AuthenticationInterface::class => Authentication\OAuth2\OAuth2Adapter::class,
         ],
         // Use 'invokables' for constructor-less services, or services that do
         // not require arguments to the constructor. Map a service name to the
