@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2cb92edb9b0cf2fcf44d941bbaeec470",
+    "content-hash": "732ee1c15b4d94426db912b00bcd96b3",
     "packages": [
         {
             "name": "aura/di",
@@ -7742,7 +7742,10 @@
     "platform": {
         "php": "^7.1",
         "ext-imagick": "*",
-        "ext-sqlsrv": "*"
+        "ext-sqlsrv": "*",
+        "ext-pdo_sqlsrv": "*",
+        "ext-openssl": "*",
+        "ext-mongodb": "*"
     },
     "platform-dev": []
 }

@@ -18,6 +18,7 @@ $aggregator = new ConfigAggregator([
     \Zend\Expressive\Session\Ext\ConfigProvider::class,
     \Zend\Expressive\Session\ConfigProvider::class,
     \Zend\Expressive\Authentication\ConfigProvider::class,
+    \Zend\Expressive\Authentication\OAuth2\ConfigProvider::class,
     \Zend\ProblemDetails\ConfigProvider::class,
     \Zend\Db\ConfigProvider::class,
     \Zend\Cache\ConfigProvider::class,

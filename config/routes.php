@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 use Psr\Container\ContainerInterface;
 use Zend\Expressive\Application;
+use Zend\Expressive\Authentication;
+use Zend\Expressive\Helper\BodyParams\BodyParamsMiddleware;
 use Zend\Expressive\MiddlewareFactory;
-use Zend\Expressive\Authentication\OAuth2;
-use Zend\Expressive\Session\SessionMiddleware;
+use Zend\Expressive\Authentication\OAuth2\TokenEndpointHandler;
 
 /**
  * Setup routes with a single request method:
@@ -42,19 +43,18 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     $app->get('/', App\Handler\HomePageHandler::class, 'home');
     $app->get('/api/ping', App\Handler\PingHandler::class, 'api.ping');
     $app->post('/graphql', App\Handler\GraphQLHandler::class, 'graphql');
-    $app->post('/oauth2/token', OAuth2\TokenEndpointHandler::class);
+    // OAuth2 token route
+    $app->post('/oauth', TokenEndpointHandler::class, 'oauth-token');
+    // API
+    $app->get('/api/users[/{id}]', App\User\UserHandler::class, 'api.users');
     $app->post('/api/users', [
-        Zend\Expressive\Authentication\AuthenticationMiddleware::class,
-        App\Action\AddUserAction::class,
-    ], 'api.add.user');
-    $app->route('/oauth2/authorize', [
-        SessionMiddleware::class,
-
-        OAuth2\AuthorizationMiddleware::class,
-
-        // The following middleware is provided by your application (see below):
-        App\OAuthAuthorizationMiddleware::class,
-
-        OAuth2\AuthorizationHandler::class
-    ], ['GET', 'POST']);
+        Authentication\AuthenticationMiddleware::class,
+        BodyParamsMiddleware::class,
+        App\User\CreateUserHandler::class
+    ]);
+    $app->route('/api/users/{id}', [
+        Authentication\AuthenticationMiddleware::class,
+        BodyParamsMiddleware::class,
+        App\User\ModifyUserHandler::class
+    ], ['PATCH', 'DELETE'], 'api.user');
 };
