@@ -23,6 +23,7 @@ return [
         ],
         'plugins' => [
             'exception_handler' => ['throw_exceptions' => false],
+            'serializer',
         ],
     ],
 ];
