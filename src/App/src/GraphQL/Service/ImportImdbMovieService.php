@@ -28,6 +28,7 @@ use App\Entity\TapePeopleRoleCharacter;
 use App\Entity\TapeTitle;
 use App\Entity\TvShow;
 use App\Entity\TvShowChapter;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
@@ -651,16 +652,9 @@ class ImportImdbMovieService
                     $this->tape->addTitle($tapeTitle);
                 }
                 $tapeTitle->setObservations($data->getDescription());
-                /** @var SearchValue $searchValue */
-                $searchValue = $this->searchValueRepository->findOneBy([
-                    'object' => $this->tape->getObject(),
-                    'searchParam' => $data->getTitle()
-                ]);
-                if (!$searchValue) {
-                    $searchValue = new SearchValue();
-                    $searchValue->setSearchParam($data->getTitle());
-                    $this->tape->getObject()->addSearchValue($searchValue);
-                }
+                $searchValue = new SearchValue();
+                $searchValue->setSearchParam($data->getTitle());
+                $this->tape->getObject()->addSearchValue($searchValue);
             }
         }
     }
