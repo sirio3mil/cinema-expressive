@@ -3407,12 +3407,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sirio3mil/imdb-scraper.git",
-                "reference": "3c4ed901665a1596b555c23a23d7c4c45b885993"
+                "reference": "3d51d0164366369fe5a3a01cab651f20f57566a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sirio3mil/imdb-scraper/zipball/3c4ed901665a1596b555c23a23d7c4c45b885993",
-                "reference": "3c4ed901665a1596b555c23a23d7c4c45b885993",
+                "url": "https://api.github.com/repos/sirio3mil/imdb-scraper/zipball/3d51d0164366369fe5a3a01cab651f20f57566a5",
+                "reference": "3d51d0164366369fe5a3a01cab651f20f57566a5",
                 "shasum": ""
             },
             "require": {
@@ -3434,7 +3434,7 @@
                 "source": "https://github.com/sirio3mil/imdb-scraper/tree/master",
                 "issues": "https://github.com/sirio3mil/imdb-scraper/issues"
             },
-            "time": "2019-04-08T16:05:00+00:00"
+            "time": "2019-05-12T21:08:54+00:00"
         },
         {
             "name": "spatie/array-to-xml",
@@ -4395,16 +4395,16 @@
         },
         {
             "name": "webonyx/graphql-php",
-            "version": "v0.13.3",
+            "version": "v0.13.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webonyx/graphql-php.git",
-                "reference": "27539d5af07eb32048ecef2b14ffa60324987842"
+                "reference": "e55c7d72cb2d852322ebad8ce30705ae90f20717"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/27539d5af07eb32048ecef2b14ffa60324987842",
-                "reference": "27539d5af07eb32048ecef2b14ffa60324987842",
+                "url": "https://api.github.com/repos/webonyx/graphql-php/zipball/e55c7d72cb2d852322ebad8ce30705ae90f20717",
+                "reference": "e55c7d72cb2d852322ebad8ce30705ae90f20717",
                 "shasum": ""
             },
             "require": {
@@ -4443,7 +4443,7 @@
                 "api",
                 "graphql"
             ],
-            "time": "2019-05-11T07:48:12+00:00"
+            "time": "2019-05-13T07:12:05+00:00"
         },
         {
             "name": "willdurand/negotiation",
@@ -6732,6 +6732,17 @@
         {
             "name": "roave/security-advisories",
             "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Roave/SecurityAdvisories.git",
+                "reference": "c91d74867cc32f6bbc788b33d23372703d61f2c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/c91d74867cc32f6bbc788b33d23372703d61f2c2",
+                "reference": "c91d74867cc32f6bbc788b33d23372703d61f2c2",
+                "shasum": ""
+            },
             "conflict": {
                 "3f/pygmentize": "<1.2",
                 "adodb/adodb-php": "<5.20.12",
