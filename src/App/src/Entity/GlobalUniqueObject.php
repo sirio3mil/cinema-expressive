@@ -300,10 +300,10 @@ class GlobalUniqueObject implements CinemaEntity
      */
     public function addSearchValue(SearchValue $searchValue): GlobalUniqueObject
     {
-        if (!in_array($searchValue->getSearchParam(), $this->uniqueSearchValues)) {
+        if (is_array($this->uniqueSearchValues)
+            && !in_array($searchValue->getSearchParam(), $this->uniqueSearchValues)) {
             $searchValue->setObject($this);
             if (!$this->searchValues->contains($searchValue)) {
-
                 $this->searchValues[] = $searchValue;
                 $this->uniqueSearchValues[] = $searchValue->getSearchParam();
             }
