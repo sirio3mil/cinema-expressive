@@ -10,6 +10,8 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\LazyCriteriaCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\UuidInterface;
 use GraphQL\Doctrine\Annotation as API;
@@ -322,5 +324,23 @@ class GlobalUniqueObject implements CinemaEntity
             unset($this->uniqueSearchValues[$key]);
         }
         return $this->searchValues->removeElement($searchValue);
+    }
+
+    /**
+     * @param string $searchParam
+     * @return SearchValue|null
+     */
+    public function getSearchValue(string $searchParam): ?SearchValue
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("searchParam", $searchParam))
+            ->setFirstResult(0)
+            ->setMaxResults(1);
+        /** @var LazyCriteriaCollection $elements */
+        $elements = $this->getSearchValues()->matching($criteria);
+        if ($elements->count()) {
+            return $elements->first();
+        }
+        return null;
     }
 }

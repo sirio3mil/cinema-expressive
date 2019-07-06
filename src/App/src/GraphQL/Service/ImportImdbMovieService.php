@@ -28,7 +28,6 @@ use App\Entity\TapePeopleRoleCharacter;
 use App\Entity\TapeTitle;
 use App\Entity\TvShow;
 use App\Entity\TvShowChapter;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
@@ -75,9 +74,6 @@ class ImportImdbMovieService
     /** @var EntityRepository */
     protected $countryRepository;
 
-    /** @var EntityRepository */
-    protected $searchValueRepository;
-
     /** @var Tape */
     protected $tape;
 
@@ -101,8 +97,6 @@ class ImportImdbMovieService
         ]);
         /** @var EntityRepository $countryRepository */
         $this->countryRepository = $this->entityManager->getRepository(Country::class);
-        /** @var EntityRepository $searchValueRepository */
-        $this->searchValueRepository = $this->entityManager->getRepository(SearchValue::class);
     }
 
     /**
@@ -385,11 +379,7 @@ class ImportImdbMovieService
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
         $this->tape->setOriginalTitle($mapper->getTitle());
         /** @var SearchValue $searchValue */
-        $searchValue = $this->searchValueRepository->findOneBy([
-            'object' => $this->tape->getObject(),
-            'searchParam' => $mapper->getTitle()
-        ]);
-        if (!$searchValue) {
+        if (!$searchValue = $this->tape->getObject()->getSearchValue($mapper->getTitle())) {
             $searchValue = new SearchValue();
             $searchValue->setSearchParam($mapper->getTitle());
             $searchValue->setPrimaryParam(true);
@@ -540,11 +530,7 @@ class ImportImdbMovieService
                         $people->addAlias($peopleAlias);
                     }
                     /** @var SearchValue $searchValue */
-                    $searchValue = $this->searchValueRepository->findOneBy([
-                        'object' => $people->getObject(),
-                        'searchParam' => $person->getAlias()
-                    ]);
-                    if (!$searchValue) {
+                    if (!$searchValue = $people->getObject()->getSearchValue($person->getAlias())) {
                         $searchValue = new SearchValue();
                         $searchValue->setSearchParam($person->getAlias());
                         $people->getObject()->addSearchValue($searchValue);
@@ -652,9 +638,11 @@ class ImportImdbMovieService
                     $this->tape->addTitle($tapeTitle);
                 }
                 $tapeTitle->setObservations($data->getDescription());
-                $searchValue = new SearchValue();
-                $searchValue->setSearchParam($data->getTitle());
-                $this->tape->getObject()->addSearchValue($searchValue);
+                if (!$searchValue = $this->tape->getObject()->getSearchValue($data->getTitle())){
+                    $searchValue = new SearchValue();
+                    $searchValue->setSearchParam($data->getTitle());
+                    $this->tape->getObject()->addSearchValue($searchValue);
+                }
             }
         }
     }
