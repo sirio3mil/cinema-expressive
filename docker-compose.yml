@@ -32,7 +32,7 @@ services:
             - neo4j
             - mongo
     mssql:
-        image: mcr.microsoft.com/mssql/server:latest
+        image: mcr.microsoft.com/mssql/server:2019-latest
         container_name: "mssql"
         volumes:
             - ./data/mssql:/var/opt/mssql
@@ -59,11 +59,9 @@ services:
         image: mongo:latest
         container_name: "mongo"
         environment:
-            - MONGO_DATA_DIR=/data/db
-            - MONGO_LOG_DIR=/dev/null
-            - MONGODB_USER="mroot"
-            - MONGODB_PASS="ms3CjP{R?1^A"
+            - MONGO_INITDB_ROOT_USERNAME="root"
+            - MONGO_INITDB_ROOT_PASSWORD="ms3CjP{R?1^A"
         volumes:
-            - ./data/mongo:/data/db
+            - ./data/mongo:/etc/mongo
         ports:
             - 27017:27017
