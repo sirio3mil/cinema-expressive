@@ -8,4 +8,5 @@ public/photos/
 logs/
 data/mssql/
 data/neo4j/
+data/mongo/
 public/info.php

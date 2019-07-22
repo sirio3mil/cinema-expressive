@@ -54,3 +54,15 @@ services:
             - 7687:7687
         volumes:
             - ./data/neo4j/data:/data
+    mongo:
+        image: mongo:latest
+        container_name: "mongo"
+        environment:
+            - MONGO_DATA_DIR=/data/db
+            - MONGO_LOG_DIR=/dev/null
+            - MONGODB_USER="mroot"
+            - MONGODB_PASS="ms3CjP{R?1^A"
+        volumes:
+            - ./data/mongo:/data/db
+        ports:
+            - 27017:27017
