@@ -30,6 +30,7 @@ services:
             - mssql
             - memcached
             - neo4j
+            - mongo
     mssql:
         image: mcr.microsoft.com/mssql/server:latest
         container_name: "mssql"
