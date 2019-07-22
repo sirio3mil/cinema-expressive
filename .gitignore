@@ -5,3 +5,7 @@ coveralls-upload.json
 phpunit.xml
 vendor/
 public/photos/
+logs/
+data/mssql/
+data/neo4j/
+public/info.php
