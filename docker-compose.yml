@@ -30,7 +30,6 @@ services:
             - mssql
             - memcached
             - neo4j
-            - mongo
     mssql:
         image: mcr.microsoft.com/mssql/server:2019-latest
         container_name: "mssql"
@@ -38,8 +37,9 @@ services:
             - ./data/mssql:/var/opt/mssql
         environment:
             - ACCEPT_EULA=Y
-            - SA_PASSWORD=ms3CjP{R?1^A
+            - MSSQL_SA_PASSWORD=ms3CjP{R?1^A
             - MSSQL_PID=Developer
+            - MSSQL_AGENT_ENABLED=true
         ports:
             - 1433:1433
     memcached:
@@ -55,13 +55,3 @@ services:
             - 7687:7687
         volumes:
             - ./data/neo4j/data:/data
-    mongo:
-        image: mongo:latest
-        container_name: "mongo"
-        environment:
-            - MONGO_INITDB_ROOT_USERNAME="root"
-            - MONGO_INITDB_ROOT_PASSWORD="ms3CjP{R?1^A"
-        volumes:
-            - ./data/mongo:/etc/mongo
-        ports:
-            - 27017:27017
