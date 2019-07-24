@@ -32,7 +32,7 @@ services:
             - mongo
         working_dir: /usr/share/nginx
     mssql:
-        image: mcr.microsoft.com/mssql/server:2019-latest
+        image: reynier3mil/centos-mssql-full:latest
         container_name: "mssql"
         volumes:
             - mssql:/var/opt/mssql
