@@ -1,4 +1,4 @@
-version: '3'
+version: '3.7'
 services:
     web:
         image: nginx:latest
@@ -35,7 +35,7 @@ services:
         image: mcr.microsoft.com/mssql/server:2019-latest
         container_name: "mssql"
         volumes:
-            - ./data/mssql:/var/opt/mssql
+            - mssql:/var/opt/mssql
         ports:
             - 1433:1433
         environment:
@@ -52,7 +52,7 @@ services:
         image: neo4j:latest
         container_name: "neo4j"
         volumes:
-            - ./data/neo4j/data:/data
+            - neo4j:/data
         ports:
           - 7474:7474
           - 7687:7687
@@ -60,9 +60,13 @@ services:
         image: mongo:latest
         container_name: "mongo"
         volumes:
-            - ./data/mongo:/etc/mongo
+            - mongo:/etc/mongo
         ports:
             - 27017:27017
         environment:
           - MONGO_INITDB_ROOT_USERNAME="root"
           - MONGO_INITDB_ROOT_PASSWORD="ms3CjP{R?1^A"
+volumes:
+    mongo:
+    mssql:
+    neo4j:
