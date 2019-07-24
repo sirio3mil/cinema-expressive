@@ -40,6 +40,7 @@ services:
         container_name: mssql
         volumes:
             - mssql:/var/opt/mssql
+            - ./data/mssql/backups:/tmp/backups
         ports:
             - 1433:1433
         networks:
