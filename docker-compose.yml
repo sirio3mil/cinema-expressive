@@ -60,7 +60,7 @@ services:
         image: neo4j:latest
         container_name: neo4j
         volumes:
-            - neo4j:/data
+            - ./data/neo4j:/data
         ports:
           - 7474:7474
           - 7687:7687
@@ -70,7 +70,7 @@ services:
         image: mongo:latest
         container_name: mongo
         volumes:
-            - mongo:/etc/mongo
+            - ./data/mongo:/etc/mongo
         ports:
             - 27017:27017
         networks:
@@ -79,12 +79,8 @@ services:
           - MONGO_INITDB_ROOT_USERNAME="root"
           - MONGO_INITDB_ROOT_PASSWORD="ms3CjP{R?1^A"
 volumes:
-    mongo:
-        name: mongo-data
     mssql:
         name: mssql-data
-    neo4j:
-        name: neo4j-data
 networks:
     api-network:
         driver: bridge
