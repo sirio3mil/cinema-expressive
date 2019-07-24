@@ -2,7 +2,7 @@ version: '3.7'
 services:
     web:
         image: nginx:latest
-        container_name: "web"
+        container_name: web
         volumes:
             - .:/usr/share/nginx/html/api
             - ./logs/nginx:/var/log/nginx
@@ -11,11 +11,13 @@ services:
         ports:
           - 80:80
           - 443:443
+        networks:
+            - api-network
         links:
             - php
     php:
         image: reynier3mil/centos-php-fpm-msphpsql:graph
-        container_name: "php"
+        container_name: php
         volumes:
             - .:/usr/share/nginx/html/api
             - ./logs/php-fpm:/var/log/php-fpm
@@ -25,6 +27,8 @@ services:
             - ./config/php-fpm/16-xdebug.ini:/etc/php.d/15-xdebug.ini
         ports:
             - 9050:9050
+        networks:
+            - api-network
         links:
             - mssql
             - memcached
@@ -33,11 +37,13 @@ services:
         working_dir: /usr/share/nginx
     mssql:
         image: reynier3mil/centos-mssql-full:latest
-        container_name: "mssql"
+        container_name: mssql
         volumes:
             - mssql:/var/opt/mssql
         ports:
             - 1433:1433
+        networks:
+            - api-network
         environment:
           - ACCEPT_EULA=Y
           - MSSQL_SA_PASSWORD=ms3CjP{R?1^A
@@ -45,28 +51,41 @@ services:
           - MSSQL_AGENT_ENABLED=true
     memcached:
         image: memcached:latest
-        container_name: "memcached"
+        container_name: memcached
         ports:
             - 11211:11211
+        networks:
+            - api-network
     neo4j:
         image: neo4j:latest
-        container_name: "neo4j"
+        container_name: neo4j
         volumes:
             - neo4j:/data
         ports:
           - 7474:7474
           - 7687:7687
+        networks:
+            - api-network
     mongo:
         image: mongo:latest
-        container_name: "mongo"
+        container_name: mongo
         volumes:
             - mongo:/etc/mongo
         ports:
             - 27017:27017
+        networks:
+            - api-network
         environment:
           - MONGO_INITDB_ROOT_USERNAME="root"
           - MONGO_INITDB_ROOT_PASSWORD="ms3CjP{R?1^A"
 volumes:
     mongo:
+        name: mongo-data
     mssql:
+        name: mssql-data
     neo4j:
+        name: neo4j-data
+networks:
+    api-network:
+        driver: bridge
+        name: api-network
