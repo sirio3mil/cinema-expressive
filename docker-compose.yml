@@ -24,6 +24,7 @@ services:
             - ./config/php-fpm/php.ini:/etc/php.ini
             - ./config/php-fpm/php-fpm.conf:/etc/php-fpm.conf
             - ./config/php-fpm/www.conf:/etc/php-fpm.d/www.conf
+            - ./config/php-fpm/10-opcache.ini:/etc/php.d/10-opcache.ini
             - ./config/php-fpm/16-xdebug.ini:/etc/php.d/15-xdebug.ini
         ports:
             - 9050:9050
