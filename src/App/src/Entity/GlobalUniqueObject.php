@@ -98,14 +98,10 @@ class GlobalUniqueObject implements CinemaEntity
      */
     protected $searchValues;
 
-    /** @var array */
-    protected $uniqueSearchValues;
-
     public function __construct()
     {
         $this->files = new ArrayCollection();
         $this->searchValues = new ArrayCollection();
-        $this->uniqueSearchValues = [];
     }
 
 
@@ -286,13 +282,10 @@ class GlobalUniqueObject implements CinemaEntity
     public function setSearchValues(Collection $searchValues): GlobalUniqueObject
     {
         $this->searchValues = $searchValues;
-        $this->uniqueSearchValues = [];
         /** @var SearchValue $item */
         foreach ($searchValues as $item) {
             $item->setObject($this);
-            $this->uniqueSearchValues[] = $item->getSearchParam();
         }
-        $this->uniqueSearchValues = array_unique($this->uniqueSearchValues);
         return $this;
     }
 
@@ -302,12 +295,9 @@ class GlobalUniqueObject implements CinemaEntity
      */
     public function addSearchValue(SearchValue $searchValue): GlobalUniqueObject
     {
-        if (!in_array($searchValue->getSearchParam(), $this->uniqueSearchValues)) {
-            if (!$this->searchValues->contains($searchValue)) {
-                $this->searchValues[] = $searchValue;
-                $this->uniqueSearchValues[] = $searchValue->getSearchParam();
-                $searchValue->setObject($this);
-            }
+        if (!$this->searchValues->contains($searchValue)) {
+            $this->searchValues[] = $searchValue;
+            $searchValue->setObject($this);
         }
         return $this;
     }
@@ -318,10 +308,6 @@ class GlobalUniqueObject implements CinemaEntity
      */
     public function removeSearchValue(SearchValue $searchValue): bool
     {
-        $key = array_search($searchValue->getSearchParam(), $this->uniqueSearchValues);
-        if ($key !== false) {
-            unset($this->uniqueSearchValues[$key]);
-        }
         return $this->searchValues->removeElement($searchValue);
     }
 
