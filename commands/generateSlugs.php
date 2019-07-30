@@ -74,8 +74,6 @@ if (!$stmt) {
     die(print_r(sqlsrv_errors(), true));
 }
 
-$delete = [];
-
 foreach ($delete as $searchValueId) {
     if (sqlsrv_execute($stmt) === false) {
         die(print_r(sqlsrv_errors(), true));
