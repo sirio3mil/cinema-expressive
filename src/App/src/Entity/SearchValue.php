@@ -43,6 +43,19 @@ class SearchValue implements CinemaEntity
     private $searchParam;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(
+     *     type="string",
+     *     length=250,
+     *     name="slug",
+     *     nullable=false,
+     *     options={"fixed":false}
+     * )
+     */
+    private $slug;
+
+    /**
      * @var GlobalUniqueObject
      *
      * @ORM\ManyToOne(targetEntity="GlobalUniqueObject", inversedBy="searchValues", fetch="EXTRA_LAZY", cascade={"all"})
@@ -107,5 +120,24 @@ class SearchValue implements CinemaEntity
     public function getPrimaryParam(): bool
     {
         return $this->primaryParam;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param string $slug
+     * @return SearchValue
+     */
+    public function setSlug(string $slug): SearchValue
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 }

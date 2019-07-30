@@ -312,13 +312,13 @@ class GlobalUniqueObject implements CinemaEntity
     }
 
     /**
-     * @param string $searchParam
+     * @param string $slug
      * @return SearchValue|null
      */
-    public function getSearchValue(string $searchParam): ?SearchValue
+    public function getSearchValue(string $slug): ?SearchValue
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("searchParam", $searchParam))
+            ->where(Criteria::expr()->eq("slug", $slug))
             ->setFirstResult(0)
             ->setMaxResults(1);
         /** @var LazyCriteriaCollection $elements */

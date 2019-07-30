@@ -28,6 +28,7 @@ use App\Entity\TapePeopleRoleCharacter;
 use App\Entity\TapeTitle;
 use App\Entity\TvShow;
 use App\Entity\TvShowChapter;
+use Ausi\SlugGenerator\SlugGenerator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
@@ -79,6 +80,10 @@ class ImportImdbMovieService
 
     /** @var int */
     protected $imdbNumber;
+    /**
+     * @var SlugGenerator
+     */
+    private $generator;
 
     public function __construct(ContainerInterface $container)
     {
@@ -97,6 +102,8 @@ class ImportImdbMovieService
         ]);
         /** @var EntityRepository $countryRepository */
         $this->countryRepository = $this->entityManager->getRepository(Country::class);
+        /** @var SlugGenerator generator */
+        $this->generator = new SlugGenerator();
     }
 
     /**
@@ -183,6 +190,7 @@ class ImportImdbMovieService
         $this->entityManager->persist($imdbNumber);
         $searchValue = new SearchValue();
         $searchValue->setSearchParam($person->getFullName());
+        $searchValue->setSlug($this->generator->generate($person->getFullName()));
         $searchValue->setPrimaryParam(true);
         $people->getObject()->addSearchValue($searchValue);
         return $people;
@@ -378,10 +386,12 @@ class ImportImdbMovieService
         $mapper = $this->container->get(HomeMapper::class);
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
         $this->tape->setOriginalTitle($mapper->getTitle());
+        $slug = $this->generator->generate($mapper->getTitle());
         /** @var SearchValue $searchValue */
-        if (!$searchValue = $this->tape->getObject()->getSearchValue($mapper->getTitle())) {
+        if (!$searchValue = $this->tape->getObject()->getSearchValue($slug)) {
             $searchValue = new SearchValue();
             $searchValue->setSearchParam($mapper->getTitle());
+            $searchValue->setSlug($slug);
             $searchValue->setPrimaryParam(true);
             $this->tape->getObject()->addSearchValue($searchValue);
         }
@@ -529,10 +539,12 @@ class ImportImdbMovieService
                         $peopleAlias->setAlias($person->getAlias());
                         $people->addAlias($peopleAlias);
                     }
+                    $slug = $this->generator->generate($person->getAlias());
                     /** @var SearchValue $searchValue */
-                    if (!$searchValue = $people->getObject()->getSearchValue($person->getAlias())) {
+                    if (!$searchValue = $people->getObject()->getSearchValue($slug)) {
                         $searchValue = new SearchValue();
                         $searchValue->setSearchParam($person->getAlias());
+                        $searchValue->setSlug($slug);
                         $people->getObject()->addSearchValue($searchValue);
                     }
                     /** @var PeopleAliasTape $peopleAliasTape */
@@ -638,9 +650,11 @@ class ImportImdbMovieService
                     $this->tape->addTitle($tapeTitle);
                 }
                 $tapeTitle->setObservations($data->getDescription());
-                if (!$searchValue = $this->tape->getObject()->getSearchValue($data->getTitle())){
+                $slug = $this->generator->generate($data->getTitle());
+                if (!$searchValue = $this->tape->getObject()->getSearchValue($slug)){
                     $searchValue = new SearchValue();
                     $searchValue->setSearchParam($data->getTitle());
+                    $searchValue->setSlug($slug);
                     $this->tape->getObject()->addSearchValue($searchValue);
                 }
             }
