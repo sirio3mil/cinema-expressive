@@ -388,7 +388,7 @@ class ImportImdbMovieService
         $this->tape->setOriginalTitle($mapper->getTitle());
         $slug = $this->generator->generate($mapper->getTitle());
         /** @var SearchValue $searchValue */
-        if (!$searchValue = $this->tape->getObject()->getSearchValue($slug)) {
+        if ($slug && !$searchValue = $this->tape->getObject()->getSearchValue($slug)) {
             $searchValue = new SearchValue();
             $searchValue->setSearchParam($mapper->getTitle());
             $searchValue->setSlug($slug);
@@ -541,7 +541,7 @@ class ImportImdbMovieService
                     }
                     $slug = $this->generator->generate($person->getAlias());
                     /** @var SearchValue $searchValue */
-                    if (!$searchValue = $people->getObject()->getSearchValue($slug)) {
+                    if ($slug && !$searchValue = $people->getObject()->getSearchValue($slug)) {
                         $searchValue = new SearchValue();
                         $searchValue->setSearchParam($person->getAlias());
                         $searchValue->setSlug($slug);
@@ -651,7 +651,7 @@ class ImportImdbMovieService
                 }
                 $tapeTitle->setObservations($data->getDescription());
                 $slug = $this->generator->generate($data->getTitle());
-                if (!$searchValue = $this->tape->getObject()->getSearchValue($slug)){
+                if ($slug && !$searchValue = $this->tape->getObject()->getSearchValue($slug)){
                     $searchValue = new SearchValue();
                     $searchValue->setSearchParam($data->getTitle());
                     $searchValue->setSlug($slug);
