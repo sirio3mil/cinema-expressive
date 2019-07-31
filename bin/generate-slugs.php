@@ -1,7 +1,9 @@
 <?php
 declare(strict_types=1);
 
-include dirname(__DIR__, 1) . '/vendor/autoload.php';
+chdir(__DIR__ . '/../');
+
+require 'vendor/autoload.php';
 
 use Ausi\SlugGenerator\SlugGenerator;
 
