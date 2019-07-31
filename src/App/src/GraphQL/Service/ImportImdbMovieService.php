@@ -103,7 +103,7 @@ class ImportImdbMovieService
         /** @var EntityRepository $countryRepository */
         $this->countryRepository = $this->entityManager->getRepository(Country::class);
         /** @var SlugGenerator generator */
-        $this->generator = new SlugGenerator();
+        $this->generator = $container->get(SlugGenerator::class);
     }
 
     /**
