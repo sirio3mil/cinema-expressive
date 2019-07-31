@@ -40,6 +40,7 @@ return [
             App\GraphQL\Type\Mutation::class => App\GraphQL\Factory\MutationFactory::class,
             App\GraphQL\Resolver\SearchResolver::class => App\GraphQL\Factory\SearchFactory::class,
             App\GraphQL\Resolver\TapeResolver::class => App\GraphQL\Factory\TapeFactory::class,
+            App\GraphQL\Resolver\ListTapeUserResolver::class => App\GraphQL\Factory\ListTapeUserFactory::class,
             App\GraphQL\Resolver\TapeLanguageResolver::class => App\GraphQL\Factory\TapeLanguageFactory::class,
             App\GraphQL\Resolver\EditTapeUserResolver::class => App\GraphQL\Factory\EditTapeUserFactory::class,
             App\GraphQL\Resolver\ImportImdbMovieResolver::class => App\GraphQL\Factory\ImportImdbMovieFactory::class,
