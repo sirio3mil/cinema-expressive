@@ -125,7 +125,7 @@ class PeopleDetail implements CinemaEntity
 
 
     /**
-     * @param null|string $gender
+     * @param string|null $gender
      * @return PeopleDetail
      */
     public function setGender(?string $gender): PeopleDetail

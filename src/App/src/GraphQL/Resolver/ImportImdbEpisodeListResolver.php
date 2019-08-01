@@ -9,11 +9,13 @@
 namespace App\GraphQL\Resolver;
 
 use App\Entity\Tape;
+use App\Entity\TvShowChapter;
 use Psr\Container\ContainerInterface;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
+use Exception;
 
 class ImportImdbEpisodeListResolver
 {
@@ -48,6 +50,7 @@ class ImportImdbEpisodeListResolver
      * @throws NonUniqueResultException
      * @throws ORMException
      * @throws OptimisticLockException
+     * @throws Exception
      */
     public static function resolve(ContainerInterface $container, array $args): array
     {

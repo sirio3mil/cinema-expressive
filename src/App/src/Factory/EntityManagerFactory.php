@@ -11,12 +11,20 @@ namespace App\Factory;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Common\Cache\MemcachedCache;
 use Psr\Container\ContainerInterface;
 use Memcached;
 
 class EntityManagerFactory
 {
+    /**
+     * @param ContainerInterface $container
+     * @return EntityManager
+     * @throws DBALException
+     * @throws ORMException
+     */
     public function __invoke(ContainerInterface $container): EntityManager
     {
         $config = $container->has('config') ? $container->get('config') : [];

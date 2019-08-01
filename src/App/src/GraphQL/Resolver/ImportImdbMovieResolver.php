@@ -15,7 +15,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class ImportImdbMovieResolver
 {

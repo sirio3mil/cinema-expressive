@@ -107,7 +107,7 @@ class Country implements CinemaEntity
     }
 
     /**
-     * @param null|string $isoCode
+     * @param string|null $isoCode
      * @return Country
      */
     public function setIsoCode(?string $isoCode = null): Country

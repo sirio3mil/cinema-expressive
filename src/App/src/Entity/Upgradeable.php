@@ -10,6 +10,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
+use Exception;
 
 trait Upgradeable
 {
@@ -27,9 +28,9 @@ trait Upgradeable
 
     /**
      * @param DateTime $updatedAt
-     * @return CinemaEntity
+     * @return Upgradeable
      */
-    public function setUpdatedAt(DateTime $updatedAt): CinemaEntity
+    public function setUpdatedAt(DateTime $updatedAt): Upgradeable
     {
         $this->updatedAt = $updatedAt;
 
@@ -44,13 +45,21 @@ trait Upgradeable
         return $this->updatedAt;
     }
 
-    /** @ORM\PrePersist */
+    /**
+     * @throws Exception
+     *
+     * @ORM\PrePersist
+     */
     public function generateUpgradeDate()
     {
         $this->updatedAt = DateGenerator::getUtcDateTime();
     }
 
-    /** @ORM\PreUpdate */
+    /**
+     * @throws Exception
+     *
+     * @ORM\PreUpdate
+     */
     public function upgradeDate()
     {
         $this->updatedAt = DateGenerator::getUtcDateTime();

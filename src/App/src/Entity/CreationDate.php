@@ -10,6 +10,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use DateTime;
+use Exception;
 
 trait CreationDate
 {
@@ -28,9 +29,9 @@ trait CreationDate
 
     /**
      * @param DateTime $createdAt
-     * @return CinemaEntity
+     * @return CreationDate
      */
-    public function setCreatedAt(DateTime $createdAt): CinemaEntity
+    public function setCreatedAt(DateTime $createdAt): CreationDate
     {
         $this->createdAt = $createdAt;
 
@@ -45,7 +46,11 @@ trait CreationDate
         return $this->createdAt;
     }
 
-    /** @ORM\PrePersist */
+    /**
+     * @throws Exception
+     *
+     * @ORM\PrePersist
+     */
     public function generateCreationDate()
     {
         if(is_null($this->createdAt)) {

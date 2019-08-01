@@ -13,6 +13,8 @@ use GraphQL\Error\Error;
 use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Utils\Utils;
+use UnexpectedValueException;
+use Exception;
 
 class DateTimeType extends ScalarType
 {
@@ -27,10 +29,16 @@ class DateTimeType extends ScalarType
         return $valueNode->value;
     }
 
+    /**
+     * @param mixed $value
+     * @param array|null $variables
+     * @return DateTime|mixed
+     * @throws Exception
+     */
     public function parseValue($value, array $variables = null)
     {
         if (!is_string($value)) {
-            throw new \UnexpectedValueException('Cannot represent value as DateTime date: ' . Utils::printSafe($value));
+            throw new UnexpectedValueException('Cannot represent value as DateTime date: ' . Utils::printSafe($value));
         }
 
         return new DateTime($value);

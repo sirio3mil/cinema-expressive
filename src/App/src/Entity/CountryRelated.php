@@ -21,9 +21,9 @@ trait CountryRelated
 
     /**
      * @param Country|null $country
-     * @return CinemaEntity
+     * @return CountryRelated
      */
-    public function setCountry(?Country $country): CinemaEntity
+    public function setCountry(?Country $country): CountryRelated
     {
         $this->country = $country;
 

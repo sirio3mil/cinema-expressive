@@ -12,6 +12,7 @@ use ImdbScraper\Iterator\EpisodeIterator;
 use ImdbScraper\Mapper\EpisodeListMapper;
 use ImdbScraper\Model\Episode;
 use Psr\Container\ContainerInterface;
+use Exception;
 
 class ImdbEpisodeListResolver
 {
@@ -20,14 +21,17 @@ class ImdbEpisodeListResolver
      * @param ContainerInterface $container
      * @param array $args
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public static function resolve(ContainerInterface $container, array $args): array
     {
         $data = [];
         /** @var EpisodeListMapper $mapper */
         $mapper = $container->get(EpisodeListMapper::class);
-        $mapper->setImdbNumber($args['imdbNumber'])->setSeason($args['seasonNumber'])->setContentFromUrl();
+        $mapper
+            ->setImdbNumber($args['imdbNumber'])
+            ->setSeason($args['seasonNumber'])
+            ->setContentFromUrl();
         /** @var EpisodeIterator $episodeIterator */
         $episodeIterator = $mapper->getEpisodes();
         /** @var Episode $episode */

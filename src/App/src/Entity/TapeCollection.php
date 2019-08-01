@@ -15,9 +15,9 @@ trait TapeCollection
 {
     /**
      * @param Tape $tape
-     * @return CinemaEntity
+     * @return TapeCollection
      */
-    public function addTape(Tape $tape): CinemaEntity
+    public function addTape(Tape $tape): TapeCollection
     {
         $this->tapes[] = $tape;
 

@@ -55,7 +55,7 @@ use ImdbScraper\Model\Keyword;
 use ImdbScraper\Model\Location as Place;
 use ImdbScraper\Model\Release;
 use ImdbScraper\Model\People as Person;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Exception;
 
 class ImportImdbMovieService

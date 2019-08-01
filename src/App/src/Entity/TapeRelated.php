@@ -13,9 +13,9 @@ trait TapeRelated
 {
     /**
      * @param Tape $tape
-     * @return CinemaEntity
+     * @return TapeRelated
      */
-    public function setTape(Tape $tape): CinemaEntity
+    public function setTape(Tape $tape): TapeRelated
     {
         $this->tape = $tape;
 

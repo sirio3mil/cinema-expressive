@@ -83,7 +83,8 @@
     "zendframework/zend-expressive-twigrenderer": "^2.0",
     "zendframework/zend-problem-details": "^1.0",
     "zendframework/zend-stdlib": "^3.1",
-    "zendframework/zend-stratigility": "^3.0"
+    "zendframework/zend-stratigility": "^3.0",
+    "ext-memcached": "*"
   },
   "require-dev": {
     "filp/whoops": "^2.1",

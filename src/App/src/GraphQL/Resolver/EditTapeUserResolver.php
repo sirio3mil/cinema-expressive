@@ -18,7 +18,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\ORMException;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Doctrine\ORM\Query;
 use InvalidArgumentException;
 use Doctrine\ORM\OptimisticLockException;
