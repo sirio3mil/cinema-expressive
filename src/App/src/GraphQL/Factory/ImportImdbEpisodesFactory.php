@@ -9,12 +9,12 @@
 namespace App\GraphQL\Factory;
 
 use App\Entity\TvShowChapter;
-use App\GraphQL\Resolver\ImportImdbEpisodeListResolver;
+use App\GraphQL\Resolver\ImportImdbEpisodesResolver;
 use GraphQL\Doctrine\Types;
 use Psr\Container\ContainerInterface;
 use GraphQL\Type\Definition\Type;
 
-class ImportImdbEpisodeListFactory
+class ImportImdbEpisodesFactory
 {
     public function __invoke(ContainerInterface $container): array
     {
@@ -27,7 +27,7 @@ class ImportImdbEpisodeListFactory
             ],
             'type' => Type::listOf($types->getOutput(TvShowChapter::class)),
             'resolve' => function ($source, $args) use ($container) {
-                return ImportImdbEpisodeListResolver::resolve($container, $args);
+                return ImportImdbEpisodesResolver::resolve($container, $args);
             }
         ];
     }

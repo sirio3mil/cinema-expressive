@@ -25,7 +25,9 @@ class ListTapeUserFactory
                 'userId' => Type::nonNull($types->getId(User::class)),
                 'tapeUserStatusId' => $types->getId(TapeUserStatus::class),
                 'visible' => Type::boolean(),
-                'placeId' => $types->getId(Place::class)
+                'placeId' => $types->getId(Place::class),
+                'page' => Type::nonNull(Type::int()),
+                'pageSize' => Type::nonNull(Type::int())
             ],
             'resolve' => function ($source, $args) use ($container) {
                 /** @var EntityManager $entityManager */

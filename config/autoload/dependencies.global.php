@@ -19,9 +19,6 @@ return [
         // class name.
         'invokables' => [
             DateTime::class => App\GraphQL\Type\DateTimeType::class,
-            App\GraphQL\Type\SearchResultType::class => App\GraphQL\Type\SearchResultType::class,
-            App\GraphQL\Type\ImportedEpisodeType::class => App\GraphQL\Type\ImportedEpisodeType::class,
-            App\GraphQL\Type\ImportImdbMovieOutputType::class => App\GraphQL\Type\ImportImdbMovieOutputType::class,
             ImdbScraper\Mapper\HomeMapper::class => ImdbScraper\Mapper\HomeMapper::class,
             ImdbScraper\Mapper\KeywordMapper::class => ImdbScraper\Mapper\KeywordMapper::class,
             ImdbScraper\Mapper\ReleaseMapper::class => ImdbScraper\Mapper\ReleaseMapper::class,
@@ -44,8 +41,8 @@ return [
             App\GraphQL\Resolver\TapeLanguageResolver::class => App\GraphQL\Factory\TapeLanguageFactory::class,
             App\GraphQL\Resolver\EditTapeUserResolver::class => App\GraphQL\Factory\EditTapeUserFactory::class,
             App\GraphQL\Resolver\ImportImdbMovieResolver::class => App\GraphQL\Factory\ImportImdbMovieFactory::class,
-            App\GraphQL\Resolver\ImportImdbEpisodeListResolver::class
-                => App\GraphQL\Factory\ImportImdbEpisodeListFactory::class,
+            App\GraphQL\Resolver\ImportImdbEpisodesResolver::class
+                => App\GraphQL\Factory\ImportImdbEpisodesFactory::class,
             MongoDB\Client::class => App\Factory\MongoDBClientFactory::class,
             GraphQL\Doctrine\Types::class => App\GraphQL\Factory\TypeFactory::class,
             MongoDB\Driver\Manager::class => App\Factory\MongoDBManagerFactory::class,

@@ -11,7 +11,7 @@ namespace App\GraphQL\Factory;
 use App\GraphQL\Type\Mutation;
 use Psr\Container\ContainerInterface;
 use App\GraphQL\Resolver\EditTapeUserResolver;
-use App\GraphQL\Resolver\ImportImdbEpisodeListResolver;
+use App\GraphQL\Resolver\ImportImdbEpisodesResolver;
 use App\GraphQL\Resolver\ImportImdbMovieResolver;
 
 class MutationFactory
@@ -22,7 +22,7 @@ class MutationFactory
             'fields' => [
                 'editTapeUser' => $container->get(EditTapeUserResolver::class),
                 'importImdbMovie' => $container->get(ImportImdbMovieResolver::class),
-                'importImdbEpisodeList' => $container->get(ImportImdbEpisodeListResolver::class)
+                'importImdbEpisodeList' => $container->get(ImportImdbEpisodesResolver::class)
             ]
         ]);
     }

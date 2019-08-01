@@ -1,31 +1,41 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: SYSTEM
- * Date: 19/07/2018
- * Time: 18:02
+ * User: reynier.delarosa
+ * Date: 05/09/2018
+ * Time: 17:24
  */
 
 namespace App\GraphQL\Resolver;
 
+use App\Entity\Tape;
+use App\Entity\TvShowChapter;
 use ImdbScraper\Iterator\EpisodeIterator;
 use ImdbScraper\Mapper\EpisodeListMapper;
 use ImdbScraper\Model\Episode;
 use Psr\Container\ContainerInterface;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 use Exception;
 
-class ImdbEpisodeListResolver
+class ImportImdbEpisodesResolver
 {
 
     /**
      * @param ContainerInterface $container
      * @param array $args
-     * @return array
+     * @return TvShowChapter[]
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @throws Exception
      */
     public static function resolve(ContainerInterface $container, array $args): array
     {
-        $data = [];
+        $episodes = [];
         /** @var EpisodeListMapper $mapper */
         $mapper = $container->get(EpisodeListMapper::class);
         $mapper
@@ -36,14 +46,12 @@ class ImdbEpisodeListResolver
         $episodeIterator = $mapper->getEpisodes();
         /** @var Episode $episode */
         foreach ($episodeIterator as $episode) {
-            $data[] = [
-                'title' => $episode->getTitle(),
-                'date' => $episode->getDate()->format("Y-m-d"),
-                'imdbNumber' => $episode->getImdbNumber(),
-                'episodeNumber' => $episode->getEpisodeNumber(),
-                'isFullDate' => $episode->getIsFullDate()
-            ];
+            /** @var Tape $tape */
+            $tape = ImportImdbMovieResolver::resolve($container, [
+                'imdbNumber' => $episode->getImdbNumber()
+            ]);
+            $episodes[] = $tape->getTvShowChapter();
         }
-        return $data;
+        return $episodes;
     }
 }
