@@ -4,11 +4,8 @@ namespace App\GraphQL\Resolver;
 
 use App\Entity\Place;
 use App\Entity\TapeUser;
-use App\Entity\TapeUserHistory;
-use App\Entity\TapeUserHistoryDetail;
 use App\Entity\TapeUserStatus;
 use App\Entity\User;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 class ListTapeUserResolver
@@ -23,7 +20,7 @@ class ListTapeUserResolver
     {
         /** @var User $user */
         $user = $args['userId']->getEntity();
-        $visible = $args['visible'] ?? true;
+        $visible = $args['visible'] ?? false;
         $tapeUserStatus = null;
         $place = null;
         if (array_key_exists('tapeUserStatusId', $args)) {
@@ -38,34 +35,36 @@ class ListTapeUserResolver
         $queryBuilder
             ->select('l')
             ->from(TapeUser::class, 'l')
-//            ->innerJoin(
-//                TapeUserHistory::class,
-//                'h',
-//                Join::ON,
-//                $queryBuilder->expr()->eq('l.tapeUser', 'h.tapeUser')
-//            )
-//            ->innerJoin(
-//                TapeUserHistoryDetail::class,
-//                'd',
-//                Join::ON,
-//                $queryBuilder->expr()->eq('h.tapeUserHistory', 'd.tapeUserHistory')
-//            )
             ->where('l.user = :user')
-//            ->andWhere('d.visible = :visible')
             ->setParameter('user', $user);
-//            ->setParameter('visible', $visible);
 
-//        if ($tapeUserStatus) {
-//            $queryBuilder
-//                ->andWhere('h.tapeUserStatus = :tapeUserStatus')
-//                ->setParameter('tapeUserStatus', $tapeUserStatus);
-//        }
-//
-//        if ($place) {
-//            $queryBuilder
-//                ->andWhere('d.place = :place')
-//                ->setParameter('place', $place);
-//        }
+        if ($tapeUserStatus || $place || $visible) {
+            $queryBuilder->innerJoin(
+                'l.tapeUser',
+                'h'
+            );
+            if ($tapeUserStatus) {
+                $queryBuilder
+                    ->andWhere('h.tapeUserStatus = :tapeUserStatus')
+                    ->setParameter('tapeUserStatus', $tapeUserStatus);
+            }
+            if ($place || $visible) {
+                $queryBuilder->innerJoin(
+                    'h.tapeUserHistory',
+                    'd'
+                );
+                if ($place) {
+                    $queryBuilder
+                        ->andWhere('d.place = :place')
+                        ->setParameter('place', $place);
+                }
+                if ($visible) {
+                    $queryBuilder
+                        ->andWhere('d.visible = :visible')
+                        ->setParameter('visible', $visible);
+                }
+            }
+        }
 
         $query = $queryBuilder->getQuery();
 
