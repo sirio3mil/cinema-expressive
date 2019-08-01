@@ -1,16 +1,17 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: SYSTEM
- * Date: 20/07/2018
- * Time: 9:36
+ * User: reynier.delarosa
+ * Date: 25/06/2018
+ * Time: 18:14
  */
 
 namespace App\GraphQL\Type;
 
+
 use GraphQL\Type\Definition\ObjectType;
 
-class Mutation extends ObjectType
+class QueryType extends ObjectType
 {
 
     public function __construct(array $config)

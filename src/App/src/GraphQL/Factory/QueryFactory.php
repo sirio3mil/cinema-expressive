@@ -10,15 +10,15 @@ namespace App\GraphQL\Factory;
 
 use App\GraphQL\Resolver\ListTapeUserResolver;
 use App\GraphQL\Resolver\TapeResolver;
-use App\GraphQL\Type\Query;
+use App\GraphQL\Type\QueryType;
 use Psr\Container\ContainerInterface;
 use App\GraphQL\Resolver\SearchResolver;
 
 class QueryFactory
 {
-    public function __invoke(ContainerInterface $container): Query
+    public function __invoke(ContainerInterface $container): QueryType
     {
-        return new Query([
+        return new QueryType([
             'fields' => [
                 'search' => $container->get(SearchResolver::class),
                 'getTape' => $container->get(TapeResolver::class),

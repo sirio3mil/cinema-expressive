@@ -8,7 +8,6 @@ use App\Entity\TapeUserStatus;
 use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use ArrayIterator;
 
 class ListTapeUserResolver
 {
@@ -16,9 +15,9 @@ class ListTapeUserResolver
     /**
      * @param QueryBuilder $queryBuilder
      * @param TapeUser[] $args
-     * @return ArrayIterator
+     * @return array
      */
-    public static function resolve(QueryBuilder $queryBuilder, array $args): ArrayIterator
+    public static function resolve(QueryBuilder $queryBuilder, array $args): array
     {
         /** @var User $user */
         $user = $args['userId']->getEntity();
@@ -82,6 +81,10 @@ class ListTapeUserResolver
             ->setMaxResults($pageSize);
 
 
-        return $paginator->getIterator();
+        return [
+            'elements' => $paginator->getIterator(),
+            'total' => $totalItems,
+            'pages' => $pagesCount
+        ];
     }
 }
