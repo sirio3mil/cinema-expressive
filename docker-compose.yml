@@ -40,8 +40,7 @@ services:
         image: reynier3mil/centos-mssql-full:latest
         container_name: mssql
         volumes:
-            - mssql:/var/opt/mssql
-            - ./data/mssql/backups:/tmp/backups
+            - ./data/mssql:/var/opt/mssql
         ports:
             - 1433:1433
         networks:
@@ -80,9 +79,6 @@ services:
         environment:
           - MONGO_INITDB_ROOT_USERNAME="root"
           - MONGO_INITDB_ROOT_PASSWORD="ms3CjP{R?1^A"
-volumes:
-    mssql:
-        name: mssql-data
 networks:
     api-network:
         driver: bridge
