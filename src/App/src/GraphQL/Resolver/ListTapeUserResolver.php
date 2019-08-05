@@ -41,7 +41,7 @@ class ListTapeUserResolver
 
         if ($tapeUserStatus || $place || $visible) {
             $queryBuilder->innerJoin(
-                'l.tapeUser',
+                'l.history',
                 'h'
             );
             if ($tapeUserStatus) {
@@ -51,7 +51,7 @@ class ListTapeUserResolver
             }
             if ($place || $visible) {
                 $queryBuilder->innerJoin(
-                    'h.tapeUserHistory',
+                    'h.detail',
                     'd'
                 );
                 if ($place) {
