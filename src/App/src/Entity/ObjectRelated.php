@@ -15,7 +15,7 @@ trait ObjectRelated
      * @param GlobalUniqueObject $object
      * @return ObjectRelated
      */
-    public function setObject(GlobalUniqueObject $object): ObjectRelated
+    public function setObject(GlobalUniqueObject $object): self
     {
         $this->object = $object;
 

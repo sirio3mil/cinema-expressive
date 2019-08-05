@@ -31,7 +31,7 @@ trait CreationDate
      * @param DateTime $createdAt
      * @return CreationDate
      */
-    public function setCreatedAt(DateTime $createdAt): CreationDate
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 

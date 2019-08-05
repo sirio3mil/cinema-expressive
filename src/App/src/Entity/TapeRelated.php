@@ -15,7 +15,7 @@ trait TapeRelated
      * @param Tape $tape
      * @return TapeRelated
      */
-    public function setTape(Tape $tape): TapeRelated
+    public function setTape(Tape $tape): self
     {
         $this->tape = $tape;
 

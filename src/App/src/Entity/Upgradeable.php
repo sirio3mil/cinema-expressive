@@ -30,7 +30,7 @@ trait Upgradeable
      * @param DateTime $updatedAt
      * @return Upgradeable
      */
-    public function setUpdatedAt(DateTime $updatedAt): Upgradeable
+    public function setUpdatedAt(DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 

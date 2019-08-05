@@ -17,7 +17,7 @@ trait TapeCollection
      * @param Tape $tape
      * @return TapeCollection
      */
-    public function addTape(Tape $tape): TapeCollection
+    public function addTape(Tape $tape): self
     {
         $this->tapes[] = $tape;
 

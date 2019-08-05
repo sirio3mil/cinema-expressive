@@ -23,7 +23,7 @@ trait CountryRelated
      * @param Country|null $country
      * @return CountryRelated
      */
-    public function setCountry(?Country $country): CountryRelated
+    public function setCountry(?Country $country): self
     {
         $this->country = $country;
 
