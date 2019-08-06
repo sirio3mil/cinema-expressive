@@ -26,8 +26,6 @@ class EditTvShowResolver
      */
     public static function resolve(EntityManager $entityManager, array $args): TapeDetail
     {
-        /** @var Tape $tape */
-        $tape = $args['tapeId']->getEntity();
 
         $tapeDetail = null;
 

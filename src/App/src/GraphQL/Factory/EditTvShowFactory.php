@@ -8,7 +8,6 @@
 
 namespace App\GraphQL\Factory;
 
-use App\Entity\Tape;
 use App\Entity\TvShow;
 use App\GraphQL\Resolver\EditTvShowResolver;
 use Doctrine\ORM\EntityManager;
@@ -25,7 +24,6 @@ class EditTvShowFactory
         return [
             'type' => Type::nonNull($types->getOutput(TvShow::class)),
             'args' => [
-                'tapeId' => Type::nonNull($types->getId(Tape::class)),
                 'input' => $types->getPartialInput(TvShow::class)
             ],
             'resolve' => function ($source, $args) use ($container) {

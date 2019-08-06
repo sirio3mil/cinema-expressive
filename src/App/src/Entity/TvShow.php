@@ -81,6 +81,8 @@ class TvShow implements CinemaEntity
     }
 
     /**
+     * @API\Exclude
+     *
      * @param Collection $chapters
      * @return TvShow
      */
