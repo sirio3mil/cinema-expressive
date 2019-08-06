@@ -17,15 +17,16 @@ class ListTapeUserResolver
 {
 
     /**
-     * @param QueryBuilder $queryBuilder
+     * @param QueryBuilder $qb
      * @param TapeUser[] $args
      * @return array
      */
-    public static function resolve(QueryBuilder $queryBuilder, array $args): array
+    public static function resolve(QueryBuilder $qb, array $args): array
     {
         /** @var User $user */
         $user = $args['userId']->getEntity();
         $visible = $args['visible'] ?? null;
+        $isTvShow = $args['isTvShow'] ?? null;
         $tapeUserStatus = null;
         $place = null;
         if (array_key_exists('tapeUserStatusId', $args)) {
@@ -37,41 +38,55 @@ class ListTapeUserResolver
             $place = $args['placeId']->getEntity();
         }
 
-        $queryBuilder
+        $qb
             ->select('l')
             ->from(TapeUser::class, 'l')
             ->where('l.user = :user')
             ->setParameter('user', $user);
 
+        if (!is_null($isTvShow)) {
+            $qb
+                ->innerJoin(
+                    'l.tape',
+                    't'
+                )
+                ->innerJoin(
+                    't.detail',
+                    'dt'
+                )
+                ->andWhere('dt.isTvShow = :isTvShow')
+                ->setParameter('isTvShow', $isTvShow);
+        }
+
         if ($tapeUserStatus || $place || !is_null($visible)) {
-            $queryBuilder->innerJoin(
+            $qb->innerJoin(
                 'l.history',
                 'h'
             );
             if ($tapeUserStatus) {
-                $queryBuilder
+                $qb
                     ->andWhere('h.tapeUserStatus = :tapeUserStatus')
                     ->setParameter('tapeUserStatus', $tapeUserStatus);
             }
             if ($place || !is_null($visible)) {
-                $queryBuilder->innerJoin(
+                $qb->innerJoin(
                     'h.detail',
                     'd'
                 );
                 if ($place) {
-                    $queryBuilder
+                    $qb
                         ->andWhere('d.place = :place')
                         ->setParameter('place', $place);
                 }
                 if (!is_null($visible)) {
-                    $queryBuilder
+                    $qb
                         ->andWhere('d.visible = :visible')
                         ->setParameter('visible', $visible);
                 }
             }
         }
 
-        $paginator = new Paginator($queryBuilder);
+        $paginator = new Paginator($qb);
 
         $totalItems = count($paginator);
         $pageSize = $args['pageSize'];
@@ -81,7 +96,7 @@ class ListTapeUserResolver
         $currentPage = $args['page'];
         $paginator
             ->getQuery()
-            ->setFirstResult($pageSize * ($currentPage-1))
+            ->setFirstResult($pageSize * ($currentPage - 1))
             ->setMaxResults($pageSize);
 
 

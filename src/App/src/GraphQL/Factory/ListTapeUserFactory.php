@@ -30,6 +30,7 @@ class ListTapeUserFactory
             'args' => [
                 'userId' => Type::nonNull($types->getId(User::class)),
                 'tapeUserStatusId' => $types->getId(TapeUserStatus::class),
+                'isTvShow' => Type::boolean(),
                 'visible' => Type::boolean(),
                 'placeId' => $types->getId(Place::class),
                 'page' => Type::nonNull(Type::int()),
