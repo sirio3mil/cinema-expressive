@@ -9,29 +9,29 @@
 namespace App\GraphQL\Factory;
 
 use App\Entity\Tape;
-use App\Entity\TapeDetail;
-use App\GraphQL\Resolver\EditTapeDetailResolver;
+use App\Entity\TvShow;
+use App\GraphQL\Resolver\EditTvShowResolver;
 use Doctrine\ORM\EntityManager;
 use GraphQL\Doctrine\Types;
 use Psr\Container\ContainerInterface;
 use GraphQL\Type\Definition\Type;
 
-class EditTapeDetailFactory
+class EditTvShowFactory
 {
     public function __invoke(ContainerInterface $container): array
     {
         /** @var Types $types */
         $types = $container->get(Types::class);
         return [
-            'type' => Type::nonNull($types->getOutput(TapeDetail::class)),
+            'type' => Type::nonNull($types->getOutput(TvShow::class)),
             'args' => [
                 'tapeId' => Type::nonNull($types->getId(Tape::class)),
-                'input' => $types->getPartialInput(TapeDetail::class)
+                'input' => $types->getPartialInput(TvShow::class)
             ],
             'resolve' => function ($source, $args) use ($container) {
                 /** @var EntityManager $entityManager */
                 $entityManager = $container->get(EntityManager::class);
-                return EditTapeDetailResolver::resolve($entityManager, $args);
+                return EditTvShowResolver::resolve($entityManager, $args);
             }
         ];
     }

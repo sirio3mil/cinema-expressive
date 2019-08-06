@@ -8,7 +8,7 @@
 
 namespace App\GraphQL\Factory;
 
-use App\GraphQL\Resolver\EditTapeDetailResolver;
+use App\GraphQL\Resolver\EditTvShowResolver;
 use App\GraphQL\Type\MutationType;
 use Psr\Container\ContainerInterface;
 use App\GraphQL\Resolver\EditTapeUserResolver;
@@ -22,7 +22,7 @@ class MutationFactory
         return new MutationType([
             'fields' => [
                 'editTapeUser' => $container->get(EditTapeUserResolver::class),
-                'editTapeDetail' => $container->get(EditTapeDetailResolver::class),
+                'editTvShow' => $container->get(EditTvShowResolver::class),
                 'importImdbMovie' => $container->get(ImportImdbMovieResolver::class),
                 'importImdbEpisodeList' => $container->get(ImportImdbEpisodesResolver::class)
             ]

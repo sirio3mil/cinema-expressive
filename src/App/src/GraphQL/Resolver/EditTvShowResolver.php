@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 
-class EditTapeDetailResolver
+class EditTvShowResolver
 {
 
     /**
