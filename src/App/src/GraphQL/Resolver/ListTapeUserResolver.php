@@ -67,7 +67,7 @@ class ListTapeUserResolver
 
         if (!is_null($finished)) {
             $qb
-                ->innerJoin(TvShow::class, 's', Join::ON, 's.tape = l.tape')
+                ->innerJoin('t.tvShow', 's')
                 ->andWhere('s.finished = :finished')
                 ->setParameter('finished', $finished);
         }
