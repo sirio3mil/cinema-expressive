@@ -41,6 +41,7 @@ return [
             App\GraphQL\Resolver\ListTapeUserResolver::class => App\GraphQL\Factory\ListTapeUserFactory::class,
             App\GraphQL\Resolver\TapeLanguageResolver::class => App\GraphQL\Factory\TapeLanguageFactory::class,
             App\GraphQL\Resolver\EditTapeUserResolver::class => App\GraphQL\Factory\EditTapeUserFactory::class,
+            App\GraphQL\Resolver\EditTapeDetailResolver::class => App\GraphQL\Factory\EditTapeDetailFactory::class,
             App\GraphQL\Resolver\ImportImdbMovieResolver::class => App\GraphQL\Factory\ImportImdbMovieFactory::class,
             App\GraphQL\Resolver\ImportImdbEpisodesResolver::class
                 => App\GraphQL\Factory\ImportImdbEpisodesFactory::class,
