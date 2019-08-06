@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use GraphQL\Doctrine\Annotation as API;
 
 /**
  * Class TapeUserHistoryDetail
@@ -59,6 +60,8 @@ class TapeUserHistoryDetail implements CinemaEntity
 
 
     /**
+     * @API\Exclude
+     *
      * @param TapeUserHistory $tapeUserHistory
      * @return TapeUserHistoryDetail
      */
