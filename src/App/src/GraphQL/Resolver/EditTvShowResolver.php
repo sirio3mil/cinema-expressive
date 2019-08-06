@@ -9,10 +9,11 @@
 namespace App\GraphQL\Resolver;
 
 use App\Entity\Tape;
-use App\Entity\TapeDetail;
+use App\Entity\TvShow;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
+use InvalidArgumentException;
 
 class EditTvShowResolver
 {
@@ -20,18 +21,25 @@ class EditTvShowResolver
     /**
      * @param EntityManager $entityManager
      * @param array $args
-     * @return TapeDetail
+     * @return TvShow
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public static function resolve(EntityManager $entityManager, array $args): TapeDetail
+    public static function resolve(EntityManager $entityManager, array $args): TvShow
     {
-
-        $tapeDetail = null;
-
-        $entityManager->persist($tapeDetail);
-
+        if (!isset($args['input']['tape'])) {
+            throw new InvalidArgumentException('Tape is mandatory');
+        }
+        /** @var Tape $tape */
+        $tape = $args['input']['tape']->getEntity();
+        $finished = $args['input']['finished'] ?? false;
+        $tvShow = $tape->getTvShow();
+        if (!$tvShow) {
+            throw new InvalidArgumentException('Tape does not have Tv Show');
+        }
+        $tvShow->setFinished($finished);
+        $entityManager->persist($tvShow);
         $entityManager->flush();
-        return $tapeDetail;
+        return $tvShow;
     }
 }

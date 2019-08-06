@@ -24,7 +24,7 @@ class EditTvShowFactory
         return [
             'type' => Type::nonNull($types->getOutput(TvShow::class)),
             'args' => [
-                'input' => $types->getPartialInput(TvShow::class)
+                'input' => Type::nonNull($types->getPartialInput(TvShow::class))
             ],
             'resolve' => function ($source, $args) use ($container) {
                 /** @var EntityManager $entityManager */
