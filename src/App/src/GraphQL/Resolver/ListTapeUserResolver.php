@@ -5,7 +5,9 @@ namespace App\GraphQL\Resolver;
 use App\Entity\Place;
 use App\Entity\TapeUser;
 use App\Entity\TapeUserStatus;
+use App\Entity\TvShow;
 use App\Entity\User;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use function array_key_exists;
@@ -26,6 +28,7 @@ class ListTapeUserResolver
         /** @var User $user */
         $user = $args['userId']->getEntity();
         $visible = $args['visible'] ?? null;
+        $finished = $args['finished'] ?? null;
         $isTvShow = $args['isTvShow'] ?? null;
         $tapeUserStatus = null;
         $place = null;
@@ -60,6 +63,13 @@ class ListTapeUserResolver
             $qb
                 ->andWhere('dt.isTvShow = :isTvShow')
                 ->setParameter('isTvShow', $isTvShow);
+        }
+
+        if (!is_null($finished)) {
+            $qb
+                ->innerJoin(TvShow::class, 's', Join::ON, 's.tape = l.tape')
+                ->andWhere('s.finished = :finished')
+                ->setParameter('finished', $finished);
         }
 
         if ($tapeUserStatus || $place || !is_null($visible)) {
