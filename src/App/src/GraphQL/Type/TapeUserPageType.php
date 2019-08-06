@@ -3,7 +3,6 @@
 
 namespace App\GraphQL\Type;
 
-
 use App\Entity\TapeUser;
 use GraphQL\Doctrine\Types;
 use GraphQL\Type\Definition\ObjectType;
