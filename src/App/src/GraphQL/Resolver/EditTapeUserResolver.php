@@ -17,24 +17,20 @@ use App\Entity\TapeUserStatus;
 use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
-use Psr\Container\ContainerInterface;
 use Doctrine\ORM\OptimisticLockException;
 
 class EditTapeUserResolver
 {
 
     /**
-     * @param ContainerInterface $container
+     * @param EntityManager $entityManager
      * @param array $args
      * @return TapeUser
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public static function resolve(ContainerInterface $container, array $args): TapeUser
+    public static function resolve(EntityManager $entityManager, array $args): TapeUser
     {
-
-        /** @var EntityManager $entityManager */
-        $entityManager = $container->get(EntityManager::class);
         /** @var User $user */
         $user = $args['userId']->getEntity();
         /** @var TapeUserStatus $tapeUserStatus */

@@ -14,6 +14,7 @@ use App\Entity\TapeUser;
 use App\Entity\TapeUserStatus;
 use App\Entity\User;
 use App\GraphQL\Resolver\EditTapeUserResolver;
+use Doctrine\ORM\EntityManager;
 use GraphQL\Doctrine\Types;
 use Psr\Container\ContainerInterface;
 use GraphQL\Type\Definition\Type;
@@ -25,7 +26,7 @@ class EditTapeUserFactory
         /** @var Types $types */
         $types = $container->get(Types::class);
         return [
-            'type' => $types->getOutput(TapeUser::class),
+            'type' => Type::nonNull($types->getOutput(TapeUser::class)),
             'args' => [
                 'userId' => Type::nonNull($types->getId(User::class)),
                 'tapeId' => Type::nonNull($types->getId(Tape::class)),
@@ -33,7 +34,9 @@ class EditTapeUserFactory
                 'placeId' => $types->getId(Place::class)
             ],
             'resolve' => function ($source, $args) use ($container) {
-                return EditTapeUserResolver::resolve($container, $args);
+                /** @var EntityManager $entityManager */
+                $entityManager = $container->get(EntityManager::class);
+                return EditTapeUserResolver::resolve($entityManager, $args);
             }
         ];
     }
