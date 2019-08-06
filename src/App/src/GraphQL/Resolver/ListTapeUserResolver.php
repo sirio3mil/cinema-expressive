@@ -8,6 +8,10 @@ use App\Entity\TapeUserStatus;
 use App\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use function array_key_exists;
+use function is_null;
+use function count;
+use function ceil;
 
 class ListTapeUserResolver
 {
@@ -21,7 +25,7 @@ class ListTapeUserResolver
     {
         /** @var User $user */
         $user = $args['userId']->getEntity();
-        $visible = $args['visible'] ?? false;
+        $visible = $args['visible'] ?? null;
         $tapeUserStatus = null;
         $place = null;
         if (array_key_exists('tapeUserStatusId', $args)) {
@@ -39,7 +43,7 @@ class ListTapeUserResolver
             ->where('l.user = :user')
             ->setParameter('user', $user);
 
-        if ($tapeUserStatus || $place || $visible) {
+        if ($tapeUserStatus || $place || !is_null($visible)) {
             $queryBuilder->innerJoin(
                 'l.history',
                 'h'
@@ -49,7 +53,7 @@ class ListTapeUserResolver
                     ->andWhere('h.tapeUserStatus = :tapeUserStatus')
                     ->setParameter('tapeUserStatus', $tapeUserStatus);
             }
-            if ($place || $visible) {
+            if ($place || !is_null($visible)) {
                 $queryBuilder->innerJoin(
                     'h.detail',
                     'd'
@@ -59,7 +63,7 @@ class ListTapeUserResolver
                         ->andWhere('d.place = :place')
                         ->setParameter('place', $place);
                 }
-                if ($visible) {
+                if (!is_null($visible)) {
                     $queryBuilder
                         ->andWhere('d.visible = :visible')
                         ->setParameter('visible', $visible);
