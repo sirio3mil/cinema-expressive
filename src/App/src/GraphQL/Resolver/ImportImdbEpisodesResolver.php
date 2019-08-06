@@ -39,8 +39,8 @@ class ImportImdbEpisodesResolver
         /** @var EpisodeListMapper $mapper */
         $mapper = $container->get(EpisodeListMapper::class);
         $mapper
-            ->setImdbNumber($args['imdbNumber'])
             ->setSeason($args['seasonNumber'])
+            ->setImdbNumber($args['imdbNumber'])
             ->setContentFromUrl();
         /** @var EpisodeIterator $episodeIterator */
         $episodeIterator = $mapper->getEpisodes();
