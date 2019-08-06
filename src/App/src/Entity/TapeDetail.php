@@ -91,6 +91,18 @@ class TapeDetail implements CinemaEntity
      *
      * @ORM\Column(
      *     type="boolean",
+     *     name="isTvShowChapter",
+     *     nullable=false,
+     *     options={"default":0}
+     * )
+     */
+    private $isTvShowChapter;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(
+     *     type="boolean",
      *     name="adult",
      *     nullable=false,
      *     options={"default":0}
@@ -293,5 +305,24 @@ class TapeDetail implements CinemaEntity
         if (is_null($this->budget)) {
             $this->budget = 0;
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTvShowChapter(): bool
+    {
+        return $this->isTvShowChapter;
+    }
+
+    /**
+     * @param bool $isTvShowChapter
+     * @return TapeDetail
+     */
+    public function setIsTvShowChapter(bool $isTvShowChapter): TapeDetail
+    {
+        $this->isTvShowChapter = $isTvShowChapter;
+
+        return $this;
     }
 }

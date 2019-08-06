@@ -35,6 +35,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\QueryBuilder;
 use ImdbScraper\Iterator\AlsoKnownAsIterator;
 use ImdbScraper\Iterator\CastIterator;
 use ImdbScraper\Iterator\CertificateIterator;
@@ -349,21 +350,22 @@ class ImportImdbMovieService
             "tape" => $this->tape
         ]);
         if (!$tvShowChapter) {
+            /** @var QueryBuilder $qb */
+            $qb = $this->entityManager->createQueryBuilder();
+            $qb
+                ->select('tv')
+                ->from(TvShow::class, 'tv')
+                ->innerJoin('tv.tape', 't')
+                ->innerJoin('t.object', 'o')
+                ->innerJoin('o.imdbNumber', 'i')
+                ->where('i.imdbNumber = :imdbNumber')
+                ->andWhere('o.rowType = :rowType')
+                ->setParameters([
+                    'imdbNumber' => $mapper->getTvShow(),
+                    'rowType' => $this->tapeRowType
+                ]);
             /** @var Query $query */
-            $query = $this->entityManager->createQuery('
-                    SELECT tv 
-                    FROM App\Entity\TvShow tv 
-                    JOIN tv.tape t 
-                    JOIN App\Entity\ImdbNumber i 
-                        WITH i.object = t.object
-                    JOIN i.object o 
-                    WHERE i.imdbNumber = :imdbNumber 
-                        AND o.rowType = :rowType
-                ');
-            $query->setParameters([
-                'imdbNumber' => $mapper->getTvShow(),
-                'rowType' => $this->tapeRowType
-            ]);
+            $query = $qb->getQuery();
             $query->useQueryCache(true);
             /** @var TvShow $tvShow */
             $tvShow = $query->getSingleResult();
@@ -407,6 +409,7 @@ class ImportImdbMovieService
         $tapeDetail->setYear($mapper->getYear());
         $tapeDetail->setColor($mapper->getColor());
         $tapeDetail->setIsTvShow($mapper->isTvShow());
+        $tapeDetail->setIsTvShowChapter($mapper->isEpisode());
         if ($tapeDetail->getIsTvShow()) {
             /** @var TvShow $tvShow */
             $tvShow = $this->entityManager->getRepository(TvShow::class)->findOneBy([
@@ -427,7 +430,7 @@ class ImportImdbMovieService
         }
         $ranking->setScoreFromCalculatedValue($mapper->getScore());
         $ranking->setVotes($mapper->getVotes());
-        if ($mapper->isEpisode()) {
+        if ($tapeDetail->isTvShowChapter()) {
             $this->setTvShowChapter($mapper);
         }
         if ($sounds = $mapper->getSounds()) {

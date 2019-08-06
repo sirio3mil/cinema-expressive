@@ -41,19 +41,23 @@ class ListTapeUserResolver
         $qb
             ->select('l')
             ->from(TapeUser::class, 'l')
+            ->innerJoin(
+                'l.tape',
+                't'
+            )
+            ->innerJoin(
+                't.detail',
+                'dt'
+            )
             ->where('l.user = :user')
-            ->setParameter('user', $user);
+            ->andWhere('dt.isTvShowChapter = :isTvShowChapter')
+            ->setParameters([
+                'user' => $user,
+                'isTvShowChapter' => false
+            ]);
 
         if (!is_null($isTvShow)) {
             $qb
-                ->innerJoin(
-                    'l.tape',
-                    't'
-                )
-                ->innerJoin(
-                    't.detail',
-                    'dt'
-                )
                 ->andWhere('dt.isTvShow = :isTvShow')
                 ->setParameter('isTvShow', $isTvShow);
         }
