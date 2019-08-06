@@ -585,7 +585,7 @@ class Tape implements CinemaEntity
      * @param TapeUser $tapeUser
      * @return Tape
      */
-    public function addUser(TapeUser $tapeUser): Tape
+    public function addTapeUser(TapeUser $tapeUser): Tape
     {
         $this->users[] = $tapeUser->setTape($this);
         return $this;
@@ -595,7 +595,7 @@ class Tape implements CinemaEntity
      * @param TapeUser $tapeUser
      * @return bool
      */
-    public function removeUser(TapeUser $tapeUser): bool
+    public function removeTapeUser(TapeUser $tapeUser): bool
     {
         return $this->users->removeElement($tapeUser);
     }
@@ -604,7 +604,7 @@ class Tape implements CinemaEntity
      * @param User $user
      * @return TapeUser|null
      */
-    public function getUser(User $user): ?TapeUser
+    public function getTapeUser(User $user): ?TapeUser
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("user", $user))
