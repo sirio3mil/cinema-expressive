@@ -126,15 +126,22 @@ class TvShow implements CinemaEntity
     }
 
     /**
-     * @return TvShowChapter
+     * @return TvShowChapter|null
      */
-    public function getLastChapter(): TvShowChapter
+    public function getLastChapter(): ?TvShowChapter
     {
         /** @var TvShowChapter $maxChapter */
-        $maxChapter = reset($this->chapters);
+        $maxChapter = null;
         /** @var TvShowChapter $item */
         foreach ($this->chapters as $item) {
-            if ($item->getSeason() >= $maxChapter->getSeason() && $item->getChapter() > $maxChapter->getChapter()) {
+            if (
+                !$maxChapter ||
+                $item->getSeason() > $maxChapter->getSeason() ||
+                (
+                    $item->getSeason() == $maxChapter->getSeason() &&
+                    $item->getChapter() > $maxChapter->getChapter()
+                )
+            ) {
                 $maxChapter = $item;
             }
         }
