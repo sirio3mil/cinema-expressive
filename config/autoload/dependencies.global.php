@@ -18,7 +18,7 @@ return [
         // not require arguments to the constructor. Map a service name to the
         // class name.
         'invokables' => [
-            DateTime::class => App\GraphQL\Type\DateTimeType::class,
+            DateTime::class => App\Type\DateTimeType::class,
             ImdbScraper\Mapper\HomeMapper::class => ImdbScraper\Mapper\HomeMapper::class,
             ImdbScraper\Mapper\KeywordMapper::class => ImdbScraper\Mapper\KeywordMapper::class,
             ImdbScraper\Mapper\ReleaseMapper::class => ImdbScraper\Mapper\ReleaseMapper::class,
@@ -31,26 +31,26 @@ return [
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories' => [
             Zend\Cache\Storage\Adapter\Memcached::class => App\Factory\MemcachedFactory::class,
-            GraphQL\Type\Schema::class => App\GraphQL\Factory\SchemaFactory::class,
-            GraphQL\Server\StandardServer::class => App\GraphQL\Factory\StandardServerFactory::class,
-            App\GraphQL\Type\QueryType::class => App\GraphQL\Factory\QueryFactory::class,
-            App\GraphQL\Type\MutationType::class => App\GraphQL\Factory\MutationFactory::class,
-            App\GraphQL\Type\TapeUserPageType::class => App\GraphQL\Factory\TapeUserPageTypeFactory::class,
-            App\GraphQL\Resolver\SearchResolver::class => App\GraphQL\Factory\SearchFactory::class,
-            App\GraphQL\Resolver\TapeResolver::class => App\GraphQL\Factory\TapeFactory::class,
-            App\GraphQL\Resolver\ListTapeUserResolver::class => App\GraphQL\Factory\ListTapeUserFactory::class,
-            App\GraphQL\Resolver\ListTvShowChapterUserResolver::class
-                => App\GraphQL\Factory\ListTvShowChapterUserFactory::class,
-            App\GraphQL\Resolver\TapeLanguageResolver::class => App\GraphQL\Factory\TapeLanguageFactory::class,
-            App\GraphQL\Resolver\EditTapeUserResolver::class => App\GraphQL\Factory\EditTapeUserFactory::class,
-            App\GraphQL\Resolver\EditTapeUserHistoryDetailResolver::class
-                => App\GraphQL\Factory\EditTapeUserHistoryDetailFactory::class,
-            App\GraphQL\Resolver\EditTvShowResolver::class => App\GraphQL\Factory\EditTvShowFactory::class,
-            App\GraphQL\Resolver\ImportImdbMovieResolver::class => App\GraphQL\Factory\ImportImdbMovieFactory::class,
-            App\GraphQL\Resolver\ImportImdbEpisodesResolver::class
-                => App\GraphQL\Factory\ImportImdbEpisodesFactory::class,
+            GraphQL\Type\Schema::class => App\Factory\SchemaFactory::class,
+            GraphQL\Server\StandardServer::class => App\Factory\StandardServerFactory::class,
+            App\Type\QueryType::class => App\Factory\QueryFactory::class,
+            App\Type\MutationType::class => App\Factory\MutationFactory::class,
+            App\Type\TapeUserPageType::class => App\Factory\TapeUserPageTypeFactory::class,
+            App\Resolver\SearchResolver::class => App\Factory\SearchFactory::class,
+            App\Resolver\TapeResolver::class => App\Factory\TapeFactory::class,
+            App\Resolver\ListTapeUserResolver::class => App\Factory\ListTapeUserFactory::class,
+            App\Resolver\ListTvShowChapterUserResolver::class
+                => App\Factory\ListTvShowChapterUserFactory::class,
+            App\Resolver\TapeLanguageResolver::class => App\Factory\TapeLanguageFactory::class,
+            App\Resolver\EditTapeUserResolver::class => App\Factory\EditTapeUserFactory::class,
+            App\Resolver\EditTapeUserHistoryDetailResolver::class
+                => App\Factory\EditTapeUserHistoryDetailFactory::class,
+            App\Resolver\EditTvShowResolver::class => App\Factory\EditTvShowFactory::class,
+            App\Resolver\ImportImdbMovieResolver::class => App\Factory\ImportImdbMovieFactory::class,
+            App\Resolver\ImportImdbEpisodesResolver::class
+                => App\Factory\ImportImdbEpisodesFactory::class,
             MongoDB\Client::class => App\Factory\MongoDBClientFactory::class,
-            GraphQL\Doctrine\Types::class => App\GraphQL\Factory\TypeFactory::class,
+            GraphQL\Doctrine\Types::class => App\Factory\TypeFactory::class,
             MongoDB\Driver\Manager::class => App\Factory\MongoDBManagerFactory::class,
             Doctrine\ORM\EntityManager::class => App\Factory\EntityManagerFactory::class,
             Tuupola\Middleware\CorsMiddleware::class => App\Factory\CorsMiddlewareFactory::class
