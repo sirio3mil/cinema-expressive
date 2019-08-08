@@ -1,20 +1,21 @@
 <?php
 
+
 namespace App\GraphQL\Factory;
 
-use App\Entity\Place;
 use App\Entity\TapeUserStatus;
+use App\Entity\TvShow;
 use App\Entity\User;
-use App\GraphQL\Resolver\ListTapeUserResolver;
+use App\GraphQL\Resolver\ListTvShowChapterUserResolver;
 use App\GraphQL\Type\TapeUserPageType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
+use GraphQL\Doctrine\Exception;
 use GraphQL\Doctrine\Types;
 use GraphQL\Type\Definition\Type;
 use Psr\Container\ContainerInterface;
-use GraphQL\Doctrine\Exception;
 
-class ListTapeUserFactory
+class ListTvShowChapterUserFactory
 {
     /**
      * @param ContainerInterface $container
@@ -29,11 +30,8 @@ class ListTapeUserFactory
             'type' => $types->get(TapeUserPageType::class),
             'args' => [
                 'userId' => Type::nonNull($types->getId(User::class)),
-                'tapeUserStatusId' => $types->getId(TapeUserStatus::class),
-                'isTvShow' => Type::boolean(),
-                'visible' => Type::boolean(),
-                'finished' => Type::boolean(),
-                'placeId' => $types->getId(Place::class),
+                'tvShow' => Type::nonNull($types->getId(TvShow::class)),
+                'tapeUserStatusId' => Type::nonNull($types->getId(TapeUserStatus::class)),
                 'page' => Type::nonNull(Type::int()),
                 'pageSize' => Type::nonNull(Type::int())
             ],
@@ -42,7 +40,7 @@ class ListTapeUserFactory
                 $entityManager = $container->get(EntityManager::class);
                 /** @var QueryBuilder $queryBuilder */
                 $queryBuilder = $entityManager->createQueryBuilder();
-                return ListTapeUserResolver::resolve($queryBuilder, $args);
+                return ListTvShowChapterUserResolver::resolve($queryBuilder, $args);
             }
         ];
     }

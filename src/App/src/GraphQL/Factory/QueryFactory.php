@@ -9,6 +9,7 @@
 namespace App\GraphQL\Factory;
 
 use App\GraphQL\Resolver\ListTapeUserResolver;
+use App\GraphQL\Resolver\ListTvShowChapterUserResolver;
 use App\GraphQL\Resolver\TapeResolver;
 use App\GraphQL\Type\QueryType;
 use Psr\Container\ContainerInterface;
@@ -22,7 +23,8 @@ class QueryFactory
             'fields' => [
                 'search' => $container->get(SearchResolver::class),
                 'getTape' => $container->get(TapeResolver::class),
-                'listTapeUser' => $container->get(ListTapeUserResolver::class)
+                'listTapeUser' => $container->get(ListTapeUserResolver::class),
+                'listTvShowChapterUser' => $container->get(ListTvShowChapterUserResolver::class)
             ]
         ]);
     }
