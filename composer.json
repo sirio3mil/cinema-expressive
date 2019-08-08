@@ -30,8 +30,7 @@
         "zendframework/zend-expressive-helpers",
         "zendframework/zend-expressive-router",
         "zendframework/zend-httphandlerrunner",
-        "zendframework/zend-expressive-aurarouter",
-        "zendframework/zend-expressive-twigrenderer"
+        "zendframework/zend-expressive-aurarouter"
       ]
     }
   },
@@ -74,7 +73,6 @@
     "zendframework/zend-expressive-helpers": "^5.0",
     "zendframework/zend-expressive-session": "^1.2",
     "zendframework/zend-expressive-session-ext": "^1.6",
-    "zendframework/zend-expressive-twigrenderer": "^2.0",
     "zendframework/zend-problem-details": "^1.0",
     "zendframework/zend-stdlib": "^3.1",
     "zendframework/zend-stratigility": "^3.0"

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a1e65bb48dbb84a2c5d56aae36d57ae8",
+    "content-hash": "84aa08d34f68037f8cd8d009e4e1d507",
     "packages": [
         {
             "name": "aura/di",
@@ -2960,73 +2960,6 @@
             "time": "2019-08-07T07:10:58+00:00"
         },
         {
-            "name": "twig/twig",
-            "version": "v2.11.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/twigphp/Twig.git",
-                "reference": "699ed2342557c88789a15402de5eb834dedd6792"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/699ed2342557c88789a15402de5eb834dedd6792",
-                "reference": "699ed2342557c88789a15402de5eb834dedd6792",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.0",
-                "symfony/polyfill-ctype": "^1.8",
-                "symfony/polyfill-mbstring": "^1.3"
-            },
-            "require-dev": {
-                "psr/container": "^1.0",
-                "symfony/debug": "^2.7",
-                "symfony/phpunit-bridge": "^3.4.19|^4.1.8|^5.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.11-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Twig_": "lib/"
-                },
-                "psr-4": {
-                    "Twig\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com",
-                    "homepage": "http://fabien.potencier.org",
-                    "role": "Lead Developer"
-                },
-                {
-                    "name": "Armin Ronacher",
-                    "email": "armin.ronacher@active-4.com",
-                    "role": "Project Founder"
-                },
-                {
-                    "name": "Twig Team",
-                    "homepage": "https://twig.symfony.com/contributors",
-                    "role": "Contributors"
-                }
-            ],
-            "description": "Twig, the flexible, fast, and secure template language for PHP",
-            "homepage": "https://twig.symfony.com",
-            "keywords": [
-                "templating"
-            ],
-            "time": "2019-06-18T15:37:11+00:00"
-        },
-        {
             "name": "webonyx/graphql-php",
             "version": "v0.13.6",
             "source": {
@@ -4342,69 +4275,6 @@
                 "zf"
             ],
             "time": "2019-06-20T14:05:59+00:00"
-        },
-        {
-            "name": "zendframework/zend-expressive-twigrenderer",
-            "version": "2.4.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zendframework/zend-expressive-twigrenderer.git",
-                "reference": "17df00d1025362c7bfe743e7b9f51be2838a0181"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-expressive-twigrenderer/zipball/17df00d1025362c7bfe743e7b9f51be2838a0181",
-                "reference": "17df00d1025362c7bfe743e7b9f51be2838a0181",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.1",
-                "psr/container": "^1.0",
-                "twig/twig": "^1.34 | ^2.4",
-                "zendframework/zend-expressive-helpers": "^5.0",
-                "zendframework/zend-expressive-router": "^3.0",
-                "zendframework/zend-expressive-template": "^2.0"
-            },
-            "conflict": {
-                "container-interop/container-interop": "<1.2.0"
-            },
-            "require-dev": {
-                "malukenho/docheader": "^0.1.5",
-                "phpunit/phpunit": "^7.0.2",
-                "zendframework/zend-coding-standard": "~1.0.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.4.x-dev",
-                    "dev-develop": "2.5.x-dev"
-                },
-                "zf": {
-                    "config-provider": "Zend\\Expressive\\Twig\\ConfigProvider"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Zend\\Expressive\\Twig\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "description": "Twig integration for Expressive",
-            "keywords": [
-                "ZendFramework",
-                "expressive",
-                "http",
-                "middleware",
-                "psr",
-                "psr-7",
-                "twig",
-                "zend-expressive",
-                "zf"
-            ],
-            "time": "2019-06-12T15:06:52+00:00"
         },
         {
             "name": "zendframework/zend-httphandlerrunner",
