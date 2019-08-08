@@ -12,8 +12,11 @@
     "psr-11",
     "psr-15",
     "zf",
-    "zendframework",
-    "zend-expressive"
+    "zend-framework",
+    "zend-expressive",
+    "graphql",
+    "cinema",
+    "api"
   ],
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -38,31 +41,22 @@
       "url": "https://github.com/sirio3mil/imdb-scraper"
     }
   ],
-  "support": {
-    "issues": "https://github.com/zendframework/zend-expressive-skeleton/issues",
-    "source": "https://github.com/zendframework/zend-expressive-skeleton",
-    "rss": "https://github.com/zendframework/zend-expressive-skeleton/releases.atom",
-    "slack": "https://zendframework-slack.herokuapp.com",
-    "forum": "https://discourse.zendframework.com/c/questions/expressive"
-  },
   "require": {
-    "php": "^7.1",
+    "php": "^7.3",
     "ext-imagick": "*",
+    "ext-memcached": "*",
     "ext-mongodb": "*",
     "ext-openssl": "*",
     "ext-pdo_sqlsrv": "*",
     "ext-sqlsrv": "*",
     "ausi/slug-generator": "^1.1",
-    "devster/ubench": "^2.0",
     "doctrine/orm": "^2.6",
     "ecodev/graphql-doctrine": "^6.0",
-    "graphaware/neo4j-php-client": "^4.8",
     "mongodb/mongodb": "^1.4",
     "moontoast/math": "^1.1",
     "ramsey/uuid-doctrine": "^1.4",
     "sirio3mil/imdb-scraper": "dev-master",
     "symfony/yaml": "^4.1",
-    "thecodingmachine/graphqlite": "^3.0@dev",
     "tuupola/cors-middleware": "^0.9.1",
     "webonyx/graphql-php": "^0.13",
     "zendframework/zend-auradi-config": "^1.0",
@@ -83,8 +77,7 @@
     "zendframework/zend-expressive-twigrenderer": "^2.0",
     "zendframework/zend-problem-details": "^1.0",
     "zendframework/zend-stdlib": "^3.1",
-    "zendframework/zend-stratigility": "^3.0",
-    "ext-memcached": "*"
+    "zendframework/zend-stratigility": "^3.0"
   },
   "require-dev": {
     "filp/whoops": "^2.1",
@@ -95,7 +88,8 @@
     "symfony/var-dumper": "^4.1",
     "whoops/soap": "^1.0",
     "zendframework/zend-expressive-tooling": "^1.0",
-    "zfcampus/zf-development-mode": "^3.1"
+    "zfcampus/zf-development-mode": "^3.1",
+    "devster/ubench": "^2.0"
   },
   "autoload": {
     "psr-4": {
@@ -120,7 +114,6 @@
       "@test",
       "@analyze"
     ],
-    "analyze": "phpstan analyze -l max -c ./phpstan.installer.neon ./src ./config",
     "clear-config-cache": "php bin/clear-config-cache.php",
     "cs-check": "phpcs",
     "cs-fix": "phpcbf",
