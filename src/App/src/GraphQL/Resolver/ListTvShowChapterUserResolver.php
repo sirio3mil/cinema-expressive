@@ -23,7 +23,7 @@ class ListTvShowChapterUserResolver
         /** @var User $user */
         $user = $args['userId']->getEntity();
         /** @var TvShow $tvShow */
-        $tvShow = $args['tvShow']->getEntity();
+        $tvShow = $args['tvShowId']->getEntity();
         /** @var TapeUserStatus $tapeUserStatus */
         $tapeUserStatus = $args['tapeUserStatusId']->getEntity();
 

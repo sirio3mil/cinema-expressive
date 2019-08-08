@@ -30,7 +30,7 @@ class ListTvShowChapterUserFactory
             'type' => $types->get(TapeUserPageType::class),
             'args' => [
                 'userId' => Type::nonNull($types->getId(User::class)),
-                'tvShow' => Type::nonNull($types->getId(TvShow::class)),
+                'tvShowId' => Type::nonNull($types->getId(TvShow::class)),
                 'tapeUserStatusId' => Type::nonNull($types->getId(TapeUserStatus::class)),
                 'page' => Type::nonNull(Type::int()),
                 'pageSize' => Type::nonNull(Type::int())
