@@ -8,6 +8,7 @@ use App\Entity\TapeUserStatus;
 use App\Entity\TvShow;
 use App\Entity\User;
 use App\Helper\ListOutputHelper;
+use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
 
 class ListTvShowChapterUserResolver
@@ -25,6 +26,9 @@ class ListTvShowChapterUserResolver
         $tvShow = $args['tvShow']->getEntity();
         /** @var TapeUserStatus $tapeUserStatus */
         $tapeUserStatus = $args['tapeUserStatusId']->getEntity();
+
+        $orderBy = new OrderBy('ch.season', 'desc');
+        $orderBy->add('ch.chapter', 'desc');
 
         $qb
             ->select('l')
@@ -44,6 +48,7 @@ class ListTvShowChapterUserResolver
             ->where('l.user = :user')
             ->andWhere('ch.tvShow = :tvShow')
             ->andWhere('h.tapeUserStatus = :tapeUserStatus')
+            ->orderBy($orderBy)
             ->setParameters([
                 'user' => $user,
                 'tvShow' => $tvShow,
