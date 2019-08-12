@@ -10,6 +10,7 @@ namespace App\Resolver;
 
 use App\Entity\Tape;
 use App\Service\ImportImdbMovieService;
+use Ausi\SlugGenerator\SlugGenerator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\NonUniqueResultException;
@@ -33,8 +34,10 @@ class ImportImdbMovieResolver
     {
         /** @var EntityManager $entityManager */
         $entityManager = $container->get(EntityManager::class);
+        /** @var SlugGenerator $slugGenerator */
+        $slugGenerator = $container->get(SlugGenerator::class);
         /** @var ImportImdbMovieService $importImdbMovieService */
-        $importImdbMovieService = new ImportImdbMovieService($container);
+        $importImdbMovieService = new ImportImdbMovieService($entityManager, $slugGenerator);
         $importImdbMovieService->setImdbNumber($args['imdbNumber']);
         $importImdbMovieService->import();
         /** @var Tape $tape */

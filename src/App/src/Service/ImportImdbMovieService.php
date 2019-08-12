@@ -56,7 +56,6 @@ use ImdbScraper\Model\Keyword;
 use ImdbScraper\Model\Location as Place;
 use ImdbScraper\Model\Release;
 use ImdbScraper\Model\People as Person;
-use Psr\Container\ContainerInterface;
 use Exception;
 
 class ImportImdbMovieService
@@ -69,9 +68,6 @@ class ImportImdbMovieService
 
     /** @var EntityManager */
     protected $entityManager;
-
-    /** @var ContainerInterface */
-    protected $container;
 
     /** @var EntityRepository */
     protected $countryRepository;
@@ -86,11 +82,15 @@ class ImportImdbMovieService
      */
     private $generator;
 
-    public function __construct(ContainerInterface $container)
+    /**
+     * ImportImdbMovieService constructor.
+     * @param EntityManager $entityManager
+     * @param SlugGenerator $slugGenerator
+     */
+    public function __construct(EntityManager $entityManager, SlugGenerator $slugGenerator)
     {
-        $this->container = $container;
         /** @var EntityManager $entityManager */
-        $this->entityManager = $container->get(EntityManager::class);
+        $this->entityManager = $entityManager;
         /** @var EntityRepository $rowTypeRepository */
         $rowTypeRepository = $this->entityManager->getRepository(RowType::class);
         /** @var RowType peopleRowType */
@@ -104,7 +104,7 @@ class ImportImdbMovieService
         /** @var EntityRepository $countryRepository */
         $this->countryRepository = $this->entityManager->getRepository(Country::class);
         /** @var SlugGenerator generator */
-        $this->generator = $container->get(SlugGenerator::class);
+        $this->generator = $slugGenerator;
     }
 
     /**
@@ -385,7 +385,7 @@ class ImportImdbMovieService
     protected function setDetails(): void
     {
         /** @var HomeMapper $mapper */
-        $mapper = $this->container->get(HomeMapper::class);
+        $mapper = new HomeMapper();
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
         $this->tape->setOriginalTitle($mapper->getTitle());
         $slug = $this->generator->generate($mapper->getTitle());
@@ -453,7 +453,7 @@ class ImportImdbMovieService
     protected function setKeywords(): void
     {
         /** @var KeywordMapper $mapper */
-        $mapper = $this->container->get(KeywordMapper::class);
+        $mapper = new KeywordMapper();
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
         /** @var KeywordIterator $keywords */
         $keywords = $mapper->getKeywords();
@@ -483,7 +483,7 @@ class ImportImdbMovieService
     protected function setLocations(): void
     {
         /** @var LocationMapper $mapper */
-        $mapper = $this->container->get(LocationMapper::class);
+        $mapper = new LocationMapper();
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
         /** @var LocationIterator $places */
         $places = $mapper->getLocations();
@@ -521,7 +521,7 @@ class ImportImdbMovieService
             "roleId" => ROLE::ROLE_CAST
         ]);
         /** @var CastMapper $mapper */
-        $mapper = $this->container->get(CastMapper::class);
+        $mapper = new CastMapper();
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
         /** @var CastIterator $castIterator */
         $castIterator = $mapper->getCast();
@@ -670,7 +670,7 @@ class ImportImdbMovieService
     protected function setPremieresAndTitles(): void
     {
         /** @var ReleaseMapper $mapper */
-        $mapper = $this->container->get(ReleaseMapper::class);
+        $mapper = new ReleaseMapper();
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
         $this->setPremieres($mapper->getReleaseDates());
         $this->setTitles($mapper->getAlsoKnownAs());
@@ -682,7 +682,7 @@ class ImportImdbMovieService
     protected function setCertifications(): void
     {
         /** @var ParentalGuideMapper $mapper */
-        $mapper = $this->container->get(ParentalGuideMapper::class);
+        $mapper = new ParentalGuideMapper();
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
         /** @var CertificateIterator $certificates */
         $certificates = $mapper->getCertificates();
