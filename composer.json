@@ -54,7 +54,7 @@
     "mongodb/mongodb": "^1.4",
     "moontoast/math": "^1.1",
     "ramsey/uuid-doctrine": "^1.4",
-    "sirio3mil/imdb-scraper": "dev-master",
+    "sirio3mil/imdb-scraper": "^1.1",
     "symfony/yaml": "^4.1",
     "tuupola/cors-middleware": "^0.9.1",
     "webonyx/graphql-php": "^0.13",
