@@ -83,6 +83,11 @@ class ImportImdbMovieService
     private $generator;
 
     /**
+     * @var People[]
+     */
+    private $peopleCreated;
+
+    /**
      * ImportImdbMovieService constructor.
      * @param EntityManager $entityManager
      * @param SlugGenerator $slugGenerator
@@ -105,6 +110,7 @@ class ImportImdbMovieService
         $this->countryRepository = $this->entityManager->getRepository(Country::class);
         /** @var SlugGenerator generator */
         $this->generator = $slugGenerator;
+        $this->peopleCreated = [];
     }
 
     /**
@@ -156,6 +162,9 @@ class ImportImdbMovieService
      */
     protected function getPeopleByImdbNumber(Person $person): ?People
     {
+        if (array_key_exists($person->getImdbNumber(), $this->peopleCreated)){
+            return $this->peopleCreated[$person->getImdbNumber()];
+        }
         /** @var Query $query */
         $query = $this->entityManager->createQuery('
             SELECT p 
@@ -194,6 +203,7 @@ class ImportImdbMovieService
         $searchValue->setSlug($this->generator->generate($person->getFullName()));
         $searchValue->setPrimaryParam(true);
         $people->getObject()->addSearchValue($searchValue);
+        $this->peopleCreated[$person->getImdbNumber()] = $people;
         return $people;
     }
 
@@ -246,7 +256,7 @@ class ImportImdbMovieService
                 'imdbNumber' => $this->imdbNumber,
                 'rowType' => $this->tapeRowType
             ]);
-            $query->useQueryCache(true);
+            $query->useQueryCache(false);
             /** @var ImdbNumber $imdbNumber */
             $imdbNumber = $query->getSingleResult();
             /** @var Tape $tape */
