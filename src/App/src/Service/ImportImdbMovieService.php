@@ -256,7 +256,7 @@ class ImportImdbMovieService
                 'imdbNumber' => $this->imdbNumber,
                 'rowType' => $this->tapeRowType
             ]);
-            $query->useQueryCache(false);
+            $query->useQueryCache(true);
             /** @var ImdbNumber $imdbNumber */
             $imdbNumber = $query->getSingleResult();
             /** @var Tape $tape */
