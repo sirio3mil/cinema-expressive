@@ -25,7 +25,7 @@ class CorsMiddlewareFactory
         return new CorsMiddleware([
             "origin" => ["*"],
             "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
-            "headers.allow" => ["Content-Type", "Accept"],
+            "headers.allow" => ["*"],
             "headers.expose" => [],
             "credentials" => false,
             "cache" => 0,
