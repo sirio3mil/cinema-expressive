@@ -8,26 +8,33 @@
 
 namespace App\Handler;
 
+use GraphQL\Server\ServerConfig;
 use GraphQL\Server\StandardServer;
+use GraphQL\Type\Schema;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use Zend\Diactoros\Response\JsonResponse;
+use Zend\Expressive\Authentication\UserInterface;
 
 class GraphQLHandler implements RequestHandlerInterface
 {
 
-    /** @var StandardServer $standardServer */
-    protected $standardServer;
+    /** @var ServerConfig */
+    private $serverConfig;
 
-    public function __construct(StandardServer $standardServer)
+    public function __construct(Schema $schema, bool $debug)
     {
-        $this->standardServer = $standardServer;
+        $this->serverConfig = ServerConfig::create()
+            ->setSchema($schema)
+            ->setQueryBatching(true)
+            ->setDebug($debug);
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $response = $this->standardServer->executePsrRequest($request);
+        $this->serverConfig->setContext($request->getAttribute(UserInterface::class));
+        $response = (new StandardServer($this->serverConfig))->executePsrRequest($request);
         return new JsonResponse($response);
     }
 }

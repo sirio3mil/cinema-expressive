@@ -26,7 +26,7 @@ class SearchFactory
                 'pattern' => Type::nonNull(Type::string()),
                 'rowType' => Type::int()
             ],
-            'resolve' => function ($source, $args) use ($container) {
+            'resolve' => function ($source, $args, $context) use ($container) {
                 return SearchResolver::resolve($container, $args);
             }
         ];

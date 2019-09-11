@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace App\Factory;
 
 use App\Handler\GraphQLHandler;
-use GraphQL\Server\StandardServer;
+use GraphQL\Type\Schema;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
@@ -19,9 +19,9 @@ class GraphQLHandlerFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
-        /** @var StandardServer $standardServer */
-        $standardServer = $container->get(StandardServer::class);
+        $schema = $container->get(Schema::class);
+        $config = $container->has('config') ? $container->get('config') : [];
 
-        return new GraphQLHandler($standardServer);
+        return new GraphQLHandler($schema, $config['debug']);
     }
 }
