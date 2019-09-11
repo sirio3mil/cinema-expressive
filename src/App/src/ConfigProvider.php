@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Factory\GraphQLHandlerFactory;
+use App\Handler\GraphQLHandler;
+
 /**
  * The configuration provider for the App module
  *
@@ -35,7 +38,7 @@ class ConfigProvider
             'invokables' => [
             ],
             'factories' => [
-                Handler\GraphQLHandler::class => Handler\GraphQLHandlerFactory::class,
+                GraphQLHandler::class => GraphQLHandlerFactory::class,
             ],
         ];
     }

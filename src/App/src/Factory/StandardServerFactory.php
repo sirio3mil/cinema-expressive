@@ -8,6 +8,7 @@
 
 namespace App\Factory;
 
+use GraphQL\Server\ServerConfig;
 use GraphQL\Server\StandardServer;
 use GraphQL\Type\Schema;
 use Psr\Container\ContainerInterface;
@@ -18,10 +19,12 @@ class StandardServerFactory
     {
         $schema = $container->get(Schema::class);
         $config = $container->has('config') ? $container->get('config') : [];
-        return new StandardServer([
-            'schema' => $schema,
-            'queryBatching' => true,
-            'debug' => $config['debug']
-        ]);
+
+        $config = ServerConfig::create()
+            ->setSchema($schema)
+            ->setQueryBatching(true)
+            ->setDebug($config['debug']);
+
+        return new StandardServer($config);
     }
 }
