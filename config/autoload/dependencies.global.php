@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Zend\Expressive\Authentication;
 
 return [
@@ -26,7 +27,8 @@ return [
             ImdbScraper\Mapper\ParentalGuideMapper::class => ImdbScraper\Mapper\ParentalGuideMapper::class,
             ImdbScraper\Mapper\CastMapper::class => ImdbScraper\Mapper\CastMapper::class,
             ImdbScraper\Mapper\EpisodeListMapper::class => ImdbScraper\Mapper\EpisodeListMapper::class,
-            Ausi\SlugGenerator\SlugGenerator::class => Ausi\SlugGenerator\SlugGenerator::class
+            Ausi\SlugGenerator\SlugGenerator::class => Ausi\SlugGenerator\SlugGenerator::class,
+            AnnotationReader::class => AnnotationReader::class
         ],
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories' => [
@@ -35,7 +37,6 @@ return [
             App\Type\QueryType::class => App\Factory\QueryFactory::class,
             App\Type\MutationType::class => App\Factory\MutationFactory::class,
             App\Type\TapeUserPageType::class => App\Factory\TapeUserPageTypeFactory::class,
-            App\Resolver\SearchResolver::class => App\Factory\SearchFactory::class,
             App\Resolver\TapeResolver::class => App\Factory\TapeFactory::class,
             App\Resolver\ListTapeUserResolver::class => App\Factory\ListTapeUserFactory::class,
             App\Resolver\ListTvShowChapterUserResolver::class

@@ -11,17 +11,25 @@ namespace App\Factory;
 use App\Resolver\ListTapeUserResolver;
 use App\Resolver\ListTvShowChapterUserResolver;
 use App\Resolver\TapeResolver;
+use App\Service\ResolverManager;
 use App\Type\QueryType;
 use Psr\Container\ContainerInterface;
 use App\Resolver\SearchResolver;
+use ReflectionException;
 
 class QueryFactory
 {
+    /**
+     * @param ContainerInterface $container
+     * @return QueryType
+     * @throws ReflectionException
+     */
     public function __invoke(ContainerInterface $container): QueryType
     {
+        $manager = new ResolverManager($container);
         return new QueryType([
             'fields' => [
-                'search' => $container->get(SearchResolver::class),
+                'search' => $manager->get(SearchResolver::class),
                 'getTape' => $container->get(TapeResolver::class),
                 'listTapeUser' => $container->get(ListTapeUserResolver::class),
                 'listTvShowChapterUser' => $container->get(ListTvShowChapterUserResolver::class)

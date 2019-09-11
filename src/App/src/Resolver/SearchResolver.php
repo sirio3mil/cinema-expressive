@@ -14,21 +14,32 @@ use App\Entity\SearchValue;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Psr\Container\ContainerInterface;
+use GraphQL\Doctrine\Annotation as API;
 
-class SearchResolver
+class SearchResolver implements QueryResolverInterface
 {
+
     /**
-     * @param ContainerInterface $container
-     * @param array $args
-     * @return array
+     * @var EntityManager
      */
-    public static function resolve(ContainerInterface $container, array $args): array
+    private $entityManager;
+
+    public function __construct(EntityManager $entityManager)
     {
-        /** @var EntityManager $entityManager */
-        $entityManager = $container->get(EntityManager::class);
+        $this->entityManager = $entityManager;
+    }
+
+    /**
+     * @API\Field(type="SearchValue[]")
+     *
+     * @param string $pattern
+     * @param int|null $rowType
+     * @return SearchValue[]
+     */
+    protected function execute(string $pattern, ?int $rowType): array
+    {
         /** @var ResultSetMappingBuilder $rsm */
-        $rsm = new ResultSetMappingBuilder($entityManager);
+        $rsm = new ResultSetMappingBuilder($this->entityManager);
         $rsm->addRootEntityFromClassMetadata(SearchValue::class, 'sv');
         $rsm->addJoinedEntityFromClassMetadata(GlobalUniqueObject::class, 'o', 'sv', 'object');
         $rsm->addJoinedEntityFromClassMetadata(RowType::class, 'rt', 'o', 'rowType');
@@ -44,10 +55,19 @@ class SearchResolver
                 INNER JOIN dbo.Object o on o.objectId = sv.objectId
                 INNER JOIN dbo.RowType rt on rt.rowTypeId = o.rowTypeId";
         /** @var NativeQuery $query */
-        $query = $entityManager->createNativeQuery($sql, $rsm);
-        $query->setParameter(1, $args['pattern']);
-        $query->setParameter(2, $args['rowType']);
+        $query = $this->entityManager->createNativeQuery($sql, $rsm);
+        $query->setParameter(1, $pattern);
+        $query->setParameter(2, $rowType);
 
         return $query->getResult();
+    }
+
+    /**
+     * @param array $args
+     * @return mixed
+     */
+    public function resolve(array $args)
+    {
+        return $this->execute($args['pattern'], $args['rowType'] ?? null);
     }
 }
