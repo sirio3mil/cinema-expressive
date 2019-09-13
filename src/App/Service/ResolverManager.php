@@ -71,13 +71,7 @@ class ResolverManager
     public function get(string $resolverClassName): array
     {
         $this->reflectionClass = new ReflectionClass($resolverClassName);
-        $this->reflectionMethod = $this->reflectionClass->getMethod('execute');
-        if (!$this->reflectionMethod) {
-            throw new Exception('TBD');
-        }
-        if (!$this->reflectionMethod->hasReturnType()) {
-            throw new Exception('TBD');
-        }
+        $this->setReflectionMethod();
 
         $resolver = $this->getInstance($resolverClassName);
         $type = $this->getType();
@@ -118,27 +112,42 @@ class ResolverManager
 
     /**
      * @return array
+     * @throws ReflectionException
      */
     protected function getArguments(): array
     {
         $args = [];
-        /** @var ReflectionParameter[] $parameters */
-        $parameters = $this->reflectionMethod->getParameters();
-        foreach ($parameters as $parameter) {
-            $argType = null;
-            /** @var ReflectionClass $class */
-            $class = $parameter->getClass();
-            if (!$class) {
-                $argType = call_user_func(Type::class . '::' . $parameter->getType());
-            } elseif ($class->getName() === EntityID::class) {
+        switch ($this->reflectionMethod->getName()) {
+            case 'execute':
+                /** @var ReflectionParameter[] $parameters */
+                $parameters = $this->reflectionMethod->getParameters();
+                foreach ($parameters as $parameter) {
+                    $argType = null;
+                    /** @var ReflectionClass $class */
+                    $class = $parameter->getClass();
+                    if (!$class) {
+                        $argType = call_user_func(Type::class . '::' . $parameter->getType());
+                    } elseif ($class->isSubclassOf(CinemaEntity::class)){
+                        $argType = $this->types->getId($class->getName());
+                    }
+                    if (!$parameter->allowsNull()) {
+                        $argType = Type::nonNull($argType);
+                    }
+                    $args[$parameter->getName()] = $argType;
+                }
+                break;
+            case 'resolve':
+                $argType = null;
+                $argName = null;
                 /** @var ReflectionType $returnType */
                 $returnType = $this->reflectionMethod->getReturnType();
-                $argType = $this->types->getId($returnType->getName());
-            }
-            if (!$parameter->allowsNull()) {
-                $argType = Type::nonNull($argType);
-            }
-            $args[$parameter->getName()] = $argType;
+                $class = new ReflectionClass($returnType->getName());
+                if ($class->isSubclassOf(CinemaEntity::class)){
+                    $argType = $this->types->getId($class->getName());
+                    $argName = strtolower(substr($class->getShortName(), 0, 1)) . substr($class->getShortName(), 1) . 'Id';
+                }
+                $args[$argName] = $argType;
+                break;
         }
         return $args;
     }
@@ -181,5 +190,22 @@ class ResolverManager
             $type = Type::nonNull($type);
         }
         return $type;
+    }
+
+    /**
+     * @throws ReflectionException
+     * @throws Exception
+     */
+    protected function setReflectionMethod(): void
+    {
+        try {
+            $this->reflectionMethod = $this->reflectionClass->getMethod('execute');
+        }
+        catch (ReflectionException $e){
+            $this->reflectionMethod = $this->reflectionClass->getMethod('resolve');
+        }
+        if (!$this->reflectionMethod->hasReturnType()) {
+            throw new Exception('TBD');
+        }
     }
 }
