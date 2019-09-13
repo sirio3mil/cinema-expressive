@@ -16,7 +16,7 @@ use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use GraphQL\Doctrine\Annotation as API;
 
-class SearchResolver implements QueryResolverInterface
+class SearchResolver extends AbstractResolver implements QueryResolverInterface
 {
 
     /**

@@ -12,7 +12,7 @@ use App\Entity\Tape;
 use GraphQL\Doctrine\Definition\EntityID;
 use GraphQL\Error\Error;
 
-class TapeResolver implements QueryResolverInterface
+class TapeResolver extends AbstractResolver implements QueryResolverInterface
 {
 
     /**

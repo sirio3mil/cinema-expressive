@@ -4,6 +4,7 @@
 namespace App\Service;
 
 use App\Entity\CinemaEntity;
+use App\Resolver\AbstractResolver;
 use App\Resolver\ResolverInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Exception;
@@ -87,6 +88,8 @@ class ResolverManager
             'type' => $type,
             'args' => $args,
             'resolve' => function ($source, $args, $context) use ($resolver) {
+                $resolver->setUser($context);
+                $resolver->setSource($source);
                 return $resolver->resolve($args);
             }
         ];
@@ -94,9 +97,9 @@ class ResolverManager
 
     /**
      * @param string $resolverClassName
-     * @return ResolverInterface
+     * @return AbstractResolver
      */
-    protected function getInstance(string $resolverClassName): ResolverInterface
+    protected function getInstance(string $resolverClassName): AbstractResolver
     {
         $dynamicParameters = [];
         /** @var ReflectionMethod $constructor */
@@ -110,7 +113,7 @@ class ResolverManager
                 }
             }
         }
-        /** @var ResolverInterface $resolver */
+        /** @var AbstractResolver $resolver */
         return new $resolverClassName(...$dynamicParameters);
     }
 
