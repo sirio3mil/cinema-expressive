@@ -5,7 +5,6 @@ namespace App\Service;
 
 use App\Entity\CinemaEntity;
 use App\Resolver\AbstractResolver;
-use App\Resolver\ResolverInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Exception;
 use GraphQL\Doctrine\Annotation\Field;

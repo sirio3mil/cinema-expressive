@@ -14,7 +14,7 @@ require_once "vendor/autoload.php";
 // Create a simple "default" Doctrine ORM configuration for Annotations
 $isDevMode = true;
 $paths = [
-    __DIR__. "/src/App/src/Entity"
+    __DIR__ . "/src/App/Entity"
 ];
 $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, null, null, false);
 //$config = Setup::createYAMLMetadataConfiguration(array(__DIR__."/mapping/yml"), $isDevMode);

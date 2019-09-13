@@ -18,7 +18,8 @@ class MemcachedFactory
     {
         $config = $container->has('config') ? $container->get('config') : [];
         $config = $config['zend-cache'] ?? [];
-
-        return StorageFactory::factory($config);
+        /** @var Memcached $storage */
+        $storage = StorageFactory::factory($config);
+        return $storage;
     }
 }
