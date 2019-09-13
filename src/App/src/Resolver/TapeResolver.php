@@ -9,16 +9,29 @@
 namespace App\Resolver;
 
 use App\Entity\Tape;
+use GraphQL\Doctrine\Definition\EntityID;
+use GraphQL\Error\Error;
 
-class TapeResolver
+class TapeResolver implements QueryResolverInterface
 {
 
     /**
-     * @param array $args
+     * @param EntityID $tapeId
      * @return Tape
+     * @throws Error
      */
-    public static function resolve(array $args): Tape
+    protected function execute(EntityID $tapeId): Tape
     {
-        return $args['tapeId']->getEntity();
+        return $tapeId->getEntity();
+    }
+
+    /**
+     * @inheritDoc
+     * @return Tape
+     * @throws Error
+     */
+    public function resolve(array $args): Tape
+    {
+        return $this->execute($args['tapeId']);
     }
 }

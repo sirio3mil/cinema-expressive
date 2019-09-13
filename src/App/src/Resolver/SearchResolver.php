@@ -63,10 +63,10 @@ class SearchResolver implements QueryResolverInterface
     }
 
     /**
-     * @param array $args
-     * @return mixed
+     * @inheritDoc
+     * @return array
      */
-    public function resolve(array $args)
+    public function resolve(array $args): array
     {
         return $this->execute($args['pattern'], $args['rowType'] ?? null);
     }
