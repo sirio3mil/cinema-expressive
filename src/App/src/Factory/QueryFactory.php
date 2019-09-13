@@ -30,7 +30,7 @@ class QueryFactory
         return new QueryType([
             'fields' => [
                 'search' => $manager->get(SearchResolver::class),
-                'getTape' => $manager->get(TapeResolver::class),
+                'tape' => $manager->get(TapeResolver::class),
                 'listTapeUser' => $container->get(ListTapeUserResolver::class),
                 'listTvShowChapterUser' => $container->get(ListTvShowChapterUserResolver::class)
             ]
