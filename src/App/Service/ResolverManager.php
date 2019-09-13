@@ -5,6 +5,7 @@ namespace App\Service;
 
 use App\Entity\CinemaEntity;
 use App\Resolver\AbstractResolver;
+use App\Type\CustomType;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Exception;
 use GraphQL\Doctrine\Annotation\Field;
@@ -48,6 +49,10 @@ class ResolverManager
      * @var string
      */
     private $entityNamespaceName;
+    /**
+     * @var string
+     */
+    private $typeNamespaceName;
 
     /**
      * ResolverManager constructor.
@@ -59,6 +64,17 @@ class ResolverManager
         $this->types = $this->container->get(Types::class);
         $this->annotationReader = $this->container->get(AnnotationReader::class);
         $this->entityNamespaceName = str_replace('CinemaEntity', '', CinemaEntity::class);
+        $this->typeNamespaceName = str_replace('CustomType', '', CustomType::class);
+    }
+
+    /**
+     * @param ReflectionClass $class
+     * @return string
+     */
+    protected static function getEntityIdArgumentName(ReflectionClass $class): string
+    {
+        $argName = strtolower(substr($class->getShortName(), 0, 1)) . substr($class->getShortName(), 1) . 'Id';
+        return $argName;
     }
 
 
@@ -123,17 +139,25 @@ class ResolverManager
                 $parameters = $this->reflectionMethod->getParameters();
                 foreach ($parameters as $parameter) {
                     $argType = null;
+                    $argName = $parameter->getName();
                     /** @var ReflectionClass $class */
                     $class = $parameter->getClass();
                     if (!$class) {
-                        $argType = call_user_func(Type::class . '::' . $parameter->getType());
-                    } elseif ($class->isSubclassOf(CinemaEntity::class)){
+                        switch ($parameter->getType()) {
+                            case 'bool':
+                                $argType = Type::boolean();
+                                break;
+                            default:
+                                $argType = call_user_func(Type::class . '::' . $parameter->getType());
+                        }
+                    } elseif ($class->isSubclassOf(CinemaEntity::class)) {
                         $argType = $this->types->getId($class->getName());
+                        $argName = self::getEntityIdArgumentName($class);
                     }
                     if (!$parameter->allowsNull()) {
                         $argType = Type::nonNull($argType);
                     }
-                    $args[$parameter->getName()] = $argType;
+                    $args[$argName] = $argType;
                 }
                 break;
             case 'resolve':
@@ -142,9 +166,9 @@ class ResolverManager
                 /** @var ReflectionType $returnType */
                 $returnType = $this->reflectionMethod->getReturnType();
                 $class = new ReflectionClass($returnType->getName());
-                if ($class->isSubclassOf(CinemaEntity::class)){
+                if ($class->isSubclassOf(CinemaEntity::class)) {
                     $argType = $this->types->getId($class->getName());
-                    $argName = strtolower(substr($class->getShortName(), 0, 1)) . substr($class->getShortName(), 1) . 'Id';
+                    $argName = self::getEntityIdArgumentName($class);
                 }
                 $args[$argName] = $argType;
                 break;
@@ -155,6 +179,7 @@ class ResolverManager
     /**
      * @return ListOfType|NonNull|ObjectType|null
      * @throws ReflectionException
+     * @throws \GraphQL\Doctrine\Exception
      */
     protected function getType()
     {
@@ -169,13 +194,21 @@ class ResolverManager
                     /** @var Field $annotation */
                     $annotation = $this->annotationReader->getMethodAnnotation($this->reflectionMethod, Field::class);
                     if ($annotation) {
-                        $returnTypeClassName = str_replace("[]", "", $annotation->type);
-                        $returnTypeClassName = $this->entityNamespaceName . $returnTypeClassName;
-                        if (class_exists($returnTypeClassName)) {
-                            $type = $this->types->getOutput($returnTypeClassName);
+                        if (stripos($annotation->type, "[]") !== false) {
+                            $returnTypeClassName = str_replace("[]", "", $annotation->type);
+                            $returnTypeClassName = $this->entityNamespaceName . $returnTypeClassName;
+                            if (class_exists($returnTypeClassName)) {
+                                $type = $this->types->getOutput($returnTypeClassName);
+                            }
+                            $type = Type::listOf($type);
+                        }
+                        else{
+                            $returnTypeClassName = $this->typeNamespaceName . $annotation->type;
+                            if (class_exists($returnTypeClassName)) {
+                                $type = $this->types->get($returnTypeClassName);
+                            }
                         }
                     }
-                    $type = Type::listOf($type);
                     break;
                 default:
                     if (class_exists($name)) {
@@ -200,8 +233,7 @@ class ResolverManager
     {
         try {
             $this->reflectionMethod = $this->reflectionClass->getMethod('execute');
-        }
-        catch (ReflectionException $e){
+        } catch (ReflectionException $e) {
             $this->reflectionMethod = $this->reflectionClass->getMethod('resolve');
         }
         if (!$this->reflectionMethod->hasReturnType()) {

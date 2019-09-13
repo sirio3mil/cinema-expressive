@@ -8,7 +8,7 @@ use GraphQL\Doctrine\Types;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 
-class TapeUserPageType extends ObjectType
+class TapeUserPageType extends ObjectType implements CustomType
 {
     public function __construct(Types $types)
     {

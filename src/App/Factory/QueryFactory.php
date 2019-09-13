@@ -31,7 +31,7 @@ class QueryFactory
             'fields' => [
                 'search' => $manager->get(SearchResolver::class),
                 'tape' => $manager->get(TapeResolver::class),
-                'listTapeUser' => $container->get(ListTapeUserResolver::class),
+                'listTapeUser' => $manager->get(ListTapeUserResolver::class),
                 'listTvShowChapterUser' => $container->get(ListTvShowChapterUserResolver::class)
             ]
         ]);

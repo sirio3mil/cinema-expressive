@@ -7,37 +7,52 @@ use App\Entity\TapeUser;
 use App\Entity\TapeUserStatus;
 use App\Entity\User;
 use App\Helper\ListOutputHelper;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
+use GraphQL\Doctrine\Annotation as API;
 use function array_key_exists;
 use function is_null;
 
-class ListTapeUserResolver
+class ListTapeUserResolver extends AbstractResolver implements QueryResolverInterface
 {
 
     /**
-     * @param QueryBuilder $qb
-     * @param TapeUser[] $args
+     * @var QueryBuilder
+     */
+    private $qb;
+
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->qb = $entityManager->createQueryBuilder();
+    }
+
+    /**
+     * @API\Field(type="TapeUserPageType")
+     *
+     * @param User $user
+     * @param TapeUserStatus|null $tapeUserStatus
+     * @param bool|null $isTvShow
+     * @param bool|null $visible
+     * @param bool|null $finished
+     * @param Place|null $place
+     * @param int $page
+     * @param int $pageSize
      * @return array
      */
-    public static function resolve(QueryBuilder $qb, array $args): array
+    public function execute(
+        User $user,
+        ?TapeUserStatus $tapeUserStatus,
+        ?Place $place,
+        ?bool $isTvShow,
+        ?bool $visible,
+        ?bool $finished,
+        int $page,
+        int $pageSize
+    ): array
     {
-        /** @var User $user */
-        $user = $args['userId']->getEntity();
-        $visible = $args['visible'] ?? null;
-        $finished = $args['finished'] ?? null;
-        $isTvShow = $args['isTvShow'] ?? null;
-        $tapeUserStatus = null;
-        $place = null;
-        if (array_key_exists('tapeUserStatusId', $args)) {
-            /** @var TapeUserStatus $tapeUserStatus */
-            $tapeUserStatus = $args['tapeUserStatusId']->getEntity();
-        }
-        if (array_key_exists('placeId', $args)) {
-            /** @var Place $place */
-            $place = $args['placeId']->getEntity();
-        }
 
-        $qb
+
+        $this->qb
             ->select('l')
             ->from(TapeUser::class, 'l')
             ->innerJoin(
@@ -56,46 +71,84 @@ class ListTapeUserResolver
             ]);
 
         if (!is_null($isTvShow)) {
-            $qb
+            $this->qb
                 ->andWhere('dt.isTvShow = :isTvShow')
                 ->setParameter('isTvShow', $isTvShow);
         }
 
         if (!is_null($finished)) {
-            $qb
+            $this->qb
                 ->innerJoin('t.tvShow', 's')
                 ->andWhere('s.finished = :finished')
                 ->setParameter('finished', $finished);
         }
 
         if ($tapeUserStatus || $place || !is_null($visible)) {
-            $qb->innerJoin(
+            $this->qb->innerJoin(
                 'l.history',
                 'h'
             );
             if ($tapeUserStatus) {
-                $qb
+                $this->qb
                     ->andWhere('h.tapeUserStatus = :tapeUserStatus')
                     ->setParameter('tapeUserStatus', $tapeUserStatus);
             }
             if ($place || !is_null($visible)) {
-                $qb->innerJoin(
+                $this->qb->innerJoin(
                     'h.detail',
                     'd'
                 );
                 if ($place) {
-                    $qb
+                    $this->qb
                         ->andWhere('d.place = :place')
                         ->setParameter('place', $place);
                 }
                 if (!is_null($visible)) {
-                    $qb
+                    $this->qb
                         ->andWhere('d.visible = :visible')
                         ->setParameter('visible', $visible);
                 }
             }
         }
 
-        return ListOutputHelper::getType($qb, $args);
+        return ListOutputHelper::getType($this->qb, [
+            'pageSize' => $pageSize,
+            'page' => $page
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     * @return array
+     */
+    public function resolve(array $args): array
+    {
+
+        /** @var User $user */
+        $user = $args['userId']->getEntity();
+        $visible = $args['visible'] ?? null;
+        $finished = $args['finished'] ?? null;
+        $isTvShow = $args['isTvShow'] ?? null;
+        $tapeUserStatus = null;
+        $place = null;
+        if (array_key_exists('tapeUserStatusId', $args)) {
+            /** @var TapeUserStatus $tapeUserStatus */
+            $tapeUserStatus = $args['tapeUserStatusId']->getEntity();
+        }
+        if (array_key_exists('placeId', $args)) {
+            /** @var Place $place */
+            $place = $args['placeId']->getEntity();
+        }
+
+        return $this->execute(
+            $user,
+            $tapeUserStatus,
+            $place,
+            $isTvShow,
+            $visible,
+            $finished,
+            $args['page'],
+            $args['pageSize']
+        );
     }
 }
