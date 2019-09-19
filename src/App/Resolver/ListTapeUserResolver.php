@@ -6,9 +6,7 @@ use App\Entity\Place;
 use App\Entity\TapeUser;
 use App\Entity\TapeUserStatus;
 use App\Entity\User;
-use App\Helper\ListOutputHelper;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\QueryBuilder;
 use GraphQL\Doctrine\Annotation as API;
 use function array_key_exists;
 use function is_null;
@@ -16,10 +14,7 @@ use function is_null;
 class ListTapeUserResolver extends AbstractResolver implements QueryResolverInterface
 {
 
-    /**
-     * @var QueryBuilder
-     */
-    private $qb;
+    use ListOutputTrait;
 
     public function __construct(EntityManager $entityManager)
     {
@@ -110,10 +105,7 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
             }
         }
 
-        return ListOutputHelper::getType($this->qb, [
-            'pageSize' => $pageSize,
-            'page' => $page
-        ]);
+        return $this->getOutput($page, $pageSize);
     }
 
     /**

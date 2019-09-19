@@ -1,28 +1,30 @@
 <?php
 
 
-namespace App\Helper;
+namespace App\Resolver;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use function count;
 use function ceil;
 
-abstract class ListOutputHelper
+trait ListOutputTrait
 {
-    public static function getType(QueryBuilder $qb, array $args): array
+
+    /**
+     * @var QueryBuilder
+     */
+    private $qb;
+
+    protected function getOutput(int $page, int $pageSize): array
     {
-        $paginator = new Paginator($qb);
-
+        $paginator = new Paginator($this->qb);
         $totalItems = count($paginator);
-        $pageSize = $args['pageSize'];
-
         $pagesCount = ceil($totalItems / $pageSize);
 
-        $currentPage = $args['page'];
         $paginator
             ->getQuery()
-            ->setFirstResult($pageSize * ($currentPage - 1))
+            ->setFirstResult($pageSize * ($page - 1))
             ->setMaxResults($pageSize);
 
         return [
