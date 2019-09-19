@@ -34,16 +34,11 @@ class GraphQLHandlerFactory
 {
     /**
      * @param ContainerInterface $container
-     * @return RequestHandlerInterface
+     * @return SchemaConfig
      * @throws ReflectionException
      */
-    public function __invoke(ContainerInterface $container): RequestHandlerInterface
+    protected static function getSchemaConfig(ContainerInterface $container): SchemaConfig
     {
-        $config = $container->has('config') ? $container->get('config') : [];
-        $debug = $config['debug'] ?? false;
-
-        GraphQL::setDefaultFieldResolver(new DefaultFieldResolver());
-
         $manager = new ResolverManager($container);
 
         $config = SchemaConfig::create()
@@ -66,8 +61,35 @@ class GraphQLHandlerFactory
                 ],
                 'name' => 'mutation'
             ]));
+        return $config;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @return Schema
+     * @throws ReflectionException
+     */
+    protected static function getSchema(ContainerInterface $container): Schema
+    {
+        $config = self::getSchemaConfig($container);
 
         $schema = new Schema($config);
+        return $schema;
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @return RequestHandlerInterface
+     * @throws ReflectionException
+     */
+    public function __invoke(ContainerInterface $container): RequestHandlerInterface
+    {
+        $config = $container->has('config') ? $container->get('config') : [];
+        $debug = $config['debug'] ?? false;
+
+        GraphQL::setDefaultFieldResolver(new DefaultFieldResolver());
+
+        $schema = self::getSchema($container);
 
         return new GraphQLHandler($schema, $debug);
     }
