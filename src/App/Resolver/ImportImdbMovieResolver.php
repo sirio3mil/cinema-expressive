@@ -18,11 +18,50 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use Psr\Container\ContainerInterface;
 
-class ImportImdbMovieResolver
+class ImportImdbMovieResolver extends AbstractResolver implements MutationResolverInterface
 {
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
+    /**
+     * @var SlugGenerator
+     */
+    private $slugGenerator;
 
     /**
-     * @param ContainerInterface $container
+     * ImportImdbMovieResolver constructor.
+     * @param EntityManager $entityManager
+     * @param SlugGenerator $slugGenerator
+     */
+    public function __construct(EntityManager $entityManager, SlugGenerator $slugGenerator)
+    {
+        $this->entityManager = $entityManager;
+        $this->slugGenerator = $slugGenerator;
+    }
+
+    /**
+     * @param int $imdbNumber
+     * @return Tape
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    protected function execute(int $imdbNumber): Tape
+    {
+        /** @var ImportImdbMovieService $importImdbMovieService */
+        $importImdbMovieService = new ImportImdbMovieService($this->entityManager, $this->slugGenerator);
+        $importImdbMovieService->setImdbNumber($imdbNumber);
+        $importImdbMovieService->import();
+        /** @var Tape $tape */
+        $tape = $importImdbMovieService->getTape();
+        $this->entityManager->persist($tape);
+        $this->entityManager->flush();
+        return $tape;
+    }
+
+    /**
      * @param array $args
      * @return Tape
      * @throws NoResultException
@@ -30,20 +69,8 @@ class ImportImdbMovieResolver
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public static function resolve(ContainerInterface $container, array $args): Tape
+    public function resolve(array $args): Tape
     {
-        /** @var EntityManager $entityManager */
-        $entityManager = $container->get(EntityManager::class);
-        /** @var SlugGenerator $slugGenerator */
-        $slugGenerator = $container->get(SlugGenerator::class);
-        /** @var ImportImdbMovieService $importImdbMovieService */
-        $importImdbMovieService = new ImportImdbMovieService($entityManager, $slugGenerator);
-        $importImdbMovieService->setImdbNumber($args['imdbNumber']);
-        $importImdbMovieService->import();
-        /** @var Tape $tape */
-        $tape = $importImdbMovieService->getTape();
-        $entityManager->persist($tape);
-        $entityManager->flush();
-        return $tape;
+        return $this->execute($args['imdbNumber']);
     }
 }

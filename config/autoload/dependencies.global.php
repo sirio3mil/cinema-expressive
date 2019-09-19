@@ -42,7 +42,6 @@ return [
             App\Resolver\EditTapeUserHistoryDetailResolver::class
                 => App\Factory\EditTapeUserHistoryDetailFactory::class,
             App\Resolver\EditTvShowResolver::class => App\Factory\EditTvShowFactory::class,
-            App\Resolver\ImportImdbMovieResolver::class => App\Factory\ImportImdbMovieFactory::class,
             App\Resolver\ImportImdbEpisodesResolver::class
                 => App\Factory\ImportImdbEpisodesFactory::class,
             MongoDB\Client::class => App\Factory\MongoDBClientFactory::class,
