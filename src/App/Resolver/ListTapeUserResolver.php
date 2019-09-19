@@ -51,7 +51,6 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
     ): array
     {
 
-
         $this->qb
             ->select('l')
             ->from(TapeUser::class, 'l')
