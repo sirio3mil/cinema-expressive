@@ -4,6 +4,7 @@
 namespace App\Service;
 
 use App\Entity\CinemaEntity;
+use App\Model\Argument;
 use App\Resolver\AbstractResolver;
 use App\Type\CustomType;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -126,6 +127,85 @@ class ResolverManager
     }
 
     /**
+     * @param ReflectionParameter $parameter
+     * @return Argument
+     * @throws ReflectionException
+     * @throws Exception
+     */
+    protected function getArgumentByParameter(ReflectionParameter $parameter): Argument
+    {
+        $argType = null;
+        $argName = $parameter->getName();
+        /** @var ReflectionClass $class */
+        $class = $parameter->getClass();
+        if (!$class) {
+            switch ($parameter->getType()) {
+                case 'bool':
+                    $argType = Type::boolean();
+                    break;
+                case 'array':
+                    /** @var ReflectionType $returnType */
+                    $returnType = $this->reflectionMethod->getReturnType();
+                    if (!$returnType) {
+                        throw new Exception("Missing argument as return type for {$this->reflectionMethod->getShortName()}");
+                    }
+                    $class = new ReflectionClass($returnType->getName());
+                    if ($class->isSubclassOf(CinemaEntity::class)) {
+                        $argType = $this->types->getPartialInput($class->getName());
+                    }
+                    break;
+                default:
+                    $argType = call_user_func(Type::class . '::' . $parameter->getType());
+            }
+        } elseif ($class->isSubclassOf(CinemaEntity::class)) {
+            switch ($argName) {
+                case 'input':
+                    $argType = $this->types->getPartialInput($class->getName());
+                    break;
+                default:
+                    $argType = $this->types->getId($class->getName());
+                    $argName = self::getEntityIdArgumentName($class);
+            }
+        } else {
+            throw new Exception("Missing argument for {$this->reflectionClass->getShortName()}");
+        }
+        if (!$parameter->allowsNull()) {
+            $argType = Type::nonNull($argType);
+        }
+        if (!$argType || !$argName) {
+            throw new Exception("Invalid argument as return type for {$this->reflectionMethod->getShortName()}");
+        }
+
+        return (new Argument())->setName($argName)->setType($argType);
+    }
+
+    /**
+     * @return Argument
+     * @throws ReflectionException
+     * @throws Exception
+     */
+    protected function getArgumentByReturnType(): Argument
+    {
+        $argType = null;
+        $argName = null;
+        /** @var ReflectionType $returnType */
+        $returnType = $this->reflectionMethod->getReturnType();
+        if (!$returnType) {
+            throw new Exception("Missing argument as return type for {$this->reflectionMethod->getShortName()}");
+        }
+        $class = new ReflectionClass($returnType->getName());
+        if ($class->isSubclassOf(CinemaEntity::class)) {
+            $argType = $this->types->getId($class->getName());
+            $argName = self::getEntityIdArgumentName($class);
+        }
+        if (!$argType || !$argName) {
+            throw new Exception("Invalid argument as return type for {$this->reflectionMethod->getShortName()}");
+        }
+
+        return (new Argument())->setName($argName)->setType($argType);
+    }
+
+    /**
      * @return array
      * @throws ReflectionException
      * @throws Exception
@@ -138,67 +218,13 @@ class ResolverManager
                 /** @var ReflectionParameter[] $parameters */
                 $parameters = $this->reflectionMethod->getParameters();
                 foreach ($parameters as $parameter) {
-                    $argType = null;
-                    $argName = $parameter->getName();
-                    /** @var ReflectionClass $class */
-                    $class = $parameter->getClass();
-                    if (!$class) {
-                        switch ($parameter->getType()) {
-                            case 'bool':
-                                $argType = Type::boolean();
-                                break;
-                            case 'array':
-                                /** @var ReflectionType $returnType */
-                                $returnType = $this->reflectionMethod->getReturnType();
-                                if (!$returnType) {
-                                    throw new Exception("Missing argument as return type for {$this->reflectionMethod->getShortName()}");
-                                }
-                                $class = new ReflectionClass($returnType->getName());
-                                if ($class->isSubclassOf(CinemaEntity::class)) {
-                                    $argType = $this->types->getPartialInput($class->getName());
-                                }
-                                break;
-                            default:
-                                $argType = call_user_func(Type::class . '::' . $parameter->getType());
-                        }
-                    } elseif ($class->isSubclassOf(CinemaEntity::class)) {
-                        switch ($argName) {
-                            case 'input':
-                                $argType = $this->types->getPartialInput($class->getName());
-                                break;
-                            default:
-                                $argType = $this->types->getId($class->getName());
-                                $argName = self::getEntityIdArgumentName($class);
-                        }
-                    } else {
-                        throw new Exception("Missing argument for {$this->reflectionClass->getShortName()}");
-                    }
-                    if (!$parameter->allowsNull()) {
-                        $argType = Type::nonNull($argType);
-                    }
-                    if (!$argType || !$argName) {
-                        throw new Exception("Invalid argument as return type for {$this->reflectionMethod->getShortName()}");
-                    }
-                    $args[$argName] = $argType;
+                    $argument = $this->getArgumentByParameter($parameter);
+                    $args[$argument->getName()] = $argument->getType();
                 }
                 break;
             case 'resolve':
-                $argType = null;
-                $argName = null;
-                /** @var ReflectionType $returnType */
-                $returnType = $this->reflectionMethod->getReturnType();
-                if (!$returnType) {
-                    throw new Exception("Missing argument as return type for {$this->reflectionMethod->getShortName()}");
-                }
-                $class = new ReflectionClass($returnType->getName());
-                if ($class->isSubclassOf(CinemaEntity::class)) {
-                    $argType = $this->types->getId($class->getName());
-                    $argName = self::getEntityIdArgumentName($class);
-                }
-                if (!$argType || !$argName) {
-                    throw new Exception("Invalid argument as return type for {$this->reflectionMethod->getShortName()}");
-                }
-                $args[$argName] = $argType;
+                $argument = $this->getArgumentByReturnType();
+                $args[$argument->getName()] = $argument->getType();
                 break;
         }
         return $args;
