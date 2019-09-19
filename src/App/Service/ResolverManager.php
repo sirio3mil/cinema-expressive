@@ -9,7 +9,6 @@ use App\Type\CustomType;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Exception;
 use GraphQL\Doctrine\Annotation\Field;
-use GraphQL\Doctrine\Definition\EntityID;
 use GraphQL\Doctrine\Types;
 use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\NonNull;
