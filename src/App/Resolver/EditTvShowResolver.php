@@ -15,31 +15,54 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 use InvalidArgumentException;
 
-class EditTvShowResolver
+class EditTvShowResolver extends AbstractResolver implements MutationResolverInterface
 {
 
     /**
-     * @param EntityManager $entityManager
-     * @param array $args
+     * @var EntityManager
+     */
+    private $entityManager;
+
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    /**
+     * @param array $input
      * @return TvShow
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public static function resolve(EntityManager $entityManager, array $args): TvShow
+    protected function execute(array $input): TvShow
     {
-        if (!isset($args['input']['tape'])) {
+        if (!isset($input['tape'])) {
             throw new InvalidArgumentException('Tape is mandatory');
         }
+
         /** @var Tape $tape */
-        $tape = $args['input']['tape']->getEntity();
-        $finished = $args['input']['finished'] ?? false;
+        $tape = $input['tape']->getEntity();
+        $finished = $input['finished'] ?? false;
         $tvShow = $tape->getTvShow();
         if (!$tvShow) {
             throw new InvalidArgumentException('Tape does not have Tv Show');
         }
         $tvShow->setFinished($finished);
-        $entityManager->persist($tvShow);
-        $entityManager->flush();
+
+        $this->entityManager->persist($tvShow);
+        $this->entityManager->flush();
+
         return $tvShow;
+    }
+
+    /**
+     * @param array $args
+     * @return TvShow
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function resolve(array $args): TvShow
+    {
+        return $this->execute($args['input']);
     }
 }

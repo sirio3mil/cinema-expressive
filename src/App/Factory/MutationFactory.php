@@ -33,7 +33,7 @@ class MutationFactory
             'fields' => [
                 'editTapeUser' => $manager->get(EditTapeUserResolver::class),
                 'editTapeUserHistoryDetail' => $manager->get(EditTapeUserHistoryDetailResolver::class),
-                'editTvShow' => $container->get(EditTvShowResolver::class),
+                'editTvShow' => $manager->get(EditTvShowResolver::class),
                 'importImdbMovie' => $manager->get(ImportImdbMovieResolver::class),
                 'importImdbEpisodes' => $manager->get(ImportImdbEpisodesResolver::class)
             ]
