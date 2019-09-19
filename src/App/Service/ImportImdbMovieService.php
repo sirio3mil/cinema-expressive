@@ -162,7 +162,7 @@ class ImportImdbMovieService
      */
     protected function getPeopleByImdbNumber(Person $person): ?People
     {
-        if (array_key_exists($person->getImdbNumber(), $this->peopleCreated)){
+        if (array_key_exists($person->getImdbNumber(), $this->peopleCreated)) {
             return $this->peopleCreated[$person->getImdbNumber()];
         }
         /** @var Query $query */
@@ -541,13 +541,9 @@ class ImportImdbMovieService
             /** @var CastPeople $person */
             foreach ($castIterator as $person) {
                 $people = $this->addTapePeople($person, $castRole);
-                if (!empty($person->getAlias())) {
+                if ($person->getAlias()) {
                     /** @var PeopleAlias $peopleAlias */
-                    $peopleAlias = $peopleAliasRepository->findOneBy([
-                        "people" => $people,
-                        "alias" => $person->getAlias()
-                    ]);
-                    if (!$peopleAlias) {
+                    if (!$peopleAlias = $people->getAlias($person->getAlias())) {
                         $peopleAlias = new PeopleAlias();
                         $peopleAlias->setAlias($person->getAlias());
                         $people->addAlias($peopleAlias);
@@ -664,7 +660,7 @@ class ImportImdbMovieService
                 }
                 $tapeTitle->setObservations($data->getDescription());
                 $slug = $this->generator->generate($data->getTitle());
-                if ($slug && !$searchValue = $this->tape->getObject()->getSearchValue($slug)){
+                if ($slug && !$searchValue = $this->tape->getObject()->getSearchValue($slug)) {
                     $searchValue = new SearchValue();
                     $searchValue->setSearchParam($data->getTitle());
                     $searchValue->setSlug($slug);
