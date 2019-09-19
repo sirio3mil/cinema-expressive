@@ -14,7 +14,7 @@ trait ListOutputTrait
     /**
      * @var QueryBuilder
      */
-    private $qb;
+    protected $qb;
 
     protected function getOutput(int $page, int $pageSize): array
     {
