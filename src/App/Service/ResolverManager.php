@@ -129,6 +129,7 @@ class ResolverManager
     /**
      * @return array
      * @throws ReflectionException
+     * @throws Exception
      */
     protected function getArguments(): array
     {
@@ -153,6 +154,8 @@ class ResolverManager
                     } elseif ($class->isSubclassOf(CinemaEntity::class)) {
                         $argType = $this->types->getId($class->getName());
                         $argName = self::getEntityIdArgumentName($class);
+                    } else {
+                        throw new Exception("Missing argument for {$this->reflectionClass->getShortName()}");
                     }
                     if (!$parameter->allowsNull()) {
                         $argType = Type::nonNull($argType);
@@ -165,10 +168,16 @@ class ResolverManager
                 $argName = null;
                 /** @var ReflectionType $returnType */
                 $returnType = $this->reflectionMethod->getReturnType();
+                if (!$returnType) {
+                    throw new Exception("Missing argument as return type for {$this->reflectionMethod->getShortName()}");
+                }
                 $class = new ReflectionClass($returnType->getName());
                 if ($class->isSubclassOf(CinemaEntity::class)) {
                     $argType = $this->types->getId($class->getName());
                     $argName = self::getEntityIdArgumentName($class);
+                }
+                if (!$argType || !$argName) {
+                    throw new Exception("Invalid argument as return type for {$this->reflectionMethod->getShortName()}");
                 }
                 $args[$argName] = $argType;
                 break;
@@ -180,6 +189,7 @@ class ResolverManager
      * @return ListOfType|NonNull|ObjectType|null
      * @throws ReflectionException
      * @throws \GraphQL\Doctrine\Exception
+     * @throws Exception
      */
     protected function getType()
     {
@@ -193,29 +203,34 @@ class ResolverManager
                 case 'array':
                     /** @var Field $annotation */
                     $annotation = $this->annotationReader->getMethodAnnotation($this->reflectionMethod, Field::class);
-                    if ($annotation) {
-                        if (stripos($annotation->type, "[]") !== false) {
-                            $returnTypeClassName = str_replace("[]", "", $annotation->type);
-                            $returnTypeClassName = $this->entityNamespaceName . $returnTypeClassName;
-                            if (class_exists($returnTypeClassName)) {
-                                $type = $this->types->getOutput($returnTypeClassName);
-                            }
-                            $type = Type::listOf($type);
+                    if (!$annotation) {
+                        throw new Exception("Missing return type annotation for {$this->reflectionClass->getShortName()}");
+                    }
+                    if (stripos($annotation->type, "[]") !== false) {
+                        $returnTypeClassName = str_replace("[]", "", $annotation->type);
+                        $returnTypeClassName = $this->entityNamespaceName . $returnTypeClassName;
+                        if (!class_exists($returnTypeClassName)) {
+                            throw new Exception("Missing entity {$returnTypeClassName}");
                         }
-                        else{
-                            $returnTypeClassName = $this->typeNamespaceName . $annotation->type;
-                            if (class_exists($returnTypeClassName)) {
-                                $type = $this->types->get($returnTypeClassName);
-                            }
+                        $type = $this->types->getOutput($returnTypeClassName);
+                        $type = Type::listOf($type);
+                    } else {
+                        $returnTypeClassName = $this->typeNamespaceName . $annotation->type;
+                        if (!class_exists($returnTypeClassName)) {
+                            throw new Exception("Missing custom type {$returnTypeClassName}");
                         }
+                        $type = $this->types->get($returnTypeClassName);
                     }
                     break;
                 default:
-                    if (class_exists($name)) {
-                        $class = new ReflectionClass($name);
-                        if ($class->isSubclassOf(CinemaEntity::class)) {
-                            $type = $this->types->getOutput($name);
-                        }
+                    if (!class_exists($name)) {
+                        throw new Exception("Missing class {$name}");
+                    }
+                    $class = new ReflectionClass($name);
+                    if ($class->isSubclassOf(CinemaEntity::class)) {
+                        $type = $this->types->getOutput($name);
+                    } else {
+                        throw new Exception("Missing type {$name}");
                     }
             }
         }
@@ -237,7 +252,7 @@ class ResolverManager
             $this->reflectionMethod = $this->reflectionClass->getMethod('resolve');
         }
         if (!$this->reflectionMethod->hasReturnType()) {
-            throw new Exception('TBD');
+            throw new Exception("Reflection method not found for {$this->reflectionClass->getShortName()}");
         }
     }
 }
