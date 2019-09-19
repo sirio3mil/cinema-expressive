@@ -10,21 +10,91 @@ namespace App\Resolver;
 
 use App\Entity\Tape;
 use App\Entity\TvShowChapter;
+use App\Service\ImportImdbMovieService;
+use Ausi\SlugGenerator\SlugGenerator;
+use Doctrine\ORM\EntityManager;
 use ImdbScraper\Iterator\EpisodeIterator;
 use ImdbScraper\Mapper\EpisodeListMapper;
 use ImdbScraper\Model\Episode;
-use Psr\Container\ContainerInterface;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
+use GraphQL\Doctrine\Annotation as API;
 use Exception;
 
-class ImportImdbEpisodesResolver
+class ImportImdbEpisodesResolver extends AbstractResolver implements MutationResolverInterface
 {
 
     /**
-     * @param ContainerInterface $container
+     * @var EntityManager
+     */
+    private $entityManager;
+    /**
+     * @var SlugGenerator
+     */
+    private $slugGenerator;
+    /**
+     * @var EpisodeListMapper
+     */
+    private $episodeListMapper;
+
+    /**
+     * ImportImdbMovieResolver constructor.
+     * @param EntityManager $entityManager
+     * @param SlugGenerator $slugGenerator
+     * @param EpisodeListMapper $episodeListMapper
+     */
+    public function __construct(
+        EntityManager $entityManager,
+        SlugGenerator $slugGenerator,
+        EpisodeListMapper $episodeListMapper
+    )
+    {
+        $this->entityManager = $entityManager;
+        $this->slugGenerator = $slugGenerator;
+        $this->episodeListMapper = $episodeListMapper;
+    }
+
+    /**
+     * @API\Field(type="TvShowChapter[]")
+     *
+     * @param int $imdbNumber
+     * @param int $seasonNumber
+     * @return TvShowChapter[]
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     * @throws ORMException
+     * @throws OptimisticLockException
+     * @throws Exception
+     */
+    protected function execute(int $imdbNumber, int $seasonNumber): array
+    {
+        $episodes = [];
+
+        $this->episodeListMapper
+            ->setSeason($seasonNumber)
+            ->setImdbNumber($imdbNumber)
+            ->setContentFromUrl();
+        /** @var EpisodeIterator $episodeIterator */
+        $episodeIterator = $this->episodeListMapper->getEpisodes();
+        /** @var ImportImdbMovieService $importImdbMovieService */
+        $importImdbMovieService = new ImportImdbMovieService($this->entityManager, $this->slugGenerator);
+        /** @var Episode $episode */
+        foreach ($episodeIterator as $episode) {
+            $importImdbMovieService->setImdbNumber($episode->getImdbNumber());
+            $importImdbMovieService->import();
+            /** @var Tape $tape */
+            $tape = $importImdbMovieService->getTape();
+            $this->entityManager->persist($tape);
+            $episodes[] = $tape->getTvShowChapter();
+        }
+        $this->entityManager->flush();
+
+        return $episodes;
+    }
+
+    /**
      * @param array $args
      * @return TvShowChapter[]
      * @throws NoResultException
@@ -33,25 +103,8 @@ class ImportImdbEpisodesResolver
      * @throws OptimisticLockException
      * @throws Exception
      */
-    public static function resolve(ContainerInterface $container, array $args): array
+    public function resolve(array $args): array
     {
-        $episodes = [];
-        /** @var EpisodeListMapper $mapper */
-        $mapper = $container->get(EpisodeListMapper::class);
-        $mapper
-            ->setSeason($args['seasonNumber'])
-            ->setImdbNumber($args['imdbNumber'])
-            ->setContentFromUrl();
-        /** @var EpisodeIterator $episodeIterator */
-        $episodeIterator = $mapper->getEpisodes();
-        /** @var Episode $episode */
-        foreach ($episodeIterator as $episode) {
-            /** @var Tape $tape */
-            $tape = ImportImdbMovieResolver::resolve($container, [
-                'imdbNumber' => $episode->getImdbNumber()
-            ]);
-            $episodes[] = $tape->getTvShowChapter();
-        }
-        return $episodes;
+        return $this->execute($args['imdbNumber'], $args['seasonNumber']);
     }
 }

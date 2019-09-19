@@ -35,7 +35,7 @@ class MutationFactory
                 'editTapeUserHistoryDetail' => $container->get(EditTapeUserHistoryDetailResolver::class),
                 'editTvShow' => $container->get(EditTvShowResolver::class),
                 'importImdbMovie' => $manager->get(ImportImdbMovieResolver::class),
-                'importImdbEpisodeList' => $container->get(ImportImdbEpisodesResolver::class)
+                'importImdbEpisodes' => $manager->get(ImportImdbEpisodesResolver::class)
             ]
         ]);
     }
