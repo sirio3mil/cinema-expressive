@@ -151,8 +151,14 @@ class ResolverManager
                                 $argType = call_user_func(Type::class . '::' . $parameter->getType());
                         }
                     } elseif ($class->isSubclassOf(CinemaEntity::class)) {
-                        $argType = $this->types->getId($class->getName());
-                        $argName = self::getEntityIdArgumentName($class);
+                        switch ($argName) {
+                            case 'input':
+                                $argType = $this->types->getPartialInput($class->getName());
+                                break;
+                            default:
+                                $argType = $this->types->getId($class->getName());
+                                $argName = self::getEntityIdArgumentName($class);
+                        }
                     } else {
                         throw new Exception("Missing argument for {$this->reflectionClass->getShortName()}");
                     }
