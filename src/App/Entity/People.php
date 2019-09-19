@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\LazyCriteriaCollection;
 use Doctrine\ORM\Mapping as ORM;
 use GraphQL\Doctrine\Annotation as API;
 
@@ -140,6 +142,24 @@ class People implements CinemaEntity
     public function getAliases(): Collection
     {
         return $this->aliases;
+    }
+
+    /**
+     * @param string $alias
+     * @return PeopleAlias
+     */
+    public function getAlias(string $alias): ?PeopleAlias
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("alias", $alias))
+            ->setFirstResult(0)
+            ->setMaxResults(1);
+        /** @var LazyCriteriaCollection $elements */
+        $elements = $this->getAliases()->matching($criteria);
+        if ($elements->count()) {
+            return $elements->first();
+        }
+        return null;
     }
 
     /**
