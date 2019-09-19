@@ -19,40 +19,33 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
 
-class EditTapeUserResolver
+class EditTapeUserResolver extends AbstractResolver implements MutationResolverInterface
 {
+    /**
+     * @var EntityManager
+     */
+    private $entityManager;
 
     /**
+     * EditTapeUserResolver constructor.
      * @param EntityManager $entityManager
-     * @param array $args
+     */
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    /**
+     * @param User $user
+     * @param Tape $tape
+     * @param TapeUserStatus $tapeUserStatus
+     * @param Place|null $place
      * @return TapeUser
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public static function resolve(EntityManager $entityManager, array $args): TapeUser
+    protected function execute(User $user, Tape $tape, TapeUserStatus $tapeUserStatus, ?Place $place = null): TapeUser
     {
-        /** @var User $user */
-        $user = $args['userId']->getEntity();
-        /** @var TapeUserStatus $tapeUserStatus */
-        $tapeUserStatus = $args['tapeUserStatusId']->getEntity();
-        $place = null;
-        $downloaded = false;
-        $tapeUserStatusDownloaded = null;
-        if (array_key_exists('placeId', $args)) {
-            /** @var Place $place */
-            $place = $args['placeId']->getEntity();
-            if ($place->getPlaceId() == Place::DOWNLOADED) {
-                /** @var TapeUserStatus $tapeUserStatusDownloaded */
-                $tapeUserStatusDownloaded = $entityManager
-                    ->getRepository(TapeUserStatus::class)
-                    ->find(TapeUserStatus::DOWNLOADED);
-                if ($tapeUserStatusDownloaded) {
-                    $downloaded = true;
-                }
-            }
-        }
-        /** @var Tape $tape */
-        $tape = $args['tapeId']->getEntity();
         /** @var TapeUser $tapeUser */
         $tapeUser = $tape->getTapeUser($user);
         if (!$tapeUser) {
@@ -75,19 +68,47 @@ class EditTapeUserResolver
                 $tapeUserHistory->setDetail($tapeUserHistoryDetail);
             }
             $tapeUserHistoryDetail->setPlace($place);
-            if ($downloaded) {
-                /** @var TapeUserHistory $tapeUserHistoryDownloaded */
-                $tapeUserHistoryDownloaded = $tapeUser->getHistoryByStatus($tapeUserStatusDownloaded);
-                if (!$tapeUserHistoryDownloaded) {
-                    $tapeUserHistoryDownloaded = new TapeUserHistory();
-                    $tapeUserHistoryDownloaded->setTapeUserStatus($tapeUserStatusDownloaded);
-                    $tapeUser->addHistory($tapeUserHistoryDownloaded);
+            if ($place->getPlaceId() == Place::DOWNLOADED) {
+                /** @var TapeUserStatus $tapeUserStatusDownloaded */
+                $tapeUserStatusDownloaded = $this->entityManager
+                    ->getRepository(TapeUserStatus::class)
+                    ->find(TapeUserStatus::DOWNLOADED);
+                if ($tapeUserStatusDownloaded) {
+                    /** @var TapeUserHistory $tapeUserHistoryDownloaded */
+                    $tapeUserHistoryDownloaded = $tapeUser->getHistoryByStatus($tapeUserStatusDownloaded);
+                    if (!$tapeUserHistoryDownloaded) {
+                        $tapeUserHistoryDownloaded = new TapeUserHistory();
+                        $tapeUserHistoryDownloaded->setTapeUserStatus($tapeUserStatusDownloaded);
+                        $tapeUser->addHistory($tapeUserHistoryDownloaded);
+                    }
                 }
             }
         }
-        $entityManager->persist($tapeUser);
+        $this->entityManager->persist($tapeUser);
+        $this->entityManager->flush();
 
-        $entityManager->flush();
         return $tapeUser;
+    }
+
+    /**
+     * @param array $args
+     * @return TapeUser
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function resolve(array $args): TapeUser
+    {
+        /** @var User $user */
+        $user = $args['userId']->getEntity();
+        /** @var TapeUserStatus $tapeUserStatus */
+        $tapeUserStatus = $args['tapeUserStatusId']->getEntity();
+        $place = null;
+        if (array_key_exists('placeId', $args)) {
+            $place = $args['placeId']->getEntity();
+        }
+        /** @var Tape $tape */
+        $tape = $args['tapeId']->getEntity();
+
+        return $this->execute($user, $tape, $tapeUserStatus, $place);
     }
 }

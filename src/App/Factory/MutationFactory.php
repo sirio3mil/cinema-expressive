@@ -31,7 +31,7 @@ class MutationFactory
         $manager = new ResolverManager($container);
         return new MutationType([
             'fields' => [
-                'editTapeUser' => $container->get(EditTapeUserResolver::class),
+                'editTapeUser' => $manager->get(EditTapeUserResolver::class),
                 'editTapeUserHistoryDetail' => $container->get(EditTapeUserHistoryDetailResolver::class),
                 'editTvShow' => $container->get(EditTvShowResolver::class),
                 'importImdbMovie' => $manager->get(ImportImdbMovieResolver::class),
