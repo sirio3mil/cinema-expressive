@@ -147,6 +147,17 @@ class ResolverManager
                             case 'bool':
                                 $argType = Type::boolean();
                                 break;
+                            case 'array':
+                                /** @var ReflectionType $returnType */
+                                $returnType = $this->reflectionMethod->getReturnType();
+                                if (!$returnType) {
+                                    throw new Exception("Missing argument as return type for {$this->reflectionMethod->getShortName()}");
+                                }
+                                $class = new ReflectionClass($returnType->getName());
+                                if ($class->isSubclassOf(CinemaEntity::class)) {
+                                    $argType = $this->types->getPartialInput($class->getName());
+                                }
+                                break;
                             default:
                                 $argType = call_user_func(Type::class . '::' . $parameter->getType());
                         }
@@ -164,6 +175,9 @@ class ResolverManager
                     }
                     if (!$parameter->allowsNull()) {
                         $argType = Type::nonNull($argType);
+                    }
+                    if (!$argType || !$argName) {
+                        throw new Exception("Invalid argument as return type for {$this->reflectionMethod->getShortName()}");
                     }
                     $args[$argName] = $argType;
                 }
