@@ -16,7 +16,7 @@ services:
         links:
             - php
     php:
-        image: reynier3mil/centos-php-fpm-msphpsql:graph
+        image: reynier3mil/centos-php-fpm-msphpsql:latest
         container_name: php
         volumes:
             - .:/usr/share/nginx/html/api
