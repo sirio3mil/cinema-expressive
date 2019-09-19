@@ -32,7 +32,7 @@ class QueryFactory
                 'search' => $manager->get(SearchResolver::class),
                 'tape' => $manager->get(TapeResolver::class),
                 'listTapeUser' => $manager->get(ListTapeUserResolver::class),
-                'listTvShowChapterUser' => $container->get(ListTvShowChapterUserResolver::class)
+                'listTvShowChapterUser' => $manager->get(ListTvShowChapterUserResolver::class)
             ]
         ]);
     }

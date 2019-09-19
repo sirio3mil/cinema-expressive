@@ -8,29 +8,46 @@ use App\Entity\TapeUserStatus;
 use App\Entity\TvShow;
 use App\Entity\User;
 use App\Helper\ListOutputHelper;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\OrderBy;
 use Doctrine\ORM\QueryBuilder;
+use GraphQL\Doctrine\Annotation as API;
 
-class ListTvShowChapterUserResolver
+class ListTvShowChapterUserResolver extends AbstractResolver implements QueryResolverInterface
 {
+
     /**
-     * @param QueryBuilder $qb
-     * @param TapeUser[] $args
+     * @var QueryBuilder
+     */
+    private $qb;
+
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->qb = $entityManager->createQueryBuilder();
+    }
+
+    /**
+     * @API\Field(type="TapeUserPageType")
+     *
+     * @param User $user
+     * @param TvShow $tvShow
+     * @param TapeUserStatus $tapeUserStatus
+     * @param int $page
+     * @param int $pageSize
      * @return array
      */
-    public static function resolve(QueryBuilder $qb, array $args): array
+    public function execute(
+        User $user,
+        TvShow $tvShow,
+        TapeUserStatus $tapeUserStatus,
+        int $page,
+        int $pageSize
+    ): array
     {
-        /** @var User $user */
-        $user = $args['userId']->getEntity();
-        /** @var TvShow $tvShow */
-        $tvShow = $args['tvShowId']->getEntity();
-        /** @var TapeUserStatus $tapeUserStatus */
-        $tapeUserStatus = $args['tapeUserStatusId']->getEntity();
-
         $orderBy = new OrderBy('ch.season', 'desc');
         $orderBy->add('ch.chapter', 'desc');
 
-        $qb
+        $this->qb
             ->select('l')
             ->from(TapeUser::class, 'l')
             ->innerJoin(
@@ -55,6 +72,31 @@ class ListTvShowChapterUserResolver
                 'tapeUserStatus' => $tapeUserStatus
             ]);
 
-        return ListOutputHelper::getType($qb, $args);
+        return ListOutputHelper::getType($this->qb, [
+            'pageSize' => $pageSize,
+            'page' => $page
+        ]);
+    }
+
+    /**
+     * @param array $args
+     * @return array
+     */
+    public function resolve(array $args): array
+    {
+        /** @var User $user */
+        $user = $args['userId']->getEntity();
+        /** @var TvShow $tvShow */
+        $tvShow = $args['tvShowId']->getEntity();
+        /** @var TapeUserStatus $tapeUserStatus */
+        $tapeUserStatus = $args['tapeUserStatusId']->getEntity();
+
+        return $this->execute(
+            $user,
+            $tvShow,
+            $tapeUserStatus,
+            $args['page'],
+            $args['pageSize']
+        );
     }
 }

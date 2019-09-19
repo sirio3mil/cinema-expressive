@@ -37,8 +37,6 @@ return [
             App\Type\QueryType::class => App\Factory\QueryFactory::class,
             App\Type\MutationType::class => App\Factory\MutationFactory::class,
             App\Type\TapeUserPageType::class => App\Factory\TapeUserPageTypeFactory::class,
-            App\Resolver\ListTvShowChapterUserResolver::class
-                => App\Factory\ListTvShowChapterUserFactory::class,
             App\Resolver\TapeLanguageResolver::class => App\Factory\TapeLanguageFactory::class,
             App\Resolver\EditTapeUserResolver::class => App\Factory\EditTapeUserFactory::class,
             App\Resolver\EditTapeUserHistoryDetailResolver::class
