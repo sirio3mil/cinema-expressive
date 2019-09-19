@@ -3,7 +3,6 @@
 
 namespace App\Resolver;
 
-
 use Zend\Expressive\Authentication\UserInterface;
 
 trait UserLoggedTrait
