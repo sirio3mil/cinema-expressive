@@ -96,7 +96,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "AppTest\\": "test/AppTest/"
+      "App\\Test\\": "tests/"
     }
   },
   "scripts": {
@@ -113,8 +113,6 @@
       "@analyze"
     ],
     "clear-config-cache": "php bin/clear-config-cache.php",
-    "cs-check": "phpcs",
-    "cs-fix": "phpcbf",
     "serve": "php -S 0.0.0.0:8080 -t public/",
     "test": "phpunit --colors=always",
     "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
