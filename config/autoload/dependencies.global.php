@@ -34,8 +34,6 @@ return [
         'factories' => [
             Zend\Cache\Storage\Adapter\Memcached::class => App\Factory\MemcachedFactory::class,
             GraphQL\Type\Schema::class => App\Factory\SchemaFactory::class,
-            App\Type\QueryType::class => App\Factory\QueryFactory::class,
-            App\Type\MutationType::class => App\Factory\MutationFactory::class,
             App\Type\TapeUserPageType::class => App\Factory\TapeUserPageTypeFactory::class,
             MongoDB\Client::class => App\Factory\MongoDBClientFactory::class,
             GraphQL\Doctrine\Types::class => App\Factory\TypeFactory::class,
