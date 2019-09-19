@@ -21,6 +21,7 @@ use App\Resolver\ListTvShowChapterUserResolver;
 use App\Resolver\SearchResolver;
 use App\Resolver\TapeResolver;
 use App\Service\ResolverManager;
+use Exception;
 use GraphQL\Doctrine\DefaultFieldResolver;
 use GraphQL\Error\SyntaxError;
 use GraphQL\GraphQL;
@@ -115,7 +116,7 @@ class GraphQLHandlerFactory
     /**
      * @param ContainerInterface $container
      * @return RequestHandlerInterface
-     * @throws ReflectionException
+     * @throws Exception
      */
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
     {
