@@ -34,7 +34,7 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
      * @param int $pageSize
      * @return array
      */
-    public function execute(
+    protected function execute(
         User $user,
         ?TapeUserStatus $tapeUserStatus,
         ?Place $place,

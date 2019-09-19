@@ -31,7 +31,7 @@ class ListTvShowChapterUserResolver extends AbstractResolver implements QueryRes
      * @param int $pageSize
      * @return array
      */
-    public function execute(
+    protected function execute(
         User $user,
         TvShow $tvShow,
         TapeUserStatus $tapeUserStatus,
