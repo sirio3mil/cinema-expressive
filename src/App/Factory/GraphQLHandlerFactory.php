@@ -22,10 +22,15 @@ use App\Resolver\SearchResolver;
 use App\Resolver\TapeResolver;
 use App\Service\ResolverManager;
 use GraphQL\Doctrine\DefaultFieldResolver;
+use GraphQL\Error\SyntaxError;
 use GraphQL\GraphQL;
+use GraphQL\Language\Parser;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Schema;
 use GraphQL\Type\SchemaConfig;
+use GraphQL\Utils\AST;
+use GraphQL\Utils\BuildSchema;
+use GraphQL\Utils\SchemaPrinter;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use ReflectionException;
@@ -74,6 +79,36 @@ class GraphQLHandlerFactory
         $config = self::getSchemaConfig($container);
 
         $schema = new Schema($config);
+
+        $dirname = dirname(__DIR__, 3);
+        $schemaFilename = $dirname . DIRECTORY_SEPARATOR . "schema.graphql";
+        file_put_contents($schemaFilename, SchemaPrinter::doPrint($schema));
+
+        return $schema;
+    }
+
+    /**
+     * @return Schema
+     * @throws SyntaxError
+     */
+    protected static function getCachedSchema(): Schema
+    {
+        $dirname = dirname(__DIR__, 3);
+        $cacheFilename = $dirname . DIRECTORY_SEPARATOR . "cached_schema.php";
+        $schemaFilename = $dirname . DIRECTORY_SEPARATOR . "schema.graphql";
+
+        if (!file_exists($cacheFilename)) {
+            $document = Parser::parse(file_get_contents($schemaFilename));
+            file_put_contents($cacheFilename, "<?php\nreturn " . var_export(AST::toArray($document), true) . ";\n");
+        } else {
+            $document = AST::fromArray(require $cacheFilename); // fromArray() is a lazy operation as well
+        }
+
+        $typeConfigDecorator = function($typeConfig) {
+            return $typeConfig;
+        };
+
+        $schema = BuildSchema::build($document, $typeConfigDecorator);
         return $schema;
     }
 
@@ -89,7 +124,7 @@ class GraphQLHandlerFactory
 
         GraphQL::setDefaultFieldResolver(new DefaultFieldResolver());
 
-        $schema = self::getSchema($container);
+        $schema = self::getCachedSchema();
 
         return new GraphQLHandler($schema, $debug);
     }

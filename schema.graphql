@@ -1,0 +1,473 @@
+schema {
+  query: query
+  mutation: mutation
+}
+
+"""Class Country"""
+type Country {
+  countryId: ID!
+  officialName: String!
+  isoCode: String
+  language: Language
+  createdAt: DateTime!
+}
+
+"""
+Automatically generated type to be used as input where an object of type `Country` is needed
+"""
+scalar CountryID
+
+scalar DateTime
+
+"""Class File"""
+type File {
+  season: FileSeason!
+  mime: String!
+  image: Image!
+  fileType: FileType!
+  deleted: Boolean!
+  deletionDate: DateTime!
+  downloadName: String
+  extension: String!
+  fileId: ID!
+  name: String!
+  originalName: String
+  path: String!
+  size: Int!
+  createdAt: DateTime!
+  object: GlobalUniqueObject!
+}
+
+"""Class FileSeason"""
+type FileSeason {
+  file: File!
+  season: Int!
+}
+
+"""Class FileType"""
+type FileType {
+  fileTypeId: ID!
+  description: String!
+}
+
+"""Class Genre"""
+type Genre {
+  genreId: ID!
+  name: String!
+  createdAt: DateTime!
+}
+
+"""Class Object"""
+type GlobalUniqueObject {
+  objectId: ID!
+  rowType: RowType!
+  imdbNumber: ImdbNumber
+  permanentLink: PermanentLink!
+  ranking: Ranking
+  people: People
+  tape: Tape
+  files: [File]
+  searchValues: [SearchValue]
+  searchValue(slug: String!): SearchValue
+}
+
+"""Class Image"""
+type Image {
+  file: File!
+  height: Int!
+  width: Int!
+}
+
+"""Class ImdbNumber"""
+type ImdbNumber {
+  imdbNumber: Int!
+  url: String
+  object: GlobalUniqueObject!
+}
+
+"""Class Language"""
+type Language {
+  languageId: ID!
+  name: String!
+  createdAt: DateTime!
+}
+
+"""Class Location"""
+type Location {
+  locationId: ID!
+  place: String!
+  createdAt: DateTime!
+}
+
+"""Class People"""
+type People {
+  peopleId: ID!
+  fullName: String!
+  detail: PeopleDetail
+  aliases: [PeopleAlias]
+  alias(alias: String!): PeopleAlias!
+  createdAt: DateTime!
+  object: GlobalUniqueObject!
+}
+
+"""Class PeopleAlias"""
+type PeopleAlias {
+  peopleAliasId: ID!
+  alias: String!
+  people: People!
+}
+
+"""
+Automatically generated type to be used as input where an object of type `PeopleAlias` is needed
+"""
+scalar PeopleAliasID
+
+"""Class PeopleAliasTape"""
+type PeopleAliasTape {
+  peopleAliasTapeId: ID!
+  peopleAlias: PeopleAlias!
+  createdAt: DateTime!
+  tape: Tape!
+}
+
+"""Class PeopleDetail"""
+type PeopleDetail {
+  gender: String
+  havePhoto: Boolean!
+  birthDate: DateTime
+  deathDate: DateTime
+  birthPlace: String
+  deathPlace: String
+  height: Int
+  skip: Boolean!
+  people: People!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  country: Country
+}
+
+"""
+Automatically generated type to be used as input where an object of type `People` is needed
+"""
+scalar PeopleID
+
+"""Class PermanentLink"""
+type PermanentLink {
+  url: String!
+  object: GlobalUniqueObject!
+}
+
+"""Class Place"""
+type Place {
+  placeId: ID!
+  description: String!
+}
+
+"""
+Automatically generated type to be used as input where an object of type `Place` is needed
+"""
+scalar PlaceID
+
+"""Class Premiere"""
+type Premiere {
+  premiereId: ID!
+  date: DateTime!
+  place: String!
+  details: [PremiereDetail]
+  detail(observation: String!): PremiereDetail
+  tape: Tape!
+  country: Country
+  createdAt: DateTime!
+}
+
+"""Class PremiereDetail"""
+type PremiereDetail {
+  premiereDetailId: ID!
+  observation: String!
+  premiere: Premiere!
+  createdAt: DateTime!
+}
+
+"""Class Producer"""
+type Producer {
+  producerId: ID!
+  name: String!
+  country: Country
+}
+
+"""Class Ranking"""
+type Ranking {
+  votes: Int!
+  score: Float!
+  calculatedScore: Float!
+  object: GlobalUniqueObject!
+}
+
+"""Class Role"""
+type Role {
+  roleId: ID!
+  role: String!
+}
+
+"""
+Automatically generated type to be used as input where an object of type `Role` is needed
+"""
+scalar RoleID
+
+"""Class RowType"""
+type RowType {
+  rowTypeId: ID!
+  description: String!
+}
+
+"""Class SearchValue"""
+type SearchValue {
+  searchValueId: ID!
+  searchParam: String!
+  primaryParam: Boolean!
+  slug: String!
+  object: GlobalUniqueObject!
+}
+
+"""Class Sound"""
+type Sound {
+  soundId: ID!
+  description: String!
+  createdAt: DateTime!
+}
+
+"""Class Tag"""
+type Tag {
+  tagId: ID!
+  keyword: String!
+  createdAt: DateTime!
+}
+
+"""Class Tape"""
+type Tape {
+  tapeId: ID!
+  originalTitle: String!
+  countries: [Country]!
+  genres: [Genre]!
+  languages: [Language]
+  locations: [Location]!
+  producers: [Producer]!
+  tags: [Tag]!
+  sounds: [Sound]!
+  default: TapeDefaultValue!
+  detail: TapeDetail
+  plot: TapePlot
+  tvShow: TvShow
+  tvShowChapter: TvShowChapter
+  users: [TapeUser]!
+  tapeUser(user: UserID!): TapeUser
+  tapePeopleRole(people: PeopleID!, role: RoleID!): TapePeopleRole
+  people: [TapePeopleRole]
+  aliases: [PeopleAliasTape]
+  peopleAliasTape(peopleAlias: PeopleAliasID!): PeopleAliasTape
+  premieres: [Premiere]
+  premiere(country: CountryID, date: DateTime!): Premiere
+  titles: [TapeTitle]
+  title(country: CountryID, title: String!): TapeTitle
+  certifications: [TapeCertification]
+  certification(country: CountryID!): TapeCertification
+  createdAt: DateTime!
+  object: GlobalUniqueObject!
+}
+
+"""Class TapeCertification"""
+type TapeCertification {
+  tapeCertificationId: ID!
+  certification: String
+  tape: Tape!
+  country: Country
+  createdAt: DateTime!
+}
+
+"""Class TapeDefaultValue"""
+type TapeDefaultValue {
+  title: SearchValue!
+  cast: People
+  director: People
+  tape: Tape!
+  country: Country
+}
+
+"""Class TapeDetail"""
+type TapeDetail {
+  year: Int
+  duration: Int
+  color: String
+  haveCover: Boolean!
+  isTvShow: Boolean!
+  adult: Boolean!
+  budget: Float!
+  currency: Int!
+  isTvShowChapter: Boolean!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  tape: Tape!
+}
+
+"""
+Automatically generated type to be used as input where an object of type `Tape` is needed
+"""
+scalar TapeID
+
+"""Class TapePeopleRole"""
+type TapePeopleRole {
+  tapePeopleRoleId: ID!
+  people: People!
+  role: Role!
+  character: TapePeopleRoleCharacter
+  createdAt: DateTime!
+  tape: Tape!
+}
+
+"""Class TapePeopleRoleCharacter"""
+type TapePeopleRoleCharacter {
+  character: String!
+  tapePeopleRole: TapePeopleRole!
+  createdAt: DateTime!
+}
+
+"""Class TapePlot"""
+type TapePlot {
+  plot: String!
+  tape: Tape!
+}
+
+"""Class TapeTitle"""
+type TapeTitle {
+  tapeTitleId: ID!
+  title: String!
+  observations: String
+  language: Language
+  tape: Tape!
+  country: Country
+}
+
+"""Class TapeUser"""
+type TapeUser {
+  tapeUserId: ID!
+  user: User!
+  score: TapeUserScore
+  history: [TapeUserHistory]!
+  historyByStatus(tapeUserStatus: TapeUserStatusID!): TapeUserHistory
+  createdAt: DateTime!
+  tape: Tape!
+}
+
+"""Class TapeUserHistory"""
+type TapeUserHistory {
+  tapeUserHistoryId: ID!
+  tapeUser: TapeUser!
+  tapeUserStatus: TapeUserStatus
+  detail: TapeUserHistoryDetail
+  createdAt: DateTime!
+}
+
+"""Class TapeUserHistoryDetail"""
+type TapeUserHistoryDetail {
+  tapeUserHistory: TapeUserHistory!
+  visible: Boolean!
+  exported: Boolean!
+  place: Place
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""Class TapeUserHistoryDetail"""
+input TapeUserHistoryDetailPartialInput {
+  visible: Boolean
+  exported: Boolean
+  place: PlaceID
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+type TapeUserPage {
+  elements: [TapeUser]
+  total: Int
+  pages: Int
+}
+
+"""Class TapeUserScore"""
+type TapeUserScore {
+  tapeUser: TapeUser!
+  score: Float!
+  exported: Boolean!
+  createdAt: DateTime!
+}
+
+"""Class TapeUserStatus"""
+type TapeUserStatus {
+  tapeUserStatusId: ID!
+  description: String!
+}
+
+"""
+Automatically generated type to be used as input where an object of type `TapeUserStatus` is needed
+"""
+scalar TapeUserStatusID
+
+"""Class TvShow"""
+type TvShow {
+  finished: Boolean!
+  chapters: [TvShowChapter]
+  lastChapter: TvShowChapter
+  createdAt: DateTime!
+  tape: Tape!
+}
+
+"""Class TvShowChapter"""
+type TvShowChapter {
+  season: Int
+  chapter: Int!
+  tvShow: TvShow!
+  createdAt: DateTime!
+  tape: Tape!
+}
+
+"""
+Automatically generated type to be used as input where an object of type `TvShow` is needed
+"""
+scalar TvShowID
+
+"""Class TvShow"""
+input TvShowPartialInput {
+  finished: Boolean
+  createdAt: DateTime
+  tape: TapeID
+}
+
+"""Class User"""
+type User {
+  userId: ID!
+  name: String!
+  email: String!
+  password: String!
+  rememberToken: String!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+"""
+Automatically generated type to be used as input where an object of type `User` is needed
+"""
+scalar UserID
+
+type mutation {
+  editTapeUser(userId: UserID!, tapeId: TapeID!, tapeUserStatusId: TapeUserStatusID!, placeId: PlaceID): TapeUser!
+  editTapeUserHistoryDetail(tapeId: TapeID!, userId: UserID!, tapeUserStatusId: TapeUserStatusID!, input: TapeUserHistoryDetailPartialInput!): TapeUserHistoryDetail!
+  editTvShow(input: TvShowPartialInput!): TvShow!
+  importImdbMovie(imdbNumber: Int!): Tape!
+  importImdbEpisodes(imdbNumber: Int!, seasonNumber: Int!): [TvShowChapter]!
+}
+
+type query {
+  search(pattern: String!, rowType: Int): [SearchValue]!
+  tape(tapeId: TapeID): Tape!
+  listTapeUser(userId: UserID!, tapeUserStatusId: TapeUserStatusID, placeId: PlaceID, isTvShow: Boolean, visible: Boolean, finished: Boolean, page: Int!, pageSize: Int!): TapeUserPage!
+  listTvShowChapterUser(userId: UserID!, tvShowId: TvShowID!, tapeUserStatusId: TapeUserStatusID!, page: Int!, pageSize: Int!): TapeUserPage!
+}
