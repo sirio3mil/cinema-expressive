@@ -31,6 +31,7 @@ class EditTvShowResolver extends AbstractResolver implements MutationResolverInt
     /**
      * @param array $input
      * @return TvShow
+     * @throws InvalidArgumentException
      * @throws ORMException
      * @throws OptimisticLockException
      */
@@ -58,6 +59,7 @@ class EditTvShowResolver extends AbstractResolver implements MutationResolverInt
     /**
      * @param array $args
      * @return TvShow
+     * @throws InvalidArgumentException
      * @throws ORMException
      * @throws OptimisticLockException
      */
