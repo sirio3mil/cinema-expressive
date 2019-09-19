@@ -37,8 +37,6 @@ return [
             App\Type\QueryType::class => App\Factory\QueryFactory::class,
             App\Type\MutationType::class => App\Factory\MutationFactory::class,
             App\Type\TapeUserPageType::class => App\Factory\TapeUserPageTypeFactory::class,
-            App\Resolver\EditTapeUserHistoryDetailResolver::class
-                => App\Factory\EditTapeUserHistoryDetailFactory::class,
             App\Resolver\EditTvShowResolver::class => App\Factory\EditTvShowFactory::class,
             MongoDB\Client::class => App\Factory\MongoDBClientFactory::class,
             GraphQL\Doctrine\Types::class => App\Factory\TypeFactory::class,
