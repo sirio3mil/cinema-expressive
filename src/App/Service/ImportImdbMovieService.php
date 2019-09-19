@@ -536,8 +536,6 @@ class ImportImdbMovieService
         /** @var CastIterator $castIterator */
         $castIterator = $mapper->getCast();
         if ($castIterator->getIterator()->count()) {
-            /** @var EntityRepository $peopleAliasRepository */
-            $peopleAliasRepository = $this->entityManager->getRepository(PeopleAlias::class);
             /** @var CastPeople $person */
             foreach ($castIterator as $person) {
                 $people = $this->addTapePeople($person, $castRole);
