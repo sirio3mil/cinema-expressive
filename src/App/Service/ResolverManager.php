@@ -15,7 +15,9 @@ use GraphQL\Type\Definition\ListOfType;
 use GraphQL\Type\Definition\NonNull;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
+use GraphQL\Upload\UploadType;
 use Psr\Container\ContainerInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -166,6 +168,8 @@ class ResolverManager
                     $argType = $this->types->getId($class->getName());
                     $argName = self::getEntityIdArgumentName($class);
             }
+        } elseif ($class->implementsInterface(UploadedFileInterface::class)) {
+            $argType = new UploadType();
         } else {
             throw new Exception("Missing argument for {$this->reflectionClass->getShortName()}");
         }
