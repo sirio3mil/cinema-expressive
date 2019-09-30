@@ -35,7 +35,7 @@ services:
       - memcached
       - neo4j
       - mongo
-    working_dir: /usr/share/nginx
+    working_dir: /usr/share/nginx/html/api
   mssql:
     image: reynier3mil/centos-mssql-full:latest
     container_name: mssql
