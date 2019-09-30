@@ -32,14 +32,14 @@ class CreateFileResolver extends AbstractResolver implements MutationResolverInt
      */
     protected function execute(GlobalUniqueObject $globalUniqueObject, UploadedFileInterface $file): File
     {
-
+        return new File();
     }
 
     /**
      * @param array $args
      * @return mixed
      */
-    public function resolve(array $args)
+    public function resolve(array $args): File
     {
         $object = $args['globalUniqueObjectId']->getEntity();
 
