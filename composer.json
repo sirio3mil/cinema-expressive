@@ -51,6 +51,7 @@
     "ausi/slug-generator": "^1.1",
     "doctrine/orm": "^2.6",
     "ecodev/graphql-doctrine": "^6.0",
+    "ecodev/graphql-upload": "^4.0",
     "mongodb/mongodb": "^1.4",
     "moontoast/math": "^1.1",
     "ramsey/uuid-doctrine": "^1.4",
