@@ -38,7 +38,8 @@ return [
             GraphQL\Doctrine\Types::class => App\Factory\TypeFactory::class,
             MongoDB\Driver\Manager::class => App\Factory\MongoDBManagerFactory::class,
             Doctrine\ORM\EntityManager::class => App\Factory\EntityManagerFactory::class,
-            Tuupola\Middleware\CorsMiddleware::class => App\Factory\CorsMiddlewareFactory::class
+            Tuupola\Middleware\CorsMiddleware::class => App\Factory\CorsMiddlewareFactory::class,
+            App\Service\ImportImdbMovieService::class => App\Factory\ImportImdbMovieFactory::class
         ],
     ],
 ];

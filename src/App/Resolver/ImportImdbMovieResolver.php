@@ -24,19 +24,19 @@ class ImportImdbMovieResolver extends AbstractResolver implements MutationResolv
      */
     private $entityManager;
     /**
-     * @var SlugGenerator
+     * @var ImportImdbMovieService
      */
-    private $slugGenerator;
+    private $service;
 
     /**
      * ImportImdbMovieResolver constructor.
      * @param EntityManager $entityManager
-     * @param SlugGenerator $slugGenerator
+     * @param ImportImdbMovieService $service
      */
-    public function __construct(EntityManager $entityManager, SlugGenerator $slugGenerator)
+    public function __construct(EntityManager $entityManager, ImportImdbMovieService $service)
     {
         $this->entityManager = $entityManager;
-        $this->slugGenerator = $slugGenerator;
+        $this->service = $service;
     }
 
     /**
@@ -49,12 +49,10 @@ class ImportImdbMovieResolver extends AbstractResolver implements MutationResolv
      */
     protected function execute(int $imdbNumber): Tape
     {
-        /** @var ImportImdbMovieService $importImdbMovieService */
-        $importImdbMovieService = new ImportImdbMovieService($this->entityManager, $this->slugGenerator);
-        $importImdbMovieService->setImdbNumber($imdbNumber);
-        $importImdbMovieService->import();
+        $this->service->setImdbNumber($imdbNumber);
+        $this->service->import();
         /** @var Tape $tape */
-        $tape = $importImdbMovieService->getTape();
+        $tape = $this->service->getTape();
         $this->entityManager->persist($tape);
         $this->entityManager->flush();
         return $tape;
