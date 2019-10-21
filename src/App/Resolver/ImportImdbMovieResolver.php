@@ -10,7 +10,6 @@ namespace App\Resolver;
 
 use App\Entity\Tape;
 use App\Service\ImportImdbMovieService;
-use Ausi\SlugGenerator\SlugGenerator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\NonUniqueResultException;
