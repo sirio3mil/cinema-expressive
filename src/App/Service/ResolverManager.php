@@ -75,8 +75,7 @@ class ResolverManager
      */
     protected static function getEntityIdArgumentName(ReflectionClass $class): string
     {
-        $argName = strtolower(substr($class->getShortName(), 0, 1)) . substr($class->getShortName(), 1) . 'Id';
-        return $argName;
+        return strtolower(substr($class->getShortName(), 0, 1)) . substr($class->getShortName(), 1) . 'Id';
     }
 
 
