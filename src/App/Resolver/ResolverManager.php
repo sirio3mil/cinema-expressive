@@ -1,11 +1,10 @@
 <?php
 
 
-namespace App\Service;
+namespace App\Resolver;
 
 use App\Entity\CinemaEntity;
 use App\Model\Argument;
-use App\Resolver\AbstractResolver;
 use App\Type\CustomType;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Exception;

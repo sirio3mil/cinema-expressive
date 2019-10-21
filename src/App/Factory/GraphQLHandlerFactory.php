@@ -21,7 +21,7 @@ use App\Resolver\ListTapeUserResolver;
 use App\Resolver\ListTvShowChapterUserResolver;
 use App\Resolver\SearchResolver;
 use App\Resolver\TapeResolver;
-use App\Service\ResolverManager;
+use App\Resolver\ResolverManager;
 use GraphQL\Doctrine\DefaultFieldResolver;
 use GraphQL\GraphQL;
 use GraphQL\Type\Definition\ObjectType;
