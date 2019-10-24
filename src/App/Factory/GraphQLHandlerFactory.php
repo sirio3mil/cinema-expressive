@@ -34,6 +34,44 @@ use ReflectionException;
 class GraphQLHandlerFactory
 {
     /**
+     * @param ResolverManager $manager
+     * @return ObjectType
+     * @throws ReflectionException
+     */
+    protected static function getQueryType(ResolverManager $manager): ObjectType
+    {
+        return new ObjectType([
+            'fields' => [
+                'search' => $manager->get(SearchResolver::class),
+                'tape' => $manager->get(TapeResolver::class),
+                'listTapeUser' => $manager->get(ListTapeUserResolver::class),
+                'listTvShowChapterUser' => $manager->get(ListTvShowChapterUserResolver::class)
+            ],
+            'name' => 'query'
+        ]);
+    }
+
+    /**
+     * @param ResolverManager $manager
+     * @return ObjectType
+     * @throws ReflectionException
+     */
+    protected static function getMutationType(ResolverManager $manager): ObjectType
+    {
+        return new ObjectType([
+            'fields' => [
+                'editTapeUser' => $manager->get(EditTapeUserResolver::class),
+                'editTapeUserHistoryDetail' => $manager->get(EditTapeUserHistoryDetailResolver::class),
+                'editTvShow' => $manager->get(EditTvShowResolver::class),
+                'importImdbMovie' => $manager->get(ImportImdbMovieResolver::class),
+                'importImdbEpisodes' => $manager->get(ImportImdbEpisodesResolver::class),
+                'createFile' => $manager->get(CreateFileResolver::class)
+            ],
+            'name' => 'mutation'
+        ]);
+    }
+
+    /**
      * @param ContainerInterface $container
      * @return SchemaConfig
      * @throws ReflectionException
@@ -43,26 +81,8 @@ class GraphQLHandlerFactory
         $manager = new ResolverManager($container);
 
         $config = SchemaConfig::create()
-            ->setQuery(new ObjectType([
-                'fields' => [
-                    'search' => $manager->get(SearchResolver::class),
-                    'tape' => $manager->get(TapeResolver::class),
-                    'listTapeUser' => $manager->get(ListTapeUserResolver::class),
-                    'listTvShowChapterUser' => $manager->get(ListTvShowChapterUserResolver::class)
-                ],
-                'name' => 'query'
-            ]))
-            ->setMutation(new ObjectType([
-                'fields' => [
-                    'editTapeUser' => $manager->get(EditTapeUserResolver::class),
-                    'editTapeUserHistoryDetail' => $manager->get(EditTapeUserHistoryDetailResolver::class),
-                    'editTvShow' => $manager->get(EditTvShowResolver::class),
-                    'importImdbMovie' => $manager->get(ImportImdbMovieResolver::class),
-                    'importImdbEpisodes' => $manager->get(ImportImdbEpisodesResolver::class),
-                    'createFile' => $manager->get(CreateFileResolver::class)
-                ],
-                'name' => 'mutation'
-            ]));
+            ->setQuery(self::getQueryType($manager))
+            ->setMutation(self::getMutationType($manager));
         return $config;
     }
 
