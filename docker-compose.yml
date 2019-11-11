@@ -11,6 +11,7 @@ services:
     ports:
       - 80:80
       - 443:443
+    restart: always
     networks:
       - api-network
     links:
@@ -28,6 +29,7 @@ services:
       - ./config/php-fpm/16-xdebug.ini:/etc/php.d/15-xdebug.ini
     ports:
       - 9050:9050
+    restart: always
     networks:
       - api-network
     links:
@@ -44,6 +46,7 @@ services:
       - ./data/mssql/backups:/tmp/backups
     ports:
       - 1433:1433
+    restart: always
     networks:
       - api-network
     environment:
@@ -56,6 +59,7 @@ services:
     container_name: memcached
     ports:
       - 11211:11211
+    restart: always
     networks:
       - api-network
   neo4j:
@@ -66,6 +70,7 @@ services:
     ports:
       - 7474:7474
       - 7687:7687
+    restart: always
     networks:
       - api-network
   mongo:
@@ -75,6 +80,7 @@ services:
       - ./data/mongo:/etc/mongo
     ports:
       - 27017:27017
+    restart: always
     networks:
       - api-network
     environment:
