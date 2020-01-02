@@ -12,6 +12,7 @@ namespace App\Factory;
 
 use App\Handler\GraphQLHandler;
 use App\Resolver\CreateFileResolver;
+use App\Resolver\EditSeasonUserResolver;
 use App\Resolver\EditTapeUserHistoryDetailResolver;
 use App\Resolver\EditTapeUserResolver;
 use App\Resolver\EditTvShowResolver;
@@ -61,6 +62,7 @@ class GraphQLHandlerFactory
         return new ObjectType([
             'fields' => [
                 'editTapeUser' => $manager->get(EditTapeUserResolver::class),
+                'editSeasonUser' => $manager->get(EditSeasonUserResolver::class),
                 'editTapeUserHistoryDetail' => $manager->get(EditTapeUserHistoryDetailResolver::class),
                 'editTvShow' => $manager->get(EditTvShowResolver::class),
                 'importImdbMovie' => $manager->get(ImportImdbMovieResolver::class),

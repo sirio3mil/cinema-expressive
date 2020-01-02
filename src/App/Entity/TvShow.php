@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use GraphQL\Doctrine\Annotation as API;
 
@@ -104,6 +105,19 @@ class TvShow implements CinemaEntity
     public function getChapters(): Collection
     {
         return $this->chapters;
+    }
+
+    /**
+     * @API\Field(type="?TvShowChapter[]")
+     *
+     * @param int $season
+     * @return Collection
+     */
+    public function getChaptersBySeason(int $season): Collection
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("season", $season));
+        return $this->getChapters()->matching($criteria);
     }
 
     /**
