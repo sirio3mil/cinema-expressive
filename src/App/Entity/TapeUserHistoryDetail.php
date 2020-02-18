@@ -18,10 +18,23 @@ class TapeUserHistoryDetail implements CinemaEntity
     use CreationDate, Upgradeable;
 
     /**
-     * @var TapeUserHistory
+     * @var int
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="TapeUserHistory", inversedBy="detail", fetch="EXTRA_LAZY")
+     * @ORM\Column(
+     *     type="bigint",
+     *     name="tapeUserHistoryDetailId",
+     *     nullable=false,
+     *     options={"unsigned":false}
+     * )
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $tapeUserHistoryDetailId;
+
+    /**
+     * @var TapeUserHistory
+     *
+     * @ORM\ManyToOne(targetEntity="TapeUserHistory", inversedBy="details", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapeUserHistoryId", referencedColumnName="tapeUserHistoryId")
      */
     private $tapeUserHistory;
@@ -150,5 +163,23 @@ class TapeUserHistoryDetail implements CinemaEntity
         if (is_null($this->exported)) {
             $this->setExported(false);
         }
+    }
+
+    /**
+     * @param int $tapeUserHistoryDetailId
+     * @return TapeUserHistoryDetail
+     */
+    public function setTapeUserHistoryDetailId(int $tapeUserHistoryDetailId): TapeUserHistoryDetail
+    {
+        $this->tapeUserHistoryDetailId = $tapeUserHistoryDetailId;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTapeUserHistoryDetailId(): int
+    {
+        return $this->tapeUserHistoryDetailId;
     }
 }

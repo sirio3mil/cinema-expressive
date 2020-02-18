@@ -51,12 +51,8 @@ class TapeUserService
             $tapeUser->addHistory($tapeUserHistory);
         }
         if ($place) {
-            /** @var TapeUserHistoryDetail $tapeUserHistoryDetail */
-            $tapeUserHistoryDetail = $tapeUserHistory->getDetail();
-            if (!$tapeUserHistoryDetail) {
-                $tapeUserHistoryDetail = new TapeUserHistoryDetail();
-                $tapeUserHistory->setDetail($tapeUserHistoryDetail);
-            }
+            $tapeUserHistoryDetail = new TapeUserHistoryDetail();
+            $tapeUserHistory->addDetail($tapeUserHistoryDetail);
             $tapeUserHistoryDetail->setPlace($place);
             if ($place->getPlaceId() == Place::DOWNLOADED) {
                 /** @var TapeUserStatus $tapeUserStatusDownloaded */

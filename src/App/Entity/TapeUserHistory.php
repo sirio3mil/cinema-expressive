@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -47,11 +48,11 @@ class TapeUserHistory implements CinemaEntity
     private $tapeUserStatus;
 
     /**
-     * @var TapeUserHistoryDetail
+     * @var Collection
      *
-     * @ORM\OneToOne(targetEntity="TapeUserHistoryDetail", mappedBy="tapeUserHistory", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="TapeUserHistoryDetail", mappedBy="tapeUserHistory", fetch="EXTRA_LAZY", cascade={"all"})
      */
-    protected $detail;
+    protected $details;
 
 
     /**
@@ -101,20 +102,43 @@ class TapeUserHistory implements CinemaEntity
     }
 
     /**
-     * @param TapeUserHistoryDetail $detail
+     * @param Collection $details
      * @return TapeUserHistory
      */
-    public function setDetail(TapeUserHistoryDetail $detail): TapeUserHistory
+    public function setDetails(Collection $details): TapeUserHistory
     {
-        $this->detail = $detail->setTapeUserHistory($this);
+        $this->details = $details;
+        /** @var TapeUserHistoryDetail $item */
+        foreach ($details as $item) {
+            $item->setTapeUserHistory($this);
+        }
         return $this;
     }
 
     /**
-     * @return TapeUserHistoryDetail|null
+     * @return Collection
      */
-    public function getDetail(): ?TapeUserHistoryDetail
+    public function getDetails(): Collection
     {
-        return $this->detail;
+        return $this->details;
+    }
+
+    /**
+     * @param TapeUserHistoryDetail $detail
+     * @return TapeUserHistory
+     */
+    public function addDetail(TapeUserHistoryDetail $detail): TapeUserHistory
+    {
+        $this->details[] = $detail->setTapeUserHistory($this);
+        return $this;
+    }
+
+    /**
+     * @param TapeUserHistoryDetail $detail
+     * @return bool
+     */
+    public function removeDetail(TapeUserHistoryDetail $detail): bool
+    {
+        return $this->details->removeElement($detail);
     }
 }
