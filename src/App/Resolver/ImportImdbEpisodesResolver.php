@@ -8,12 +8,10 @@
 
 namespace App\Resolver;
 
-use App\Entity\Tape;
 use App\Entity\TvShowChapter;
 use App\Service\ImportImdbMovieService;
 use Ausi\SlugGenerator\SlugGenerator;
 use Doctrine\ORM\EntityManager;
-use ImdbScraper\Iterator\EpisodeIterator;
 use ImdbScraper\Mapper\EpisodeListMapper;
 use ImdbScraper\Model\Episode;
 use Doctrine\ORM\NoResultException;
@@ -49,8 +47,7 @@ class ImportImdbEpisodesResolver extends AbstractResolver implements MutationRes
         EntityManager $entityManager,
         SlugGenerator $slugGenerator,
         EpisodeListMapper $episodeListMapper
-    )
-    {
+    ) {
         $this->entityManager = $entityManager;
         $this->slugGenerator = $slugGenerator;
         $this->episodeListMapper = $episodeListMapper;
@@ -76,15 +73,12 @@ class ImportImdbEpisodesResolver extends AbstractResolver implements MutationRes
             ->setSeason($seasonNumber)
             ->setImdbNumber($imdbNumber)
             ->setContentFromUrl();
-        /** @var EpisodeIterator $episodeIterator */
         $episodeIterator = $this->episodeListMapper->getEpisodes();
-        /** @var ImportImdbMovieService $importImdbMovieService */
         $importImdbMovieService = new ImportImdbMovieService($this->entityManager, $this->slugGenerator);
         /** @var Episode $episode */
         foreach ($episodeIterator as $episode) {
             $importImdbMovieService->setImdbNumber($episode->getImdbNumber());
             $importImdbMovieService->import();
-            /** @var Tape $tape */
             $tape = $importImdbMovieService->getTape();
             $this->entityManager->persist($tape);
             $episodes[] = $tape->getTvShowChapter();

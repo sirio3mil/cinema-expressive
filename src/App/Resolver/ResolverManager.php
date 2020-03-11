@@ -111,10 +111,8 @@ class ResolverManager
     protected function getInstance(string $resolverClassName): AbstractResolver
     {
         $dynamicParameters = [];
-        /** @var ReflectionMethod $constructor */
         $constructor = $this->reflectionClass->getConstructor();
         if ($constructor) {
-            /** @var ReflectionParameter[] $parameters */
             $parameters = $constructor->getParameters();
             foreach ($parameters as $parameter) {
                 if ($parameterClass = $parameter->getClass()->getName()) {
@@ -136,7 +134,6 @@ class ResolverManager
     {
         $argType = null;
         $argName = $parameter->getName();
-        /** @var ReflectionClass $class */
         $class = $parameter->getClass();
         if (!$class) {
             switch ($parameter->getType()) {

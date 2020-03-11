@@ -40,6 +40,7 @@ return [
             Doctrine\ORM\EntityManager::class => App\Factory\EntityManagerFactory::class,
             Tuupola\Middleware\CorsMiddleware::class => App\Factory\CorsMiddlewareFactory::class,
             App\Service\ImportImdbMovieService::class => App\Factory\ImportImdbMovieFactory::class,
+            App\Service\TapeUserService::class => App\Factory\TapeUserFactory::class,
             App\Type\TypeContainer::class => App\Factory\TypeContainerFactory::class
         ],
     ],

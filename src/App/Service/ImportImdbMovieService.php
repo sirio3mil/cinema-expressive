@@ -32,16 +32,9 @@ use Ausi\SlugGenerator\SlugGenerator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
-use Doctrine\ORM\QueryBuilder;
 use ImdbScraper\Iterator\AlsoKnownAsIterator;
-use ImdbScraper\Iterator\CastIterator;
-use ImdbScraper\Iterator\CertificateIterator;
-use ImdbScraper\Iterator\KeywordIterator;
-use ImdbScraper\Iterator\LocationIterator;
-use ImdbScraper\Iterator\PersonIterator;
 use ImdbScraper\Iterator\ReleaseIterator;
 use ImdbScraper\Mapper\CastMapper;
 use ImdbScraper\Mapper\HomeMapper;
@@ -94,7 +87,6 @@ class ImportImdbMovieService
      */
     public function __construct(EntityManager $entityManager, SlugGenerator $slugGenerator)
     {
-        /** @var EntityManager $entityManager */
         $this->entityManager = $entityManager;
         /** @var EntityRepository $rowTypeRepository */
         $rowTypeRepository = $this->entityManager->getRepository(RowType::class);
@@ -165,7 +157,6 @@ class ImportImdbMovieService
         if (array_key_exists($person->getImdbNumber(), $this->peopleCreated)) {
             return $this->peopleCreated[$person->getImdbNumber()];
         }
-        /** @var Query $query */
         $query = $this->entityManager->createQuery('
             SELECT p 
             FROM App\Entity\People p 
@@ -244,7 +235,6 @@ class ImportImdbMovieService
     protected function setTape(): void
     {
         try {
-            /** @var Query $query */
             $query = $this->entityManager->createQuery('
                 SELECT i 
                 FROM App\Entity\ImdbNumber i 
@@ -360,7 +350,6 @@ class ImportImdbMovieService
             "tape" => $this->tape
         ]);
         if (!$tvShowChapter) {
-            /** @var QueryBuilder $qb */
             $qb = $this->entityManager->createQueryBuilder();
             $qb
                 ->select('tv')
@@ -374,7 +363,6 @@ class ImportImdbMovieService
                     'imdbNumber' => $mapper->getTvShow(),
                     'rowType' => $this->tapeRowType
                 ]);
-            /** @var Query $query */
             $query = $qb->getQuery();
             $query->useQueryCache(true);
             /** @var TvShow $tvShow */
@@ -394,7 +382,6 @@ class ImportImdbMovieService
      */
     protected function setDetails(): void
     {
-        /** @var HomeMapper $mapper */
         $mapper = new HomeMapper();
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
         $this->tape->setOriginalTitle($mapper->getTitle());
@@ -462,10 +449,8 @@ class ImportImdbMovieService
      */
     protected function setKeywords(): void
     {
-        /** @var KeywordMapper $mapper */
         $mapper = new KeywordMapper();
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
-        /** @var KeywordIterator $keywords */
         $keywords = $mapper->getKeywords();
         if ($keywords->getIterator()->count()) {
             /** @var EntityRepository $tagRepository */
@@ -492,10 +477,8 @@ class ImportImdbMovieService
      */
     protected function setLocations(): void
     {
-        /** @var LocationMapper $mapper */
         $mapper = new LocationMapper();
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
-        /** @var LocationIterator $places */
         $places = $mapper->getLocations();
         if ($places->getIterator()->count()) {
             /** @var EntityRepository $locationRepository */
@@ -530,10 +513,8 @@ class ImportImdbMovieService
         $castRole = $roleRepository->findOneBy([
             "roleId" => ROLE::ROLE_CAST
         ]);
-        /** @var CastMapper $mapper */
         $mapper = new CastMapper();
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
-        /** @var CastIterator $castIterator */
         $castIterator = $mapper->getCast();
         if ($castIterator->getIterator()->count()) {
             /** @var CastPeople $person */
@@ -565,7 +546,6 @@ class ImportImdbMovieService
         $directorRole = $roleRepository->findOneBy([
             "roleId" => ROLE::ROLE_DIRECTOR
         ]);
-        /** @var PersonIterator $directors */
         $directors = $mapper->getDirectors();
         if ($directors->getIterator()->count()) {
             /** @var Person $person */
@@ -577,7 +557,6 @@ class ImportImdbMovieService
         $writerRole = $roleRepository->findOneBy([
             "roleId" => ROLE::ROLE_WRITER
         ]);
-        /** @var PersonIterator $writers */
         $writers = $mapper->getWriters();
         if ($writers->getIterator()->count()) {
             $peopleChecked = [];
@@ -673,7 +652,6 @@ class ImportImdbMovieService
      */
     protected function setPremieresAndTitles(): void
     {
-        /** @var ReleaseMapper $mapper */
         $mapper = new ReleaseMapper();
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
         $this->setPremieres($mapper->getReleaseDates());
@@ -685,10 +663,8 @@ class ImportImdbMovieService
      */
     protected function setCertifications(): void
     {
-        /** @var ParentalGuideMapper $mapper */
         $mapper = new ParentalGuideMapper();
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
-        /** @var CertificateIterator $certificates */
         $certificates = $mapper->getCertificates();
         if ($certificates->getIterator()->count()) {
             /** @var Certificate $certificate */
