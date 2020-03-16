@@ -89,7 +89,7 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
             }
             if ($place || !is_null($visible)) {
                 $this->qb->innerJoin(
-                    'h.detail',
+                    'h.details',
                     'd'
                 );
                 if ($place) {
