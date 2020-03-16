@@ -5,15 +5,6 @@
     "homepage": "https://github.com/sirio3mil/cinema-expressive",
     "license": "BSD-3-Clause",
     "keywords": [
-        "skeleton",
-        "middleware",
-        "psr",
-        "psr-7",
-        "psr-11",
-        "psr-15",
-        "zf",
-        "zend-framework",
-        "mezzio",
         "graphql",
         "cinema",
         "api"
