@@ -3,10 +3,10 @@
 declare(strict_types=1);
 
 use GraphQL\Upload\UploadMiddleware;
-use Zend\Expressive\Application;
-use Zend\Expressive\Authentication;
-use Zend\Expressive\Authentication\OAuth2\TokenEndpointHandler;
-use Zend\Expressive\Helper\BodyParams\BodyParamsMiddleware;
+use Mezzio\Application;
+use Mezzio\Authentication;
+use Mezzio\Authentication\OAuth2\TokenEndpointHandler;
+use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 
 /**
  * @param Application $app

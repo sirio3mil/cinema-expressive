@@ -9,8 +9,8 @@
 namespace App\Factory;
 
 use Psr\Container\ContainerInterface;
-use Zend\Cache\Storage\Adapter\Memcached;
-use Zend\Cache\StorageFactory;
+use Laminas\Cache\Storage\Adapter\Memcached;
+use Laminas\Cache\StorageFactory;
 
 class MemcachedFactory
 {
