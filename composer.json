@@ -74,7 +74,7 @@
     "require-dev": {
         "filp/whoops": "^2.1",
         "phpmd/phpmd": "^2.6.0",
-        "phpunit/phpunit": "^8.0",
+        "phpunit/phpunit": "^9.0",
         "roave/security-advisories": "dev-master",
         "squizlabs/php_codesniffer": "^2.9",
         "symfony/var-dumper": "^4.1",
