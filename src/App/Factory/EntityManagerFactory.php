@@ -48,7 +48,6 @@ class EntityManagerFactory
         Type::addType('uuid', 'Ramsey\Uuid\Doctrine\UuidType');
 
         if (!$isDevMode) {
-            /** @var Memcached $memcached */
             $memcached = new Memcached();
             $memcached->addServer($cacheConfig['adapter']['options']['servers'][0], 11211);
             $cacheDriver = new MemcachedCache();
