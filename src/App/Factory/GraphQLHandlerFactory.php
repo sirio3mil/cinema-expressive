@@ -82,10 +82,9 @@ class GraphQLHandlerFactory
     {
         $manager = new ResolverManager($container);
 
-        $config = SchemaConfig::create()
+        return SchemaConfig::create()
             ->setQuery(self::getQueryType($manager))
             ->setMutation(self::getMutationType($manager));
-        return $config;
     }
 
     /**
@@ -97,8 +96,7 @@ class GraphQLHandlerFactory
     {
         $config = self::getSchemaConfig($container);
 
-        $schema = new Schema($config);
-        return $schema;
+        return new Schema($config);
     }
 
     /**
