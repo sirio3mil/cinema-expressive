@@ -34,6 +34,7 @@ return [
         'factories' => [
             Laminas\Cache\Storage\Adapter\Memcached::class => App\Factory\MemcachedFactory::class,
             App\Type\TapeUserPageType::class => App\Factory\TapeUserPageTypeFactory::class,
+            App\Type\PlacePageType::class => App\Factory\PlacePageTypeFactory::class,
             MongoDB\Client::class => App\Factory\MongoDBClientFactory::class,
             GraphQL\Doctrine\Types::class => App\Factory\TypeFactory::class,
             MongoDB\Driver\Manager::class => App\Factory\MongoDBManagerFactory::class,

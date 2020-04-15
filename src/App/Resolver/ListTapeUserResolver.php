@@ -7,6 +7,7 @@ use App\Entity\TapeUser;
 use App\Entity\TapeUserStatus;
 use App\Entity\User;
 use Doctrine\ORM\EntityManager;
+use Exception;
 use GraphQL\Doctrine\Annotation as API;
 use function array_key_exists;
 use function is_null;
@@ -33,6 +34,7 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
      * @param int $page
      * @param int $pageSize
      * @return array
+     * @throws Exception
      */
     protected function execute(
         User $user,
@@ -111,6 +113,7 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
     /**
      * @inheritDoc
      * @return array
+     * @throws Exception
      */
     public function resolve(array $args): array
     {
