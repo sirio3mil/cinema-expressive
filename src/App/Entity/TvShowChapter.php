@@ -34,7 +34,7 @@ class TvShowChapter implements CinemaEntity
     private $tvShow;
 
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(
      *     type="smallint",
@@ -46,7 +46,7 @@ class TvShowChapter implements CinemaEntity
     private $season;
 
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(
      *     type="smallint",
@@ -89,9 +89,9 @@ class TvShowChapter implements CinemaEntity
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getChapter()
+    public function getChapter(): ?int
     {
         return $this->chapter;
     }
