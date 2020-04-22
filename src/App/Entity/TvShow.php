@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\LazyCriteriaCollection;
 use Doctrine\ORM\Mapping as ORM;
 use GraphQL\Doctrine\Annotation as API;
 
@@ -48,9 +49,17 @@ class TvShow implements CinemaEntity
      */
     protected $finished;
 
+    /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="TvShowChapterSummary", mappedBy="tvShow", fetch="EXTRA_LAZY")
+     */
+    protected $summaries;
+
     public function __construct()
     {
         $this->chapters = new ArrayCollection();
+        $this->summaries = new ArrayCollection();
     }
 
 
@@ -159,5 +168,31 @@ class TvShow implements CinemaEntity
             }
         }
         return $maxChapter;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getSummaries(): Collection
+    {
+        return $this->summaries;
+    }
+
+    /**
+     * @param User $user
+     * @return TvShowChapterSummary|null
+     */
+    public function getSummaryByUser(User $user): ?TvShowChapterSummary
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("user", $user))
+            ->setFirstResult(0)
+            ->setMaxResults(1);
+        /** @var LazyCriteriaCollection $elements */
+        $elements = $this->getSummaries()->matching($criteria);
+        if ($elements->count()) {
+            return $elements->first();
+        }
+        return null;
     }
 }

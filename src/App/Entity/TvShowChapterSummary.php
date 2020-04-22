@@ -10,21 +10,20 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-
 /**
- * Class TvShowChapterResume
+ * Class TvShowChapterSummary
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Entity(readOnly=true)
- * @ORM\Table(name="TvShowChapterResume")
+ * @ORM\Table(name="TvShowChapterSummary")
  */
-class TvShowChapterResume implements CinemaEntity
+class TvShowChapterSummary implements CinemaEntity
 {
     /**
      * @var TvShow
      *
      * @ORM\Id
-     * @ORM\OneToOne(targetEntity="TvShow", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="TvShow", fetch="EXTRA_LAZY", inversedBy="summaries")
      * @ORM\JoinColumn(name="tvShowId", referencedColumnName="tapeId")
      */
     private $tvShow;
