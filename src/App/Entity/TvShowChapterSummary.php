@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Entity(readOnly=true)
- * @ORM\Table(name="TvShowChapterSummary")
+ * @ORM\Table(name="usr.TvShowChapterSummary")
  */
 class TvShowChapterSummary implements CinemaEntity
 {
