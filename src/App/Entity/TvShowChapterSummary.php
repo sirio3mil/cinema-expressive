@@ -38,7 +38,7 @@ class TvShowChapterSummary implements CinemaEntity
     private $user;
 
     /**
-     * @var TvShowChapter
+     * @var TvShowChapter|null
      *
      * @ORM\OneToOne(targetEntity="TvShowChapter", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="importedChapterId", referencedColumnName="tapeId")
@@ -46,7 +46,7 @@ class TvShowChapterSummary implements CinemaEntity
     private $importedChapter;
 
     /**
-     * @var TvShowChapter
+     * @var TvShowChapter|null
      *
      * @ORM\OneToOne(targetEntity="TvShowChapter", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="viewedChapterId", referencedColumnName="tapeId")
@@ -70,17 +70,17 @@ class TvShowChapterSummary implements CinemaEntity
     }
 
     /**
-     * @return TvShowChapter
+     * @return TvShowChapter|null
      */
-    public function getImportedChapter(): TvShowChapter
+    public function getImportedChapter(): ?TvShowChapter
     {
         return $this->importedChapter;
     }
 
     /**
-     * @return TvShowChapter
+     * @return TvShowChapter|null
      */
-    public function getViewedChapter(): TvShowChapter
+    public function getViewedChapter(): ?TvShowChapter
     {
         return $this->viewedChapter;
     }
