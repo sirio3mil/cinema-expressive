@@ -10,3 +10,4 @@ data/mssql/
 data/neo4j/
 data/mongo/
 public/info.php
+/config/nginx/cert/
