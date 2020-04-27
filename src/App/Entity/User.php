@@ -35,52 +35,18 @@ class User implements CinemaEntity
      *
      * @ORM\Column(
      *     type="string",
-     *     length=255,
-     *     name="name",
+     *     length=40,
+     *     name="username",
      *     nullable=false,
      *     options={"fixed":false}
      * )
      */
-    private $name;
+    private $username;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(
-     *     type="string",
-     *     length=255,
-     *     name="email",
-     *     nullable=false,
-     *     options={"fixed":false}
-     * )
+     * @var string|null
      */
-    private $email;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(
-     *     type="string",
-     *     length=255,
-     *     name="password",
-     *     nullable=false,
-     *     options={"fixed":false}
-     * )
-     */
-    private $password;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(
-     *     type="string",
-     *     length=100,
-     *     name="rememberToken",
-     *     nullable=true,
-     *     options={"fixed":false}
-     * )
-     */
-    private $rememberToken;
+    private $token;
 
 
     /**
@@ -92,12 +58,12 @@ class User implements CinemaEntity
     }
 
     /**
-     * @param string $name
+     * @param string $username
      * @return User
      */
-    public function setName(string $name): User
+    public function setUsername(string $username): User
     {
-        $this->name = $name;
+        $this->username = $username;
     
         return $this;
     }
@@ -105,65 +71,26 @@ class User implements CinemaEntity
     /**
      * @return string
      */
-    public function getName(): string
+    public function getUsername(): string
     {
-        return $this->name;
+        return $this->username;
     }
 
     /**
-     * @param string $email
+     * @param string|null $token
      * @return User
      */
-    public function setEmail(string $email): User
+    public function setToken(?string $token): User
     {
-        $this->email = $email;
-    
+        $this->token = $token;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getEmail(): string
+    public function getToken(): ?string
     {
-        return $this->email;
-    }
-
-    /**
-     * @param string $password
-     * @return User
-     */
-    public function setPassword(string $password): User
-    {
-        $this->password = $password;
-    
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    /**
-     * @param null|string $rememberToken
-     * @return User
-     */
-    public function setRememberToken(?string $rememberToken): User
-    {
-        $this->rememberToken = $rememberToken;
-    
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getRememberToken(): string
-    {
-        return $this->rememberToken;
+        return $this->token;
     }
 }
