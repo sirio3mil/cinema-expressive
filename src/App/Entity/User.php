@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -48,6 +50,18 @@ class User implements CinemaEntity
      */
     private $token;
 
+    /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="WishList", mappedBy="user", fetch="EXTRA_LAZY")
+     */
+    protected $wishList;
+
+    public function __construct()
+    {
+        $this->wishList = new ArrayCollection();
+    }
+
 
     /**
      * @return int
@@ -92,5 +106,13 @@ class User implements CinemaEntity
     public function getToken(): ?string
     {
         return $this->token;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getWishList(): Collection
+    {
+        return $this->wishList;
     }
 }
