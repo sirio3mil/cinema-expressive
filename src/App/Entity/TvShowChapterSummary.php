@@ -13,7 +13,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class TvShowChapterSummary
  * @package App\Entity
- * @ORM\Entity
  * @ORM\Entity(readOnly=true)
  * @ORM\Table(name="usr.TvShowChapterSummary")
  */

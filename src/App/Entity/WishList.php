@@ -7,7 +7,6 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Class WishList
  * @package App\Entity
- * @ORM\Entity
  * @ORM\Entity(readOnly=true)
  * @ORM\Table(name="usr.WishList")
  */

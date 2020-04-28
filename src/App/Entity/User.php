@@ -57,6 +57,13 @@ class User implements CinemaEntity
      */
     protected $wishList;
 
+    /**
+     * @var OauthUser
+     *
+     * @ORM\OneToOne(targetEntity="OauthUser", mappedBy="user")
+     */
+    protected $oauthUser;
+
     public function __construct()
     {
         $this->wishList = new ArrayCollection();
@@ -114,5 +121,13 @@ class User implements CinemaEntity
     public function getWishList(): Collection
     {
         return $this->wishList;
+    }
+
+    /**
+     * @return OauthUser
+     */
+    public function getOauthUser(): OauthUser
+    {
+        return $this->oauthUser;
     }
 }
