@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Middleware\OauthMiddleware;
 use GraphQL\Upload\UploadMiddleware;
 use Mezzio\Application;
 use Mezzio\Authentication;
-use Mezzio\Authentication\OAuth2\TokenEndpointHandler;
 use Mezzio\Helper\BodyParams\BodyParamsMiddleware;
 
 /**
@@ -22,7 +20,7 @@ return function (Application $app): void {
     ]);
 
     $app->post('/oauth', [
-        OauthMiddleware::class,
-        TokenEndpointHandler::class
+        BodyParamsMiddleware::class,
+        App\Handler\GraphQLHandler::class
     ]);
 };

@@ -17,6 +17,7 @@ use GraphQL\Type\Definition\Type;
 use GraphQL\Upload\UploadType;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use Psr\Http\Message\ResponseInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -97,7 +98,9 @@ class ResolverManager
             'type' => $type,
             'args' => $args,
             'resolve' => function ($source, $args, $context) use ($resolver) {
-                $resolver->setUser($context);
+                if ($context) {
+                    $resolver->setUser($context);
+                }
                 $resolver->setSource($source);
                 return $resolver->resolve($args);
             }
@@ -115,8 +118,12 @@ class ResolverManager
         if ($constructor) {
             $parameters = $constructor->getParameters();
             foreach ($parameters as $parameter) {
-                if ($parameterClass = $parameter->getClass()->getName()) {
-                    $dynamicParameters[] = $this->container->get($parameterClass);
+                if ($parameter->getName() === 'config') {
+                    $dynamicParameters[] = (array)$this->container->get('config');
+                } elseif ($parameter->getName() === 'responseFactory') {
+                    $dynamicParameters[] = $this->container->get(ResponseInterface::class);
+                } elseif ($parameterClass = $parameter->getClass()) {
+                    $dynamicParameters[] = $this->container->get($parameterClass->getName());
                 }
             }
         }

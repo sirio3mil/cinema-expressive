@@ -22,6 +22,7 @@ use App\Resolver\ListPlaceResolver;
 use App\Resolver\ListTapeUserResolver;
 use App\Resolver\ListTapeUserStatusResolver;
 use App\Resolver\ListTvShowChapterUserResolver;
+use App\Resolver\LoginResolver;
 use App\Resolver\SearchResolver;
 use App\Resolver\TapeResolver;
 use App\Resolver\ResolverManager;
@@ -45,6 +46,7 @@ class GraphQLHandlerFactory
     {
         return new ObjectType([
             'fields' => [
+                'login' => $manager->get(LoginResolver::class),
                 'search' => $manager->get(SearchResolver::class),
                 'tape' => $manager->get(TapeResolver::class),
                 'listTapeUser' => $manager->get(ListTapeUserResolver::class),
