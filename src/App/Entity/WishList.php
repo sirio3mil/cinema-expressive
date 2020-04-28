@@ -14,21 +14,21 @@ use Doctrine\ORM\Mapping as ORM;
 class WishList implements CinemaEntity
 {
     /**
-     * @var User
+     * @var TapeUserHistory
      *
      * @ORM\Id
+     * @ORM\OneToOne(targetEntity="TapeUserHistory", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="tapeUserHistoryId", referencedColumnName="tapeUserHistoryId")
+     */
+    private $tapeUserHistory;
+
+    /**
+     * @var User
+     *
      * @ORM\ManyToOne(targetEntity="User", fetch="EXTRA_LAZY", inversedBy="wishList")
      * @ORM\JoinColumn(name="userId", referencedColumnName="userId")
      */
     private $user;
-
-    /**
-     * @var TapeUserHistory
-     *
-     * @ORM\ManyToOne(targetEntity="TapeUserHistory", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="tapeUserHistoryId", referencedColumnName="tapeUserHistoryId")
-     */
-    private $tapeUserHistory;
 
     /**
      * @var TapeUser
