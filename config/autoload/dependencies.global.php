@@ -43,7 +43,8 @@ return [
             Tuupola\Middleware\CorsMiddleware::class => App\Factory\CorsMiddlewareFactory::class,
             App\Service\ImportImdbMovieService::class => App\Factory\ImportImdbMovieFactory::class,
             App\Service\TapeUserService::class => App\Factory\TapeUserFactory::class,
-            App\Type\TypeContainer::class => App\Factory\TypeContainerFactory::class
+            App\Type\TypeContainer::class => App\Factory\TypeContainerFactory::class,
+            App\Middleware\AuthenticationMiddleware::class => App\Factory\AuthenticationMiddlewareFactory::class
         ],
     ],
 ];
