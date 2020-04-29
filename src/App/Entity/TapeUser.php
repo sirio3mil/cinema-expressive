@@ -142,7 +142,7 @@ class TapeUser implements CinemaEntity
     public function getHistory(): Collection
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->neq("deletedAt", null));
+            ->where(Criteria::expr()->isNull("deletedAt"));
         return $this->history->matching($criteria);
     }
 
@@ -154,7 +154,7 @@ class TapeUser implements CinemaEntity
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("tapeUserStatus", $tapeUserStatus))
-            ->andWhere(Criteria::expr()->neq("deletedAt", null))
+            ->andWhere(Criteria::expr()->isNull("deletedAt"))
             ->setFirstResult(0)
             ->setMaxResults(1);
         /** @var LazyCriteriaCollection $elements */
