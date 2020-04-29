@@ -12,6 +12,7 @@ namespace App\Factory;
 
 use App\Handler\GraphQLHandler;
 use App\Resolver\CreateFileResolver;
+use App\Resolver\DeleteTapeUserHistoryResolver;
 use App\Resolver\EditSeasonUserResolver;
 use App\Resolver\EditTapeUserHistoryDetailResolver;
 use App\Resolver\EditTapeUserResolver;
@@ -73,7 +74,8 @@ class GraphQLHandlerFactory
                 'editTvShow' => $manager->get(EditTvShowResolver::class),
                 'importImdbMovie' => $manager->get(ImportImdbMovieResolver::class),
                 'importImdbEpisodes' => $manager->get(ImportImdbEpisodesResolver::class),
-                'createFile' => $manager->get(CreateFileResolver::class)
+                'createFile' => $manager->get(CreateFileResolver::class),
+                'deleteTapeUserHistory' => $manager->get(DeleteTapeUserHistoryResolver::class)
             ],
             'name' => 'mutation'
         ]);

@@ -21,7 +21,7 @@ class EditTvShowResolver extends AbstractResolver implements MutationResolverInt
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {

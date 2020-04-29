@@ -23,12 +23,12 @@ class EditTapeUserResolver extends AbstractResolver implements MutationResolverI
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    private EntityManager $entityManager;
 
     /**
      * @var TapeUserService
      */
-    private $tapeUserService;
+    private TapeUserService $tapeUserService;
 
     /**
      * EditTapeUserResolver constructor.

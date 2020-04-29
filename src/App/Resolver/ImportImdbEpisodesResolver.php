@@ -27,15 +27,15 @@ class ImportImdbEpisodesResolver extends AbstractResolver implements MutationRes
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    private EntityManager $entityManager;
     /**
      * @var SlugGenerator
      */
-    private $slugGenerator;
+    private SlugGenerator $slugGenerator;
     /**
      * @var EpisodeListMapper
      */
-    private $episodeListMapper;
+    private EpisodeListMapper $episodeListMapper;
 
     /**
      * ImportImdbMovieResolver constructor.
