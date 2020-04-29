@@ -51,11 +51,11 @@ class TapeUser implements CinemaEntity
     private User $user;
 
     /**
-     * @var TapeUserScore
+     * @var TapeUserScore|null
      *
-     * @ORM\OneToOne(targetEntity="TapeUserScore", mappedBy="tapeUser")
+     * @ORM\OneToOne(targetEntity="TapeUserScore", mappedBy="tapeUser", cascade={"all"})
      */
-    protected TapeUserScore $score;
+    protected ?TapeUserScore $score;
 
     /**
      * @var Collection
@@ -73,7 +73,7 @@ class TapeUser implements CinemaEntity
         $this->user = new User();
         $this->tape = new Tape();
         $this->tapeUserId = 0;
-        $this->score = new TapeUserScore();
+        $this->score = null;
     }
 
 

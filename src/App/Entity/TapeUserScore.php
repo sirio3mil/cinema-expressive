@@ -29,7 +29,7 @@ class TapeUserScore implements CinemaEntity
      * @ORM\OneToOne(targetEntity="TapeUser", inversedBy="score", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapeUserId", referencedColumnName="tapeUserId")
      */
-    private $tapeUser;
+    private TapeUser $tapeUser;
 
     /**
      * @var bool
@@ -41,7 +41,7 @@ class TapeUserScore implements CinemaEntity
      *     options={"default":0}
      * )
      */
-    private $exported;
+    private bool $exported;
 
     /**
      * @var int
@@ -53,7 +53,14 @@ class TapeUserScore implements CinemaEntity
      *     options={"unsigned":false,"default":0}
      * )
      */
-    protected $score;
+    protected int $score;
+
+    public function __construct()
+    {
+        $this->tapeUser = new TapeUser();
+        $this->exported = false;
+        $this->score = 0;
+    }
 
     /**
      * @param TapeUser $tapeUser
