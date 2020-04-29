@@ -32,7 +32,7 @@ class TapeUser implements CinemaEntity
      * )
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $tapeUserId;
+    private int $tapeUserId;
 
     /**
      * @var Tape
@@ -40,7 +40,7 @@ class TapeUser implements CinemaEntity
      * @ORM\ManyToOne(targetEntity="Tape", inversedBy="users", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
      */
-    protected $tape;
+    protected Tape $tape;
 
     /**
      * @var User
@@ -48,21 +48,21 @@ class TapeUser implements CinemaEntity
      * @ORM\ManyToOne(targetEntity="User", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="userId", referencedColumnName="userId")
      */
-    private $user;
+    private User $user;
 
     /**
      * @var TapeUserScore
      *
      * @ORM\OneToOne(targetEntity="TapeUserScore", mappedBy="tapeUser")
      */
-    protected $score;
+    protected TapeUserScore $score;
 
     /**
      * @var Collection
      *
      * @ORM\OneToMany(targetEntity="TapeUserHistory", mappedBy="tapeUser", fetch="EXTRA_LAZY", cascade={"all"})
      */
-    protected $history;
+    protected Collection $history;
 
     /**
      * Constructor
@@ -70,6 +70,10 @@ class TapeUser implements CinemaEntity
     public function __construct()
     {
         $this->history = new ArrayCollection();
+        $this->user = new User();
+        $this->tape = new Tape();
+        $this->tapeUserId = 0;
+        $this->score = new TapeUserScore();
     }
 
 
@@ -137,7 +141,9 @@ class TapeUser implements CinemaEntity
      */
     public function getHistory(): Collection
     {
-        return $this->history;
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->neq("deletedAt", null));
+        return $this->history->matching($criteria);
     }
 
     /**
@@ -148,10 +154,11 @@ class TapeUser implements CinemaEntity
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq("tapeUserStatus", $tapeUserStatus))
+            ->andWhere(Criteria::expr()->neq("deletedAt", null))
             ->setFirstResult(0)
             ->setMaxResults(1);
         /** @var LazyCriteriaCollection $elements */
-        $elements = $this->getHistory()->matching($criteria);
+        $elements = $this->history->matching($criteria);
         if ($elements->count()) {
             return $elements->first();
         }
