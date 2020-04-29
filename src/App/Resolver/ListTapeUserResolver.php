@@ -84,6 +84,7 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
                 'l.history',
                 'h'
             );
+            $this->qb->orderBy('h.createdAt', 'desc');
             if ($tapeUserStatus) {
                 $this->qb
                     ->andWhere('h.tapeUserStatus = :tapeUserStatus')
