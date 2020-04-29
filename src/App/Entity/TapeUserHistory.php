@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 class TapeUserHistory implements CinemaEntity
 {
 
-    use CreationDate;
+    use CreationDate, Upgradeable, SoftDeleteable;
 
     /**
      * @var int
@@ -30,7 +30,7 @@ class TapeUserHistory implements CinemaEntity
      * )
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $tapeUserHistoryId;
+    private int $tapeUserHistoryId;
 
     /**
      * @var TapeUser
@@ -38,7 +38,7 @@ class TapeUserHistory implements CinemaEntity
      * @ORM\ManyToOne(targetEntity="TapeUser", inversedBy="history", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapeUserId", referencedColumnName="tapeUserId")
      */
-    private $tapeUser;
+    private TapeUser $tapeUser;
 
     /**
      * @var TapeUserStatus
@@ -46,20 +46,22 @@ class TapeUserHistory implements CinemaEntity
      * @ORM\ManyToOne(targetEntity="TapeUserStatus", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="tapeUserStatusId", referencedColumnName="tapeUserStatusId")
      */
-    private $tapeUserStatus;
+    private TapeUserStatus $tapeUserStatus;
 
     /**
      * @var Collection
      *
      * @ORM\OneToMany(targetEntity="TapeUserHistoryDetail", mappedBy="tapeUserHistory", fetch="EXTRA_LAZY", cascade={"all"})
      */
-    protected $details;
+    protected Collection $details;
 
     public function __construct()
     {
         $this->details = new ArrayCollection();
+        $this->tapeUser = new TapeUser();
+        $this->tapeUserStatus = new TapeUserStatus();
+        $this->tapeUserHistoryId = 0;
     }
-
 
     /**
      * @return int
