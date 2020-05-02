@@ -24,7 +24,7 @@ trait Upgradeable
      *     options={"default":"sysutcdatetime()"}
      * )
      */
-    protected DateTime $updatedAt;
+    protected $updatedAt;
 
     /**
      * @param DateTime $updatedAt

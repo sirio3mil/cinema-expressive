@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 trait SoftDeleteable
 {
     /**
-     * @var DateTime
+     * @var DateTime|null
      *
      * @ORM\Column(
      *     type="datetime",
@@ -16,7 +16,7 @@ trait SoftDeleteable
      *     nullable=true
      * )
      */
-    protected DateTime $deletedAt;
+    protected ?DateTime $deletedAt;
 
     /**
      * @param DateTime $deletedAt

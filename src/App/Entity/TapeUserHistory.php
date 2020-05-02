@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -61,6 +62,9 @@ class TapeUserHistory implements CinemaEntity
         $this->tapeUser = new TapeUser();
         $this->tapeUserStatus = new TapeUserStatus();
         $this->tapeUserHistoryId = 0;
+        $this->deletedAt = null;
+        $this->createdAt = new DateTime();
+        $this->updatedAt = new DateTime();
     }
 
     /**
