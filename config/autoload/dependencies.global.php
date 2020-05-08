@@ -33,6 +33,7 @@ return [
         // Use 'factories' for services provided by callbacks/factory classes.
         'factories' => [
             Laminas\Cache\Storage\Adapter\Memcached::class => App\Factory\MemcachedFactory::class,
+            App\Type\TvShowChapterPageType::class => App\Factory\TvShowChapterPageTypeFactory::class,
             App\Type\TapeUserPageType::class => App\Factory\TapeUserPageTypeFactory::class,
             App\Type\PlacePageType::class => App\Factory\PlacePageTypeFactory::class,
             App\Type\TapeUserStatusPageType::class => App\Factory\TapeUserStatusPageTypeFactory::class,
