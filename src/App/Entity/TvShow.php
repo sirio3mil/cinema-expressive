@@ -28,14 +28,14 @@ class TvShow implements CinemaEntity
      * @ORM\OneToOne(targetEntity="Tape", inversedBy="tvShow", fetch="EXTRA_LAZY", cascade={"all"})
      * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
      */
-    protected $tape;
+    protected Tape $tape;
 
     /**
      * @var Collection
      *
      * @ORM\OneToMany(targetEntity="TvShowChapter", mappedBy="tvShow", fetch="EXTRA_LAZY", cascade={"all"})
      */
-    protected $chapters;
+    protected Collection $chapters;
 
     /**
      * @var bool
@@ -47,19 +47,21 @@ class TvShow implements CinemaEntity
      *     options={"default":0}
      * )
      */
-    protected $finished;
+    protected bool $finished;
 
     /**
      * @var Collection
      *
      * @ORM\OneToMany(targetEntity="TvShowChapterSummary", mappedBy="tvShow", fetch="EXTRA_LAZY")
      */
-    protected $summaries;
+    protected Collection $summaries;
 
     public function __construct()
     {
         $this->chapters = new ArrayCollection();
         $this->summaries = new ArrayCollection();
+        $this->tape = new Tape();
+        $this->finished = false;
     }
 
 

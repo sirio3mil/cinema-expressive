@@ -7,6 +7,7 @@ use App\Entity\CinemaEntity;
 use App\Model\Argument;
 use App\Type\CustomType;
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Collections\Collection;
 use Exception;
 use GraphQL\Doctrine\Annotation\Field;
 use GraphQL\Doctrine\Types;
@@ -251,6 +252,7 @@ class ResolverManager
         if ($returnType instanceof ReflectionNamedType) {
             $name = $returnType->getName();
             switch ($name) {
+                case Collection::class:
                 case 'array':
                     /** @var Field $annotation */
                     $annotation = $this->annotationReader->getMethodAnnotation($this->reflectionMethod, Field::class);

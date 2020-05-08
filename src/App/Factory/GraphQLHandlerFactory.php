@@ -22,7 +22,7 @@ use App\Resolver\ImportImdbMovieResolver;
 use App\Resolver\ListPlaceResolver;
 use App\Resolver\ListTapeUserResolver;
 use App\Resolver\ListTapeUserStatusResolver;
-use App\Resolver\ListTvShowChapterUserResolver;
+use App\Resolver\ListTvShowChapterResolver;
 use App\Resolver\LoginResolver;
 use App\Resolver\SearchResolver;
 use App\Resolver\TapeResolver;
@@ -52,7 +52,7 @@ class GraphQLHandlerFactory
                 'tape' => $manager->get(TapeResolver::class),
                 'listTapeUser' => $manager->get(ListTapeUserResolver::class),
                 'listTapeUserStatus' => $manager->get(ListTapeUserStatusResolver::class),
-                'listTvShowChapterUser' => $manager->get(ListTvShowChapterUserResolver::class),
+                'listTvShowChapter' => $manager->get(ListTvShowChapterResolver::class),
                 'listPlace' => $manager->get(ListPlaceResolver::class)
             ],
             'name' => 'query'
