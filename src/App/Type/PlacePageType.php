@@ -4,19 +4,11 @@ namespace App\Type;
 
 use App\Entity\Place;
 use GraphQL\Doctrine\Types;
-use GraphQL\Type\Definition\ObjectType;
-use GraphQL\Type\Definition\Type;
 
-class PlacePageType extends ObjectType implements CustomType
+class PlacePageType extends PageType
 {
     public function __construct(Types $types)
     {
-        parent::__construct([
-            'fields' => [
-                'elements' => Type::listOf($types->getOutput(Place::class)),
-                'total' => Type::int(),
-                'pages' => Type::int()
-            ]
-        ]);
+        parent::__construct($types, Place::class);
     }
 }
