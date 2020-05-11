@@ -8,6 +8,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -110,11 +111,11 @@ class File implements CinemaEntity
     protected Image $image;
 
     /**
-     * @var FileSeason
+     * @var FileSeason|null
      *
      * @ORM\OneToOne(targetEntity="FileSeason", mappedBy="file", cascade={"persist", "remove"})
      */
-    protected FileSeason $season;
+    protected ?FileSeason $season;
 
     /**
      * @var string
@@ -129,6 +130,20 @@ class File implements CinemaEntity
      */
     private string $mime;
 
+    public function __construct()
+    {
+        $this->fileId = 0;
+        $this->object = new GlobalUniqueObject();
+        $this->path = '';
+        $this->name = '';
+        $this->extension = '';
+        $this->fileType = new FileType();
+        $this->size = 0;
+        $this->createdAt = new DateTime();
+        $this->mime = '';
+        $this->season = null;
+    }
+
     /**
      * @param FileSeason $season
      * @return File
@@ -140,9 +155,9 @@ class File implements CinemaEntity
     }
 
     /**
-     * @return FileSeason
+     * @return FileSeason|null
      */
-    public function getSeason(): FileSeason
+    public function getSeason(): ?FileSeason
     {
         return $this->season;
     }
