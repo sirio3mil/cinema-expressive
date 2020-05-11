@@ -9,7 +9,6 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use DateTime;
 
 /**
  * Class File
@@ -20,7 +19,7 @@ use DateTime;
  */
 class File implements CinemaEntity
 {
-    use CreationDate, ObjectRelated;
+    use CreationDate, ObjectRelated, SoftDeleteable;
 
     /**
      * @var int
@@ -34,7 +33,7 @@ class File implements CinemaEntity
      * )
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $fileId;
+    private int $fileId;
 
     /**
      * @var GlobalUniqueObject
@@ -42,7 +41,7 @@ class File implements CinemaEntity
      * @ORM\ManyToOne(targetEntity="GlobalUniqueObject", inversedBy="files", cascade={"all"})
      * @ORM\JoinColumn(name="objectId", referencedColumnName="objectId")
      */
-    protected $object;
+    protected GlobalUniqueObject $object;
 
     /**
      * @var string
@@ -55,7 +54,7 @@ class File implements CinemaEntity
      *     options={"fixed":false}
      * )
      */
-    private $path;
+    private string $path;
 
     /**
      * @var string
@@ -68,7 +67,7 @@ class File implements CinemaEntity
      *     options={"fixed":false}
      * )
      */
-    private $name;
+    private string $name;
 
     /**
      * @var string
@@ -81,7 +80,7 @@ class File implements CinemaEntity
      *     options={"fixed":false}
      * )
      */
-    private $extension;
+    private string $extension;
 
     /**
      * @var int
@@ -93,56 +92,7 @@ class File implements CinemaEntity
      *     options={"unsigned":false}
      * )
      */
-    private $size;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(
-     *     type="string",
-     *     length=150,
-     *     name="originalName",
-     *     nullable=true,
-     *     options={"fixed":false}
-     * )
-     */
-    private $originalName;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(
-     *     type="string",
-     *     length=150,
-     *     name="downloadName",
-     *     nullable=true,
-     *     options={"fixed":false}
-     * )
-     */
-    private $downloadName;
-
-    /**
-     * @var bool
-     *
-     * @ORM\Column(
-     *     type="boolean",
-     *     name="deleted",
-     *     nullable=false,
-     *     options={"default":0}
-     * )
-     */
-    private $deleted;
-
-    /**
-     * @var DateTime
-     *
-     * @ORM\Column(
-     *     type="datetime",
-     *     name="deletionDate",
-     *     nullable=true
-     * )
-     */
-    protected $deletionDate;
+    private int $size;
 
     /**
      * @var FileType
@@ -150,21 +100,21 @@ class File implements CinemaEntity
      * @ORM\ManyToOne(targetEntity="FileType", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="fileTypeId", referencedColumnName="fileTypeId")
      */
-    private $fileType;
+    private FileType $fileType;
 
     /**
      * @var Image
      *
      * @ORM\OneToOne(targetEntity="Image", mappedBy="file", cascade={"persist", "remove"})
      */
-    protected $image;
+    protected Image $image;
 
     /**
      * @var FileSeason
      *
      * @ORM\OneToOne(targetEntity="FileSeason", mappedBy="file", cascade={"persist", "remove"})
      */
-    protected $season;
+    protected FileSeason $season;
 
     /**
      * @var string
@@ -177,7 +127,7 @@ class File implements CinemaEntity
      *     options={"fixed":false}
      * )
      */
-    private $mime;
+    private string $mime;
 
     /**
      * @param FileSeason $season
@@ -242,30 +192,6 @@ class File implements CinemaEntity
     }
 
     /**
-     * @return bool
-     */
-    public function getDeleted(): bool
-    {
-        return $this->deleted;
-    }
-
-    /**
-     * @return DateTime
-     */
-    public function getDeletionDate(): DateTime
-    {
-        return $this->deletionDate;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDownloadName(): ?string
-    {
-        return $this->downloadName;
-    }
-
-    /**
      * @return string
      */
     public function getExtension(): string
@@ -290,14 +216,6 @@ class File implements CinemaEntity
     }
 
     /**
-     * @return string|null
-     */
-    public function getOriginalName(): ?string
-    {
-        return $this->originalName;
-    }
-
-    /**
      * @return string
      */
     public function getPath(): string
@@ -311,36 +229,6 @@ class File implements CinemaEntity
     public function getSize(): int
     {
         return $this->size;
-    }
-
-    /**
-     * @param bool $deleted
-     * @return File
-     */
-    public function setDeleted(bool $deleted): File
-    {
-        $this->deleted = $deleted;
-        return $this;
-    }
-
-    /**
-     * @param DateTime $deletionDate
-     * @return File
-     */
-    public function setDeletionDate(DateTime $deletionDate): File
-    {
-        $this->deletionDate = $deletionDate;
-        return $this;
-    }
-
-    /**
-     * @param string $downloadName
-     * @return File
-     */
-    public function setDownloadName(string $downloadName): File
-    {
-        $this->downloadName = $downloadName;
-        return $this;
     }
 
     /**
@@ -360,16 +248,6 @@ class File implements CinemaEntity
     public function setName(string $name): File
     {
         $this->name = $name;
-        return $this;
-    }
-
-    /**
-     * @param string $originalName
-     * @return File
-     */
-    public function setOriginalName(string $originalName): File
-    {
-        $this->originalName = $originalName;
         return $this;
     }
 
@@ -401,13 +279,5 @@ class File implements CinemaEntity
     {
         $this->fileType = $fileType;
         return $this;
-    }
-
-    /** @ORM\PrePersist */
-    public function generateDeleted()
-    {
-        if(is_null($this->deleted)) {
-            $this->deleted = false;
-        }
     }
 }
