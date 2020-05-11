@@ -13,6 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
 class FileType implements CinemaEntity
 {
 
+    public const THUMBNAIL = 1;
+
     /**
      * @var int
      *

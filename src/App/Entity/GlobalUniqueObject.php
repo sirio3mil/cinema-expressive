@@ -229,7 +229,9 @@ class GlobalUniqueObject implements CinemaEntity
      */
     public function getFiles(): Collection
     {
-        return $this->files;
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->isNull('deletedAt'));
+        return $this->files->matching($criteria);
     }
 
     /**
@@ -323,6 +325,21 @@ class GlobalUniqueObject implements CinemaEntity
             ->setMaxResults(1);
         /** @var LazyCriteriaCollection $elements */
         $elements = $this->getSearchValues()->matching($criteria);
+        if ($elements->count()) {
+            return $elements->first();
+        }
+        return null;
+    }
+
+    /**
+     * @return File|null
+     */
+    public function getThumbnail(): ?File
+    {
+        $files = $this->getFiles();
+        $elements = $files->filter(function($element) {
+            return $element->getFileType()->getFileTypeId() === FileType::THUMBNAIL;
+        });
         if ($elements->count()) {
             return $elements->first();
         }

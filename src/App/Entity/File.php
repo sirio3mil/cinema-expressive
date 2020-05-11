@@ -295,4 +295,21 @@ class File implements CinemaEntity
         $this->fileType = $fileType;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getUrl(): string
+    {
+        return $_SERVER['REQUEST_SCHEME']
+            . ":"
+            . DIRECTORY_SEPARATOR
+            . DIRECTORY_SEPARATOR
+            . $_SERVER['HTTP_HOST']
+            . $this->path
+            . DIRECTORY_SEPARATOR
+            . $this->name
+            . '.'
+            . $this->extension;
+    }
 }
