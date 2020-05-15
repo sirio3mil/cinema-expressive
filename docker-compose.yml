@@ -15,6 +15,8 @@ services:
     restart: always
     networks:
       - api-network
+    links:
+      - web:cinema.lcl
   web:
     image: nginx:latest
     container_name: web
