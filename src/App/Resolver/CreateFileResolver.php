@@ -14,7 +14,7 @@ class CreateFileResolver extends AbstractResolver implements MutationResolverInt
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    private EntityManager $entityManager;
 
     /**
      * EditTapeUserResolver constructor.
