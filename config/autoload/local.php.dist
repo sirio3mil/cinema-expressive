@@ -22,5 +22,14 @@ return [
         'client_id' => '',
         'client_secret' => '',
         'scope' => ''
+    ],
+    'files' => [
+         'project_path' => '',
+         'public_path' => '',
+         'original' => '/original',
+         'thumbnail' => '/thumbnail',
+         'people' => '/people',
+         'seasons' => '/seasons',
+         'tapes' => '/tapes'
     ]
 ];

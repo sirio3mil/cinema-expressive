@@ -14,6 +14,8 @@ class FileType implements CinemaEntity
 {
 
     public const THUMBNAIL = 1;
+    public const ORIGINAL = 2;
+    public const SEASON = 3;
 
     /**
      * @var int
@@ -27,7 +29,7 @@ class FileType implements CinemaEntity
      * )
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $fileTypeId;
+    private int $fileTypeId;
 
     /**
      * @var string
@@ -40,8 +42,16 @@ class FileType implements CinemaEntity
      *     options={"fixed":false}
      * )
      */
-    private $description;
+    private string $description;
 
+    /**
+     * FileType constructor.
+     */
+    public function __construct()
+    {
+        $this->description = '';
+        $this->fileTypeId = 0;
+    }
 
     /**
      * @return int

@@ -17,6 +17,7 @@ use App\Resolver\EditSeasonUserResolver;
 use App\Resolver\EditTapeUserHistoryDetailResolver;
 use App\Resolver\EditTapeUserResolver;
 use App\Resolver\EditTvShowResolver;
+use App\Resolver\ImportFileResolver;
 use App\Resolver\ImportImdbEpisodesResolver;
 use App\Resolver\ImportImdbMovieResolver;
 use App\Resolver\ListPlaceResolver;
@@ -72,6 +73,7 @@ class GraphQLHandlerFactory
                 'editSeasonUser' => $manager->get(EditSeasonUserResolver::class),
                 'editTapeUserHistoryDetail' => $manager->get(EditTapeUserHistoryDetailResolver::class),
                 'editTvShow' => $manager->get(EditTvShowResolver::class),
+                'importFile' => $manager->get(ImportFileResolver::class),
                 'importImdbMovie' => $manager->get(ImportImdbMovieResolver::class),
                 'importImdbEpisodes' => $manager->get(ImportImdbEpisodesResolver::class),
                 'createFile' => $manager->get(CreateFileResolver::class),
