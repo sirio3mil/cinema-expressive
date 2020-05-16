@@ -235,6 +235,21 @@ class GlobalUniqueObject implements CinemaEntity
     }
 
     /**
+     * @param string $filename
+     * @return bool
+     */
+    public function haveFilename(string $filename): bool
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq('name', $filename));
+        $elements = $this->files->matching($criteria);
+        if ($elements->count()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * @param Collection $files
      * @return GlobalUniqueObject
      */
@@ -337,7 +352,7 @@ class GlobalUniqueObject implements CinemaEntity
     public function getThumbnail(): ?File
     {
         $files = $this->getFiles();
-        $elements = $files->filter(function($element) {
+        $elements = $files->filter(function ($element) {
             return $element->getFileType()->getFileTypeId() === FileType::THUMBNAIL;
         });
         if ($elements->count()) {
