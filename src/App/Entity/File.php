@@ -142,6 +142,7 @@ class File implements CinemaEntity
         $this->createdAt = new DateTime();
         $this->mime = '';
         $this->season = null;
+        $this->deletedAt = null;
     }
 
     /**

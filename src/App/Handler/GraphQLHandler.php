@@ -21,7 +21,7 @@ class GraphQLHandler implements RequestHandlerInterface
 {
 
     /** @var ServerConfig */
-    private $serverConfig;
+    private ServerConfig $serverConfig;
 
     public function __construct(Schema $schema, bool $debug)
     {
