@@ -360,4 +360,19 @@ class GlobalUniqueObject implements CinemaEntity
         }
         return null;
     }
+
+    /**
+     * @return File|null
+     */
+    public function getCover(): ?File
+    {
+        $files = $this->getFiles();
+        $elements = $files->filter(function ($element) {
+            return $element->getFileType()->getFileTypeId() === FileType::ORIGINAL;
+        });
+        if ($elements->count()) {
+            return $elements->first();
+        }
+        return null;
+    }
 }
