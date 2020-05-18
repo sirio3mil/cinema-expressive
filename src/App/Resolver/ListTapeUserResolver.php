@@ -88,6 +88,7 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
             if ($tapeUserStatus) {
                 $this->qb
                     ->andWhere('h.tapeUserStatus = :tapeUserStatus')
+                    ->andWhere('h.deletedAt is NULL')
                     ->setParameter('tapeUserStatus', $tapeUserStatus);
             }
             if ($place || !is_null($visible)) {
