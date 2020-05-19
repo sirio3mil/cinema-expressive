@@ -21,11 +21,11 @@ class ImportImdbMovieResolver extends AbstractResolver implements MutationResolv
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    private EntityManager $entityManager;
     /**
      * @var ImportImdbMovieService
      */
-    private $service;
+    private ImportImdbMovieService $service;
 
     /**
      * ImportImdbMovieResolver constructor.
@@ -50,7 +50,6 @@ class ImportImdbMovieResolver extends AbstractResolver implements MutationResolv
     {
         $this->service->setImdbNumber($imdbNumber);
         $this->service->import();
-        /** @var Tape $tape */
         $tape = $this->service->getTape();
         $this->entityManager->persist($tape);
         $this->entityManager->flush();

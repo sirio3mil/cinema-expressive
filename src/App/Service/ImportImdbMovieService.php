@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Service;
 
 use App\Entity\Ranking;
@@ -54,31 +53,32 @@ use Exception;
 class ImportImdbMovieService
 {
     /** @var RowType */
-    protected $peopleRowType;
+    protected RowType $peopleRowType;
 
     /** @var RowType */
-    protected $tapeRowType;
+    protected RowType $tapeRowType;
 
     /** @var EntityManager */
-    protected $entityManager;
+    protected EntityManager $entityManager;
 
     /** @var EntityRepository */
-    protected $countryRepository;
+    protected EntityRepository $countryRepository;
 
-    /** @var Tape */
-    protected $tape;
+    /** @var Tape|null */
+    protected ?Tape $tape;
 
     /** @var int */
-    protected $imdbNumber;
+    protected int $imdbNumber;
+
     /**
      * @var SlugGenerator
      */
-    private $generator;
+    private SlugGenerator $generator;
 
     /**
      * @var People[]
      */
-    private $peopleCreated;
+    private array $peopleCreated;
 
     /**
      * ImportImdbMovieService constructor.
@@ -88,21 +88,14 @@ class ImportImdbMovieService
     public function __construct(EntityManager $entityManager, SlugGenerator $slugGenerator)
     {
         $this->entityManager = $entityManager;
-        /** @var EntityRepository $rowTypeRepository */
-        $rowTypeRepository = $this->entityManager->getRepository(RowType::class);
-        /** @var RowType peopleRowType */
-        $this->peopleRowType = $rowTypeRepository->findOneBy([
-            "rowTypeId" => RowType::ROW_TYPE_PEOPLE
-        ]);
-        /** @var RowType tapeRowType */
-        $this->tapeRowType = $rowTypeRepository->findOneBy([
-            "rowTypeId" => RowType::ROW_TYPE_TAPE
-        ]);
+        $this->peopleRowType = $this->getRowType(RowType::ROW_TYPE_PEOPLE);
+        $this->tapeRowType = $this->getRowType(RowType::ROW_TYPE_TAPE);
         /** @var EntityRepository $countryRepository */
         $this->countryRepository = $this->entityManager->getRepository(Country::class);
-        /** @var SlugGenerator generator */
         $this->generator = $slugGenerator;
         $this->peopleCreated = [];
+        $this->tape = null;
+        $this->imdbNumber = 0;
     }
 
     /**
@@ -249,10 +242,7 @@ class ImportImdbMovieService
             $query->useQueryCache(true);
             /** @var ImdbNumber $imdbNumber */
             $imdbNumber = $query->getSingleResult();
-            /** @var Tape $tape */
-            $this->tape = $this->entityManager->getRepository(Tape::class)->findOneBy([
-                "object" => $imdbNumber->getObject()
-            ]);
+            $this->tape = $this->getTapeByObject($imdbNumber->getObject());
             if (!$this->tape) {
                 $this->tape = new Tape();
                 $imdbNumber->getObject()->setTape($this->tape);
@@ -706,5 +696,31 @@ class ImportImdbMovieService
         $this->setCast();
         $this->setPremieresAndTitles();
         $this->setCertifications();
+    }
+
+    /**
+     * @param GlobalUniqueObject $object
+     * @return Tape|null
+     */
+    protected function getTapeByObject(GlobalUniqueObject $object): ?Tape
+    {
+        /** @var Tape $tape */
+        $tape = $this->entityManager->getRepository(Tape::class)->findOneBy([
+            "object" => $object
+        ]);
+        return $tape;
+    }
+
+    /**
+     * @param int $rowTypeId
+     * @return RowType
+     */
+    protected function getRowType(int $rowTypeId): RowType
+    {
+        /** @var RowType $rowType */
+        $rowType = $this->entityManager->getRepository(RowType::class)->findOneBy([
+            "rowTypeId" => $rowTypeId
+        ]);
+        return $rowType;
     }
 }
