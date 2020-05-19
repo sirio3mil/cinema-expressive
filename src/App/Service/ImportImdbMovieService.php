@@ -33,6 +33,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query\ResultSetMapping;
 use ImdbScraper\Iterator\AlsoKnownAsIterator;
 use ImdbScraper\Iterator\ReleaseIterator;
 use ImdbScraper\Mapper\CastMapper;
@@ -696,6 +697,10 @@ class ImportImdbMovieService
         $this->setCast();
         $this->setPremieresAndTitles();
         $this->setCertifications();
+
+        $sql = "exec [dbo].[UpdateTapeDefaultValues]";
+        $query = $this->entityManager->createNativeQuery($sql, new ResultSetMapping());
+        $query->execute();
     }
 
     /**
