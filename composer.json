@@ -58,7 +58,6 @@
         "laminas/laminas-component-installer": "^2.1",
         "laminas/laminas-config-aggregator": "^1.0",
         "laminas/laminas-db": "^2.9",
-        "zendframework/zend-debug": "^2.6",
         "laminas/laminas-diactoros": "^1.7",
         "mezzio/mezzio": "^3.0",
         "mezzio/mezzio-aurarouter": "^3.0",
