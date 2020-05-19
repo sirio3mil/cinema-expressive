@@ -108,9 +108,9 @@
             "@analyze"
         ],
         "clear-config-cache": "php bin/clear-config-cache.php",
-        "clear-metadata-cache": "vendor/bin/doctrine orm:clear-cache:metadata",
-        "clear-result-cache": "vendor/bin/doctrine orm:clear-cache:result",
-        "clear-query-cache": "vendor/bin/doctrine orm:clear-cache:query",
+        "clear-metadata-cache": "vendor/doctrine/orm/bin/doctrine orm:clear-cache:metadata",
+        "clear-result-cache": "vendor/doctrine/orm/bin/doctrine orm:clear-cache:result",
+        "clear-query-cache": "vendor/doctrine/orm/bin/doctrine orm:clear-cache:query",
         "serve": "php -S 0.0.0.0:8080 -t public/",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
