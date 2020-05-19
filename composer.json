@@ -12,7 +12,9 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "classmap-authoritative": true
     },
     "extra": {
         "zf": {
@@ -46,7 +48,6 @@
         "ecodev/graphql-upload": "^4.0",
         "jasny/container": "^2.0",
         "mongodb/mongodb": "^1.4",
-        "moontoast/math": "^1.1",
         "ramsey/uuid-doctrine": "^1.4",
         "sirio3mil/imdb-scraper": "^1.1",
         "symfony/yaml": "^4.1",
