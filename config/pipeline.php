@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-use Psr\Container\ContainerInterface;
 use Mezzio\Application;
 use Mezzio\Handler\NotFoundHandler;
 use Mezzio\Helper\ServerUrlMiddleware;
 use Mezzio\Helper\UrlHelperMiddleware;
-use Mezzio\MiddlewareFactory;
 use Mezzio\Router\Middleware\DispatchMiddleware;
 use Mezzio\Router\Middleware\ImplicitHeadMiddleware;
 use Mezzio\Router\Middleware\ImplicitOptionsMiddleware;
@@ -19,10 +17,8 @@ use Tuupola\Middleware\CorsMiddleware;
 
 /**
  * @param Application $app
- * @param MiddlewareFactory $factory
- * @param ContainerInterface $container
  */
-return function (Application $app, MiddlewareFactory $factory, ContainerInterface $container) : void {
+return function (Application $app) : void {
     // The error handler should be the first (most outer) middleware to catch
     // all Exceptions.
     $app->pipe(ErrorHandler::class);
@@ -59,7 +55,9 @@ return function (Application $app, MiddlewareFactory $factory, ContainerInterfac
     // after the Implicit*Middleware.
     $app->pipe(ImplicitHeadMiddleware::class);
     $app->pipe(ImplicitOptionsMiddleware::class);
-    $app->pipe(CorsMiddleware::class);
+    $app->pipe(new CorsMiddleware([
+        "cache" => 86400
+    ]));
     $app->pipe(MethodNotAllowedMiddleware::class);
 
     // Seed the UrlHelper with the routing results:
