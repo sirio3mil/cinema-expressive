@@ -15,6 +15,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 class ImportImdbMovieResolver extends AbstractResolver implements MutationResolverInterface
 {
@@ -53,6 +54,11 @@ class ImportImdbMovieResolver extends AbstractResolver implements MutationResolv
         $tape = $this->service->getTape();
         $this->entityManager->persist($tape);
         $this->entityManager->flush();
+
+        $sql = "exec [dbo].[UpdateTapeDefaultValues]";
+        $query = $this->entityManager->createNativeQuery($sql, new ResultSetMapping());
+        $query->execute();
+
         return $tape;
     }
 
