@@ -9,6 +9,7 @@
 namespace App\Resolver;
 
 use App\Entity\Tape;
+use App\Entity\TapeDefaultValue;
 use App\Service\ImportImdbMovieService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
@@ -58,6 +59,14 @@ class ImportImdbMovieResolver extends AbstractResolver implements MutationResolv
         $sql = "exec [dbo].[UpdateTapeDefaultValues]";
         $query = $this->entityManager->createNativeQuery($sql, new ResultSetMapping());
         $query->execute();
+
+        /** @var TapeDefaultValue $tapeDefaultValue */
+        $tapeDefaultValue = $this->entityManager
+            ->getRepository(TapeDefaultValue::class)
+            ->find($tape->getTapeId());
+        if ($tapeDefaultValue) {
+            $tape->setDefault($tapeDefaultValue);
+        }
 
         return $tape;
     }

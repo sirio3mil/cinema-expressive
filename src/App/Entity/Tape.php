@@ -479,9 +479,9 @@ class Tape implements CinemaEntity
     }
 
     /**
-     * @return TapeDefaultValue
+     * @return TapeDefaultValue|null
      */
-    public function getDefault(): TapeDefaultValue
+    public function getDefault(): ?TapeDefaultValue
     {
         return $this->default;
     }
