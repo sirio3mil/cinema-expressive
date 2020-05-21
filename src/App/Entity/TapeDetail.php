@@ -208,7 +208,7 @@ class TapeDetail implements CinemaEntity
      */
     public function getHaveCover(): bool
     {
-        return $this->haveCover;
+        return $this->haveCover ?? false;
     }
 
     /**
@@ -227,7 +227,7 @@ class TapeDetail implements CinemaEntity
      */
     public function getIsTvShow()
     {
-        return $this->isTvShow;
+        return $this->isTvShow ?? false;
     }
 
     /**
@@ -246,7 +246,7 @@ class TapeDetail implements CinemaEntity
      */
     public function getAdult(): bool
     {
-        return $this->adult;
+        return $this->adult ?? false;
     }
 
     /**
@@ -263,7 +263,7 @@ class TapeDetail implements CinemaEntity
     /**
      * @return float
      */
-    public function getBudget(): float
+    public function getBudget(): ?float
     {
         return $this->budget;
     }
@@ -282,7 +282,7 @@ class TapeDetail implements CinemaEntity
     /**
      * @return int
      */
-    public function getCurrency(): int
+    public function getCurrency(): ?int
     {
         return $this->currency;
     }
@@ -294,13 +294,13 @@ class TapeDetail implements CinemaEntity
             $this->currency = 1;
         }
         if (is_null($this->haveCover)) {
-            $this->haveCover = 0;
+            $this->haveCover = false;
         }
         if (is_null($this->isTvShow)) {
-            $this->isTvShow = 0;
+            $this->isTvShow = false;
         }
         if (is_null($this->adult)) {
-            $this->adult = 0;
+            $this->adult = false;
         }
         if (is_null($this->budget)) {
             $this->budget = 0;
@@ -312,7 +312,7 @@ class TapeDetail implements CinemaEntity
      */
     public function isTvShowChapter(): bool
     {
-        return $this->isTvShowChapter;
+        return $this->isTvShowChapter ?? false;
     }
 
     /**
