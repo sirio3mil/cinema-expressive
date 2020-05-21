@@ -254,11 +254,9 @@ class ImportFileResolver extends AbstractResolver implements MutationResolverInt
             throw new Exception("Unreachable thumbnail path {$dirname}");
         }
         $thumb = new Imagick($filename);
-        $thumb->resizeImage(
+        $thumb->thumbnailImage(
             $this->config['thumbnail_width'],
             $this->config['thumbnail_height'],
-            Imagick::FILTER_LANCZOS,
-            1,
             true
         );
         $filename = $dirname . DIRECTORY_SEPARATOR . $this->getFilename(
