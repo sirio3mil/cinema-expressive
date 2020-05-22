@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\LazyCriteriaCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use GraphQL\Doctrine\Annotation as API;
 
@@ -39,7 +40,7 @@ class GlobalUniqueObject implements CinemaEntity
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
-    protected $objectId;
+    protected UuidInterface $objectId;
 
     /**
      * @var RowType
@@ -47,47 +48,48 @@ class GlobalUniqueObject implements CinemaEntity
      * @ORM\ManyToOne(targetEntity="RowType", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="rowTypeId", referencedColumnName="rowTypeId")
      */
-    private $rowType;
+    private RowType $rowType;
 
     /**
-     * @var ImdbNumber
+     * @var ImdbNumber|null
      *
      * @ORM\OneToOne(targetEntity="ImdbNumber", mappedBy="object", cascade={"all"})
      */
-    protected $imdbNumber;
+    protected ?ImdbNumber $imdbNumber;
 
     /**
-     * @var PermanentLink
+     * @var PermanentLink|null
      *
      * @ORM\OneToOne(targetEntity="PermanentLink", mappedBy="object")
      */
-    protected $permanentLink;
+    protected ?PermanentLink $permanentLink;
 
     /**
-     * @var Ranking
+     * @var Ranking|null
      *
      * @ORM\OneToOne(targetEntity="Ranking", mappedBy="object", cascade={"all"})
      */
-    protected $ranking;
+    protected ?Ranking $ranking;
 
     /**
-     * @var People
+     * @var People|null
      *
      * @ORM\OneToOne(targetEntity="People", mappedBy="object")
      */
-    protected $people;
+    protected ?People $people;
 
     /**
-     * @var Tape
+     * @var Tape|null
      *
      * @ORM\OneToOne(targetEntity="Tape", mappedBy="object", cascade={"all"})
      */
-    protected $tape;
+    protected ?Tape $tape;
 
     /**
      * @var Collection
      *
      * @ORM\OneToMany(targetEntity="File", mappedBy="object", fetch="EXTRA_LAZY", cascade={"all"})
+     * @ORM\OrderBy({"createdAt" = "DESC"})
      */
     protected $files;
 
@@ -102,6 +104,13 @@ class GlobalUniqueObject implements CinemaEntity
     {
         $this->files = new ArrayCollection();
         $this->searchValues = new ArrayCollection();
+        $this->tape = null;
+        $this->people = null;
+        $this->ranking = null;
+        $this->permanentLink = null;
+        $this->imdbNumber = null;
+        $this->rowType = new RowType();
+        $this->objectId = Uuid::uuid4();
     }
 
 
@@ -163,7 +172,7 @@ class GlobalUniqueObject implements CinemaEntity
     /**
      * @return PermanentLink
      */
-    public function getPermanentLink(): PermanentLink
+    public function getPermanentLink(): ?PermanentLink
     {
         return $this->permanentLink;
     }
