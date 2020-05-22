@@ -23,10 +23,10 @@ class TapeDetail implements CinemaEntity
      * @ORM\OneToOne(targetEntity="Tape", inversedBy="detail", fetch="EXTRA_LAZY", cascade={"all"})
      * @ORM\JoinColumn(name="tapeId", referencedColumnName="tapeId")
      */
-    protected $tape;
+    protected Tape $tape;
 
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(
      *     type="smallint",
@@ -35,10 +35,10 @@ class TapeDetail implements CinemaEntity
      *     options={"unsigned":false}
      * )
      */
-    private $year;
+    private ?int $year;
 
     /**
-     * @var int
+     * @var int|null
      *
      * @ORM\Column(
      *     type="smallint",
@@ -47,10 +47,10 @@ class TapeDetail implements CinemaEntity
      *     options={"unsigned":false}
      * )
      */
-    private $duration;
+    private ?int $duration;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @ORM\Column(
      *     type="string",
@@ -60,43 +60,43 @@ class TapeDetail implements CinemaEntity
      *     options={"fixed":false,"default":"Color"}
      * )
      */
-    private $color;
+    private ?string $color;
 
     /**
      * @var bool
      *
      * @ORM\Column(
      *     type="boolean",
-     *     name="haveCover",
+     *     name="cover",
      *     nullable=false,
      *     options={"default":0}
      * )
      */
-    private $haveCover;
+    private bool $cover;
 
     /**
      * @var bool
      *
      * @ORM\Column(
      *     type="boolean",
-     *     name="isTvShow",
+     *     name="tvShow",
      *     nullable=false,
      *     options={"default":0}
      * )
      */
-    private $isTvShow;
+    private bool $tvShow;
 
     /**
      * @var bool
      *
      * @ORM\Column(
      *     type="boolean",
-     *     name="isTvShowChapter",
+     *     name="tvShowChapter",
      *     nullable=false,
      *     options={"default":0}
      * )
      */
-    private $isTvShowChapter;
+    private bool $tvShowChapter;
 
     /**
      * @var bool
@@ -108,7 +108,7 @@ class TapeDetail implements CinemaEntity
      *     options={"default":0}
      * )
      */
-    private $adult;
+    private bool $adult;
 
     /**
      * @var float
@@ -120,7 +120,7 @@ class TapeDetail implements CinemaEntity
      *     options={"default":0}
      * )
      */
-    private $budget;
+    private float $budget;
 
     /**
      * @var int
@@ -132,7 +132,21 @@ class TapeDetail implements CinemaEntity
      *     options={"unsigned":false,"default":1}
      * )
      */
-    private $currency;
+    private int $currency;
+
+    public function __construct()
+    {
+        $this->cover = false;
+        $this->currency = 1;
+        $this->budget = 0;
+        $this->adult = false;
+        $this->tvShowChapter = false;
+        $this->tvShow = false;
+        $this->color = null;
+        $this->duration = null;
+        $this->year = null;
+        $this->tape = new Tape();
+    }
 
 
     /**
@@ -193,12 +207,12 @@ class TapeDetail implements CinemaEntity
     }
 
     /**
-     * @param bool $haveCover
+     * @param bool $cover
      * @return TapeDetail
      */
-    public function setHaveCover(bool $haveCover): TapeDetail
+    public function setCover(bool $cover): TapeDetail
     {
-        $this->haveCover = $haveCover;
+        $this->cover = $cover;
 
         return $this;
     }
@@ -208,16 +222,16 @@ class TapeDetail implements CinemaEntity
      */
     public function hasCover(): bool
     {
-        return $this->haveCover ?? false;
+        return $this->cover ?? false;
     }
 
     /**
-     * @param bool $isTvShow
+     * @param bool $tvShow
      * @return TapeDetail
      */
-    public function setIsTvShow(bool $isTvShow): TapeDetail
+    public function setTvShow(bool $tvShow): TapeDetail
     {
-        $this->isTvShow = $isTvShow;
+        $this->tvShow = $tvShow;
 
         return $this;
     }
@@ -227,7 +241,7 @@ class TapeDetail implements CinemaEntity
      */
     public function isTvShow(): bool
     {
-        return $this->isTvShow ?? false;
+        return $this->tvShow ?? false;
     }
 
     /**
@@ -287,41 +301,21 @@ class TapeDetail implements CinemaEntity
         return $this->currency;
     }
 
-    /** @ORM\PrePersist */
-    public function generateDefaultValues()
-    {
-        if (is_null($this->currency)) {
-            $this->currency = 1;
-        }
-        if (is_null($this->haveCover)) {
-            $this->haveCover = false;
-        }
-        if (is_null($this->isTvShow)) {
-            $this->isTvShow = false;
-        }
-        if (is_null($this->adult)) {
-            $this->adult = false;
-        }
-        if (is_null($this->budget)) {
-            $this->budget = 0;
-        }
-    }
-
     /**
      * @return bool
      */
     public function isTvShowChapter(): bool
     {
-        return $this->isTvShowChapter ?? false;
+        return $this->tvShowChapter ?? false;
     }
 
     /**
-     * @param bool $isTvShowChapter
+     * @param bool $tvShowChapter
      * @return TapeDetail
      */
-    public function setIsTvShowChapter(bool $isTvShowChapter): TapeDetail
+    public function setTvShowChapter(bool $tvShowChapter): TapeDetail
     {
-        $this->isTvShowChapter = $isTvShowChapter;
+        $this->tvShowChapter = $tvShowChapter;
 
         return $this;
     }

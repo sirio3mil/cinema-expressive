@@ -395,8 +395,8 @@ class ImportImdbMovieService
         $tapeDetail->setDuration($mapper->getDuration());
         $tapeDetail->setYear($mapper->getYear());
         $tapeDetail->setColor($mapper->getColor());
-        $tapeDetail->setIsTvShow($mapper->isTvShow());
-        $tapeDetail->setIsTvShowChapter($mapper->isEpisode());
+        $tapeDetail->setTvShow($mapper->isTvShow());
+        $tapeDetail->setTvShowChapter($mapper->isEpisode());
         if ($tapeDetail->isTvShow()) {
             /** @var TvShow $tvShow */
             $tvShow = $this->entityManager->getRepository(TvShow::class)->findOneBy([

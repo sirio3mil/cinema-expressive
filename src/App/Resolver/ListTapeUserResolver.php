@@ -60,7 +60,7 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
                 'dt'
             )
             ->where('l.user = :user')
-            ->andWhere('dt.isTvShowChapter = :isTvShowChapter')
+            ->andWhere('dt.tvShowChapter = :isTvShowChapter')
             ->setParameters([
                 'user' => $user,
                 'isTvShowChapter' => false
@@ -68,7 +68,7 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
 
         if (!is_null($isTvShow)) {
             $this->qb
-                ->andWhere('dt.isTvShow = :isTvShow')
+                ->andWhere('dt.tvShow = :isTvShow')
                 ->setParameter('isTvShow', $isTvShow);
         }
 
