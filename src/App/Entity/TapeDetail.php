@@ -206,7 +206,7 @@ class TapeDetail implements CinemaEntity
     /**
      * @return bool
      */
-    public function getHaveCover(): bool
+    public function hasCover(): bool
     {
         return $this->haveCover ?? false;
     }
@@ -225,7 +225,7 @@ class TapeDetail implements CinemaEntity
     /**
      * @return bool
      */
-    public function getIsTvShow()
+    public function isTvShow(): bool
     {
         return $this->isTvShow ?? false;
     }
@@ -244,7 +244,7 @@ class TapeDetail implements CinemaEntity
     /**
      * @return bool
      */
-    public function getAdult(): bool
+    public function isAdult(): bool
     {
         return $this->adult ?? false;
     }
