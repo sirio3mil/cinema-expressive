@@ -35,7 +35,7 @@ services:
     links:
       - php
   php:
-    build: ../docker-php-fpm-image
+    image: reynier3mil/centos-php-fpm-msphpsql:latest
     container_name: php
     volumes:
       - .:/usr/share/nginx/html/api
@@ -44,7 +44,7 @@ services:
       - ./config/php-fpm/php-fpm.conf:/etc/php-fpm.conf
       - ./config/php-fpm/www.conf:/etc/php-fpm.d/www.conf
       - ./config/php-fpm/10-opcache.ini:/etc/php.d/10-opcache.ini
-      - ./config/php-fpm/15-xdebug.ini:/etc/php.d/15-xdebug.ini
+      - ./config/php-fpm/16-xdebug.ini:/etc/php.d/15-xdebug.ini
     ports:
       - 9050:9050
     restart: always
@@ -53,6 +53,8 @@ services:
     links:
       - mssql
       - memcached
+      - neo4j
+      - mongo
     working_dir: /usr/share/nginx/html/api
   mssql:
     image: reynier3mil/centos-mssql-full:latest
@@ -77,6 +79,30 @@ services:
     restart: always
     networks:
       - api-network
+  neo4j:
+    image: neo4j:latest
+    container_name: neo4j
+    volumes:
+      - ./data/neo4j:/data
+    ports:
+      - 7474:7474
+      - 7687:7687
+    restart: always
+    networks:
+      - api-network
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    volumes:
+      - ./data/mongo:/etc/mongo
+    ports:
+      - 27017:27017
+    restart: always
+    networks:
+      - api-network
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME="root"
+      - MONGO_INITDB_ROOT_PASSWORD="ms3CjP{R?1^A"
 networks:
   api-network:
     driver: bridge
