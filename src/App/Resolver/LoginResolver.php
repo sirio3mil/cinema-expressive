@@ -15,18 +15,20 @@ class LoginResolver extends AbstractResolver implements QueryResolverInterface
     /**
      * @var AuthorizationServer
      */
-    private $server;
+    private AuthorizationServer $server;
 
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    private EntityManager $entityManager;
+
     /**
      * @var array
      */
-    private $config;
+    private array $config;
+
     /**
-     * @var ResponseInterface
+     * @var callable
      */
     private $responseFactory;
 
