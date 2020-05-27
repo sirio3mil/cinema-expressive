@@ -20,21 +20,16 @@ use Memcached;
 class EntityManagerFactory
 {
     /**
-     * @param ContainerInterface $container
+     * @param $config
      * @return EntityManager
      * @throws DBALException
      * @throws ORMException
      */
-    public function __invoke(ContainerInterface $container): EntityManager
+    public static function createFromConfiguration($config): EntityManager
     {
-        $config = $container->has('config') ? $container->get('config') : [];
         $isDevMode = $config['debug'];
         $dbConfig = $config['db'] ?? [];
         $cacheConfig = $config['zend-cache'] ?? [];
-
-        $paths = [
-            __DIR__ . "/src/App/src/Entity"
-        ];
 
         $dbParams = [
             'driver' => $dbConfig['driver'],
@@ -55,8 +50,27 @@ class EntityManagerFactory
         } else {
             $cacheDriver = null;
         }
+
+        $dirname = dirname(__DIR__, 3);
+        $paths = [
+            "{$dirname}/src/App/Entity",
+            "{$dirname}/vendor/ecodev/graphql-doctrine/src/Annotation"
+        ];
+
         $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, null, $cacheDriver, false);
 
         return EntityManager::create($dbParams, $config);
+    }
+
+    /**
+     * @param ContainerInterface $container
+     * @return EntityManager
+     * @throws DBALException
+     * @throws ORMException
+     */
+    public function __invoke(ContainerInterface $container): EntityManager
+    {
+        $config = $container->has('config') ? $container->get('config') : [];
+        return self::createFromConfiguration($config);
     }
 }

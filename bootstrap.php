@@ -6,28 +6,10 @@
  * Time: 22:40
  */
 
-use Doctrine\ORM\Tools\Setup;
-use Doctrine\ORM\EntityManager;
+use App\Factory\EntityManagerFactory;
 
 require_once "vendor/autoload.php";
 
-// Create a simple "default" Doctrine ORM configuration for Annotations
-$isDevMode = true;
-$paths = [
-    __DIR__ . "/src/App/Entity"
-];
-$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, null, null, false);
-//$config = Setup::createYAMLMetadataConfiguration(array(__DIR__."/mapping/yml"), $isDevMode);
-// or if you prefer XML
-//$config = Setup::createXMLMetadataConfiguration(array(__DIR__."/config"), $isDevMode);
-// database configuration parameters
-$conn = array(
-    'driver' => 'sqlsrv',
-    'host' => ".",
-    'user' => "sa",
-    'password' => "ms3CjP{R?1^A",
-    'dbname' => "Film"
-);
+$config = require "config/config.php";
 
-// obtaining the entity manager
-$entityManager = EntityManager::create($conn, $config);
+$entityManager = EntityManagerFactory::createFromConfiguration($config);

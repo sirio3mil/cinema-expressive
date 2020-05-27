@@ -102,7 +102,7 @@ class LocationDetail implements CinemaEntity
      * @ORM\Column(
      *     type="string",
      *     length=12,
-     *     name="street",
+     *     name="postalCode",
      *     nullable=true,
      *     options={"fixed":false}
      * )
