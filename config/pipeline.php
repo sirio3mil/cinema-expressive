@@ -55,9 +55,7 @@ return function (Application $app) : void {
     // after the Implicit*Middleware.
     $app->pipe(ImplicitHeadMiddleware::class);
     $app->pipe(ImplicitOptionsMiddleware::class);
-    $app->pipe(new CorsMiddleware([
-        "cache" => 86400
-    ]));
+    $app->pipe(CorsMiddleware::class);
     $app->pipe(MethodNotAllowedMiddleware::class);
 
     // Seed the UrlHelper with the routing results:

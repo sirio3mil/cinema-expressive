@@ -33,8 +33,9 @@ RUN dnf --enablerepo=remi-modular-test -y install php-fpm \
                php-pecl-uuid \
                php-pecl-zip \
                php-pecl-memcached \
-               php-pecl-imagick \
-               php-pecl-xdebug
+# enable next line for development
+#                php-pecl-xdebug \
+               php-pecl-imagick
  
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
@@ -49,10 +50,13 @@ COPY ./config/php-fpm/php.ini /etc/php.ini
 COPY ./config/php-fpm/php-fpm.conf /etc/php-fpm.conf
 COPY ./config/php-fpm/www.conf /etc/php-fpm.d/www.conf
 COPY ./config/php-fpm/10-opcache.ini /etc/php.d/10-opcache.ini
-COPY ./config/php-fpm/15-xdebug.ini /etc/php.d/15-xdebug.ini
+# disable next line for development
+RUN rm -f ./config/autoload/development.local.php
+# enable next line for development
+# COPY ./config/php-fpm/15-xdebug.ini /etc/php.d/15-xdebug.ini
 RUN chmod +x bootstrap.sh
 RUN mkdir -p /run/php-fpm
-RUN composer update
+RUN composer update --no-dev
 
 # put customized config and code files to /data
 

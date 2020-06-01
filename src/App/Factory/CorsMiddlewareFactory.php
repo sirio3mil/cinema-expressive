@@ -23,12 +23,12 @@ class CorsMiddlewareFactory
     public function __invoke(ContainerInterface $container): CorsMiddleware
     {
         return new CorsMiddleware([
-            "origin" => ["*"],
-            "methods" => ["GET", "POST", "PUT", "PATCH", "DELETE"],
-            "headers.allow" => ["*"],
+            "origin" => ["https://cinema.lcl:4443"],
+            "methods" => ["POST"],
+            "headers.allow" => ["authorization"],
             "headers.expose" => [],
             "credentials" => false,
-            "cache" => 0,
+            "cache" => 8600,
             "error" => function (RequestInterface $request, ResponseInterface $response, $arguments) use ($container) {
                 return $container->get(ProblemDetailsResponseFactory::class)->createResponse(
                     $request,

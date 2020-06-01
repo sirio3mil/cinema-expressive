@@ -5,7 +5,6 @@ services:
     container_name: frontend
     volumes:
       - ../cinema-frontend/dist/cinema-frontend:/usr/share/nginx/html
-      - ../cinema-frontend/logs/nginx:/var/log/nginx
       - ../cinema-frontend/config/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ../cinema-frontend/config/nginx/conf.d/web.conf:/etc/nginx/conf.d/web.conf
       - ../cinema-frontend/config/nginx/cert:/etc/ssl
@@ -22,7 +21,6 @@ services:
     container_name: web
     volumes:
       - .:/usr/share/nginx/html/api
-      - ./logs/nginx:/var/log/nginx
       - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./config/nginx/conf.d/api.conf:/etc/nginx/conf.d/api.conf
       - ./config/nginx/cert:/etc/ssl
@@ -38,8 +36,7 @@ services:
     build: .
     container_name: php
     volumes:
-      - ./logs/php-fpm:/var/log/php-fpm
-      - .:/usr/share/nginx/html/api
+      - ./public/photos:/usr/share/nginx/html/api/public/photos
     ports:
       - 9050:9050
     restart: always
