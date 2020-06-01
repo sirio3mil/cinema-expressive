@@ -35,16 +35,11 @@ services:
     links:
       - php
   php:
-    build: ../docker-php-fpm-image
+    build: .
     container_name: php
     volumes:
-      - .:/usr/share/nginx/html/api
       - ./logs/php-fpm:/var/log/php-fpm
-      - ./config/php-fpm/php.ini:/etc/php.ini
-      - ./config/php-fpm/php-fpm.conf:/etc/php-fpm.conf
-      - ./config/php-fpm/www.conf:/etc/php-fpm.d/www.conf
-      - ./config/php-fpm/10-opcache.ini:/etc/php.d/10-opcache.ini
-      - ./config/php-fpm/15-xdebug.ini:/etc/php.d/15-xdebug.ini
+      - .:/usr/share/nginx/html/api
     ports:
       - 9050:9050
     restart: always
@@ -53,7 +48,6 @@ services:
     links:
       - mssql
       - memcached
-    working_dir: /usr/share/nginx/html/api
   mssql:
     image: reynier3mil/centos-mssql-full:latest
     container_name: mssql
