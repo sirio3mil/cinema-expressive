@@ -4,11 +4,12 @@ namespace App\Resolver;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManager;
-use Laminas\Diactoros\Response\JsonResponse;
+use Laminas\Diactoros\Response;
 use Psr\Http\Message\ResponseInterface;
 use Laminas\Diactoros\ServerRequest;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\OAuthServerException;
+use function json_decode;
 
 class LoginResolver extends AbstractResolver implements QueryResolverInterface
 {
@@ -77,11 +78,14 @@ class LoginResolver extends AbstractResolver implements QueryResolverInterface
             $args[$key] = $args[$key] ?? $value;
         }
         $request = (new ServerRequest())->withParsedBody($args);
-        /** @var JsonResponse $response */
+        /** @var Response $response */
         $response = $this->server->respondToAccessTokenRequest($request, $this->createResponse());
 
         $user = $this->execute($args['username'], $args['password']);
-        $user->setToken($response->getPayload()['access_token']);
+        $stream = $response->getBody();
+        $stream->rewind();
+        $data = json_decode($stream->getContents(), true);
+        $user->setToken($data['access_token']);
 
         return $user;
     }
