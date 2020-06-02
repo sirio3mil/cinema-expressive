@@ -20,10 +20,11 @@ services:
     image: nginx:latest
     container_name: web
     volumes:
-      - .:/usr/share/nginx/html/api
+      - ./public/index.php:/usr/share/nginx/html/api/public/index.php
       - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./config/nginx/conf.d/api.conf:/etc/nginx/conf.d/api.conf
       - ./config/nginx/cert:/etc/ssl
+      - photos:/usr/share/nginx/html/api/public/photos
     ports:
       - 80:80
       - 443:443
@@ -36,7 +37,7 @@ services:
     build: .
     container_name: php
     volumes:
-      - ./public/photos:/usr/share/nginx/html/api/public/photos
+      - photos:/usr/share/nginx/html/api/public/photos
     ports:
       - 9050:9050
     restart: always
@@ -72,3 +73,6 @@ networks:
   api-network:
     driver: bridge
     name: api-network
+volumes:
+  photos:
+    external: true

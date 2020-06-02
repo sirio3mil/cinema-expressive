@@ -46,14 +46,12 @@ EXPOSE 9050
 
 WORKDIR /usr/share/nginx/html/api
 COPY . .
-COPY ./config/php-fpm/php.ini /etc/php.ini
-COPY ./config/php-fpm/php-fpm.conf /etc/php-fpm.conf
-COPY ./config/php-fpm/www.conf /etc/php-fpm.d/www.conf
-COPY ./config/php-fpm/10-opcache.ini /etc/php.d/10-opcache.ini
+RUN mv ./config/php-fpm /etc
+# disable next line for development
+RUN rm -f /etc/php.d/15-xdebug.ini
+RUN rm -rf ./config/nginx
 # disable next line for development
 RUN rm -f ./config/autoload/development.local.php
-# enable next line for development
-# COPY ./config/php-fpm/15-xdebug.ini /etc/php.d/15-xdebug.ini
 RUN chmod +x bootstrap.sh
 RUN mkdir -p /run/php-fpm
 RUN composer update --no-dev
