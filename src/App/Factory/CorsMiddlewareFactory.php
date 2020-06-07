@@ -9,8 +9,8 @@
 namespace App\Factory;
 
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Tuupola\Middleware\CorsMiddleware;
 use Mezzio\ProblemDetails\ProblemDetailsResponseFactory;
 
@@ -23,13 +23,13 @@ class CorsMiddlewareFactory
     public function __invoke(ContainerInterface $container): CorsMiddleware
     {
         return new CorsMiddleware([
-            "origin" => ["https://cinema.lcl:4443"],
+            "origin" => "*",
             "methods" => ["POST"],
-            "headers.allow" => ["authorization"],
+            "headers.allow" => ["authorization", "content-type"],
             "headers.expose" => [],
-            "credentials" => false,
-            "cache" => 8600,
-            "error" => function (RequestInterface $request, ResponseInterface $response, $arguments) use ($container) {
+            "credentials" => true,
+            "cache" => 1728000,
+            "error" => function (ServerRequestInterface $request, ResponseInterface $response, $arguments) use ($container) {
                 return $container->get(ProblemDetailsResponseFactory::class)->createResponse(
                     $request,
                     401,

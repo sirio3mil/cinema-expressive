@@ -12,10 +12,6 @@ services:
       - 8080:80
       - 4443:443
     restart: always
-    networks:
-      - api-network
-    links:
-      - web:cinema.lcl
   web:
     image: nginx:latest
     container_name: web
@@ -29,21 +25,15 @@ services:
       - 80:80
       - 443:443
     restart: always
-    networks:
-      - api-network
-    links:
+    depends_on:
       - php
   php:
     build: .
     container_name: php
     volumes:
       - photos:/usr/share/nginx/html/api/public/photos
-    ports:
-      - 9050:9050
     restart: always
-    networks:
-      - api-network
-    links:
+    depends_on:
       - mssql
       - memcached
   mssql:
@@ -54,8 +44,6 @@ services:
     ports:
       - 1433:1433
     restart: always
-    networks:
-      - api-network
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=ms3CjP{R?1^A
@@ -67,12 +55,6 @@ services:
     ports:
       - 11211:11211
     restart: always
-    networks:
-      - api-network
-networks:
-  api-network:
-    driver: bridge
-    name: api-network
 volumes:
   photos:
     external: true

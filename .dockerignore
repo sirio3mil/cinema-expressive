@@ -1,0 +1,5 @@
+.idea
+data/mssql/
+vendor/
+config/nginx/
+config/autoload/development.local.php
