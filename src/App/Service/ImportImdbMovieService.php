@@ -552,7 +552,7 @@ class ImportImdbMovieService
             $peopleChecked = [];
             /** @var Person $person */
             foreach ($writers as $person) {
-                if (in_array($person->getImdbNumber(), $peopleChecked)) {
+                if (in_array($person->getImdbNumber(), $peopleChecked, true)) {
                     continue;
                 }
                 $peopleChecked[] = $person->getImdbNumber();
