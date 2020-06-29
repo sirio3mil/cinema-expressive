@@ -75,7 +75,7 @@ class LoginResolver extends AbstractResolver implements QueryResolverInterface
     public function resolve(array $args)
     {
         foreach ($this->config as $key => $value) {
-            $args[$key] = $args[$key] ?? $value;
+            $args[$key] ??= $value;
         }
         $request = (new ServerRequest())->withParsedBody($args);
         /** @var Response $response */
