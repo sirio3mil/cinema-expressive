@@ -31,31 +31,31 @@ class ResolverManager
     /**
      * @var ContainerInterface
      */
-    private $container;
+    private ContainerInterface $container;
     /**
      * @var ReflectionClass
      */
-    private $reflectionClass;
+    private ReflectionClass $reflectionClass;
     /**
      * @var ReflectionMethod
      */
-    private $reflectionMethod;
+    private ReflectionMethod $reflectionMethod;
     /**
      * @var Types
      */
-    private $types;
+    private Types $types;
     /**
      * @var AnnotationReader
      */
-    private $annotationReader;
+    private AnnotationReader $annotationReader;
     /**
      * @var string
      */
-    private $entityNamespaceName;
+    private string $entityNamespaceName;
     /**
      * @var string
      */
-    private $typeNamespaceName;
+    private string $typeNamespaceName;
 
     /**
      * ResolverManager constructor.
@@ -76,7 +76,7 @@ class ResolverManager
      */
     protected static function getEntityIdArgumentName(ReflectionClass $class): string
     {
-        return strtolower(substr($class->getShortName(), 0, 1)) . substr($class->getShortName(), 1) . 'Id';
+        return strtolower($class->getShortName()[0]) . substr($class->getShortName(), 1) . 'Id';
     }
 
 
