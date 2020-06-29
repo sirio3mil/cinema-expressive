@@ -85,7 +85,7 @@ class TvShow implements CinemaEntity
     /** @ORM\PrePersist */
     public function generateFinishedFlag()
     {
-        if (is_null($this->createdAt)) {
+        if ($this->createdAt === null) {
             $this->setFinished(false);
         }
     }

@@ -129,7 +129,7 @@ class Premiere implements CinemaEntity
     /** @ORM\PrePersist */
     public function generatePlace()
     {
-        if (is_null($this->place)) {
+        if ($this->place === null) {
             $this->place = "Movie";
         }
     }

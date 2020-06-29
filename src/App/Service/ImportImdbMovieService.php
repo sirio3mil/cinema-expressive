@@ -49,6 +49,8 @@ use ImdbScraper\Model\Location as Place;
 use ImdbScraper\Model\Release;
 use ImdbScraper\Model\People as Person;
 use Exception;
+use function array_key_exists;
+use function in_array;
 
 class ImportImdbMovieService
 {

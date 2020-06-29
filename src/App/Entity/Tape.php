@@ -9,6 +9,7 @@ use Doctrine\ORM\LazyCriteriaCollection;
 use Doctrine\ORM\Mapping as ORM;
 use GraphQL\Doctrine\Annotation as API;
 use DateTime;
+use function strval;
 
 /**
  * Class Tape

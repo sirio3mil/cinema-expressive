@@ -122,7 +122,7 @@ class TapeUserScore implements CinemaEntity
     /** @ORM\PrePersist */
     public function generateExportedFlag()
     {
-        if(is_null($this->exported)) {
+        if($this->exported === null) {
             $this->setExported(false);
         }
     }

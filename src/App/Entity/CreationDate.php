@@ -53,7 +53,7 @@ trait CreationDate
      */
     public function generateCreationDate()
     {
-        if(is_null($this->createdAt)) {
+        if($this->createdAt === null) {
             $this->createdAt = DateGenerator::getUtcDateTime();
         }
     }

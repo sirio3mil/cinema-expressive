@@ -152,7 +152,7 @@ class TapeUserHistoryDetail implements CinemaEntity
     /** @ORM\PrePersist */
     public function generateVisibleFlag()
     {
-        if (is_null($this->visible)) {
+        if ($this->visible === null) {
             $this->setVisible(true);
         }
     }
@@ -160,7 +160,7 @@ class TapeUserHistoryDetail implements CinemaEntity
     /** @ORM\PrePersist */
     public function generateExportedFlag()
     {
-        if (is_null($this->exported)) {
+        if ($this->exported === null) {
             $this->setExported(false);
         }
     }

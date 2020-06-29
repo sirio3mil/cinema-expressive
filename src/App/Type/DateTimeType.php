@@ -15,6 +15,7 @@ use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Utils\Utils;
 use UnexpectedValueException;
+use function is_string;
 
 class DateTimeType extends ScalarType
 {

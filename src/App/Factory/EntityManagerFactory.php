@@ -16,6 +16,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\Common\Cache\MemcachedCache;
 use Psr\Container\ContainerInterface;
 use Memcached;
+use function dirname;
 
 class EntityManagerFactory
 {

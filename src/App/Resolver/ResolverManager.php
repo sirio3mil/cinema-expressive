@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Resolver;
 
 use App\Entity\CinemaEntity;
@@ -25,6 +24,11 @@ use ReflectionMethod;
 use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionType;
+use function call_user_func;
+use function class_exists;
+use function str_replace;
+use function stripos;
+use function substr;
 
 class ResolverManager
 {
@@ -149,7 +153,7 @@ class ResolverManager
                     $argType = Type::boolean();
                     break;
                 case 'array':
-                    /** @var ReflectionType $returnType */
+                    /** @var ReflectionNamedType $returnType */
                     $returnType = $this->reflectionMethod->getReturnType();
                     if (!$returnType) {
                         throw new Exception("Missing argument as return type for {$this->reflectionMethod->getShortName()}");
@@ -195,7 +199,7 @@ class ResolverManager
     {
         $argType = null;
         $argName = null;
-        /** @var ReflectionType $returnType */
+        /** @var ReflectionNamedType $returnType */
         $returnType = $this->reflectionMethod->getReturnType();
         if (!$returnType) {
             throw new Exception("Missing argument as return type for {$this->reflectionMethod->getShortName()}");

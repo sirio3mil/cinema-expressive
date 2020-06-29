@@ -17,6 +17,7 @@ use App\Service\TapeUserService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
+use function array_key_exists;
 
 class EditTapeUserResolver extends AbstractResolver implements MutationResolverInterface
 {
