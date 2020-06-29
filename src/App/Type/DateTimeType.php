@@ -9,19 +9,17 @@
 namespace App\Type;
 
 use DateTime;
+use Exception;
 use GraphQL\Error\Error;
 use GraphQL\Language\AST\StringValueNode;
 use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Utils\Utils;
 use UnexpectedValueException;
-use Exception;
 
 class DateTimeType extends ScalarType
 {
     public function parseLiteral($valueNode, array $variables = null)
     {
-        // Note: throwing GraphQL\Error\Error vs \UnexpectedValueException to benefit from GraphQL
-        // error location in query:
         if (!($valueNode instanceof StringValueNode)) {
             throw new Error('Query error: Can only parse strings got: ' . $valueNode->kind, $valueNode);
         }
