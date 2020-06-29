@@ -16,7 +16,7 @@ class EditTapeUserHistoryDetailResolver extends AbstractResolver implements Muta
     /**
      * @var QueryBuilder
      */
-    protected $qb;
+    protected QueryBuilder $qb;
 
     /**
      * EditTapeUserHistoryDetailResolver constructor.

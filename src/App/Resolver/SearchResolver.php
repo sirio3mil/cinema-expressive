@@ -12,7 +12,6 @@ use App\Entity\GlobalUniqueObject;
 use App\Entity\RowType;
 use App\Entity\SearchValue;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\NativeQuery;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use GraphQL\Doctrine\Annotation as API;
 
@@ -22,7 +21,7 @@ class SearchResolver extends AbstractResolver implements QueryResolverInterface
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    private EntityManager $entityManager;
 
     public function __construct(EntityManager $entityManager)
     {

@@ -26,12 +26,12 @@ class EditSeasonUserResolver extends AbstractResolver implements MutationResolve
     /**
      * @var EntityManager
      */
-    private $entityManager;
+    private EntityManager $entityManager;
 
     /**
      * @var TapeUserService
      */
-    private $tapeUserService;
+    private TapeUserService $tapeUserService;
 
     /**
      * EditSeasonUserResolver constructor.
