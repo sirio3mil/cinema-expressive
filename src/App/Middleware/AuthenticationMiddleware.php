@@ -37,12 +37,12 @@ class AuthenticationMiddleware implements MiddlewareInterface
         $user = $this->auth->authenticate($request);
         if (null !== $user) {
             return $handler->handle($request->withAttribute(UserInterface::class, $user));
-        } else {
-            $query = $request->getParsedBody()['query'] ?? null;
-            if ($query && strpos($query, 'query login') === 0) {
-                return $handler->handle($request);
-            }
         }
+        $query = $request->getParsedBody()['query'] ?? null;
+        if ($query && strpos($query, 'query login') === 0) {
+            return $handler->handle($request);
+        }
+
         return $this->auth->unauthorizedResponse($request);
     }
 }
