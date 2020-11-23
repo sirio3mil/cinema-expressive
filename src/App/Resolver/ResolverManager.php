@@ -16,8 +16,8 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Upload\UploadType;
 use Psr\Container\ContainerInterface;
-use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -148,24 +148,7 @@ class ResolverManager
         $argName = $parameter->getName();
         $class = $parameter->getClass();
         if (!$class) {
-            switch ($parameter->getType()) {
-                case 'bool':
-                    $argType = Type::boolean();
-                    break;
-                case 'array':
-                    /** @var ReflectionNamedType $returnType */
-                    $returnType = $this->reflectionMethod->getReturnType();
-                    if (!$returnType) {
-                        throw new Exception("Missing argument as return type for {$this->reflectionMethod->getShortName()}");
-                    }
-                    $class = new ReflectionClass($returnType->getName());
-                    if ($class->isSubclassOf(CinemaEntity::class)) {
-                        $argType = $this->types->getPartialInput($class->getName());
-                    }
-                    break;
-                default:
-                    $argType = call_user_func(Type::class . '::' . $parameter->getType());
-            }
+            $argType = $this->getArgumentTypeNoClass($parameter);
         } elseif ($class->isSubclassOf(CinemaEntity::class)) {
             switch ($argName) {
                 case 'input':
@@ -311,5 +294,41 @@ class ResolverManager
         if (!$this->reflectionMethod->hasReturnType()) {
             throw new Exception("Reflection method not found for {$this->reflectionClass->getShortName()}");
         }
+    }
+
+    /**
+     * @param ReflectionParameter $parameter
+     * @return mixed
+     * @throws ReflectionException
+     * @throws Exception
+     */
+    protected function getArgumentTypeNoClass(ReflectionParameter $parameter)
+    {
+        $argType = null;
+        $reflectionType = $parameter->getType();
+        if (!$reflectionType instanceof ReflectionNamedType) {
+            throw new Exception("Wrong reflection type");
+        }
+        $parameterType = $reflectionType->getName();
+        switch ($parameterType) {
+            case 'bool':
+                $argType = Type::boolean();
+                break;
+            case 'array':
+                /** @var ReflectionNamedType $returnType */
+                $returnType = $this->reflectionMethod->getReturnType();
+                if (!$returnType) {
+                    throw new Exception("Missing argument as return type for {$this->reflectionMethod->getShortName()}");
+                }
+                $class = new ReflectionClass($returnType->getName());
+                if ($class->isSubclassOf(CinemaEntity::class)) {
+                    $argType = $this->types->getPartialInput($class->getName());
+                }
+                break;
+            default:
+                $argType = call_user_func(Type::class . '::' . $parameterType);
+        }
+
+        return $argType;
     }
 }

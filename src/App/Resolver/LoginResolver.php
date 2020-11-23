@@ -72,7 +72,7 @@ class LoginResolver extends AbstractResolver implements QueryResolverInterface
      * @inheritDoc
      * @throws OAuthServerException
      */
-    public function resolve(array $args)
+    public function resolve(array $args): User
     {
         foreach ($this->config as $key => $value) {
             $args[$key] ??= $value;
@@ -80,7 +80,6 @@ class LoginResolver extends AbstractResolver implements QueryResolverInterface
         $request = (new ServerRequest())->withParsedBody($args);
         /** @var Response $response */
         $response = $this->server->respondToAccessTokenRequest($request, $this->createResponse());
-
         $user = $this->execute($args['username'], $args['password']);
         $stream = $response->getBody();
         $stream->rewind();

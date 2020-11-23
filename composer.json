@@ -34,7 +34,7 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
+        "php": "^8.0",
         "ext-bcmath": "*",
         "ext-curl": "*",
         "ext-gd": "*",
@@ -61,7 +61,7 @@
         "laminas/laminas-stratigility": "^3.0",
         "mezzio/mezzio": "^3.2",
         "mezzio/mezzio-aurarouter": "^3.0",
-        "mezzio/mezzio-authentication-oauth2": "^1.1",
+        "mezzio/mezzio-authentication-oauth2": "^2.0",
         "mezzio/mezzio-csrf": "^1.0",
         "mezzio/mezzio-flash": "^1.0",
         "mezzio/mezzio-helpers": "^5.0",

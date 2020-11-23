@@ -12,6 +12,7 @@ use GraphQL\Error\DebugFlag;
 use GraphQL\Server\ServerConfig;
 use GraphQL\Server\StandardServer;
 use GraphQL\Type\Schema;
+use Laminas\Diactoros\Exception\InvalidArgumentException;
 use Laminas\Diactoros\Response\JsonResponse;
 use Mezzio\Authentication\UserInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -34,6 +35,11 @@ class GraphQLHandler implements RequestHandlerInterface
         }
     }
 
+    /**
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     * @throws InvalidArgumentException
+     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $this->serverConfig->setContext($request->getAttribute(UserInterface::class));

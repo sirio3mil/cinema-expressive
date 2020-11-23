@@ -11,3 +11,5 @@ data/neo4j/
 data/mongo/
 public/info.php
 /config/nginx/cert/
+/supervisord.log
+/supervisord.pid
