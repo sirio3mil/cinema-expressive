@@ -8,14 +8,15 @@
 
 namespace App\Handler;
 
+use GraphQL\Error\DebugFlag;
 use GraphQL\Server\ServerConfig;
 use GraphQL\Server\StandardServer;
 use GraphQL\Type\Schema;
+use Laminas\Diactoros\Response\JsonResponse;
+use Mezzio\Authentication\UserInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Laminas\Diactoros\Response\JsonResponse;
-use Mezzio\Authentication\UserInterface;
 
 class GraphQLHandler implements RequestHandlerInterface
 {
@@ -27,8 +28,10 @@ class GraphQLHandler implements RequestHandlerInterface
     {
         $this->serverConfig = ServerConfig::create()
             ->setSchema($schema)
-            ->setQueryBatching(true)
-            ->setDebug($debug);
+            ->setQueryBatching(true);
+        if ($debug) {
+            $this->serverConfig->setDebugFlag(DebugFlag::INCLUDE_TRACE);
+        }
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
