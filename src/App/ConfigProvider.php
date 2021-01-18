@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Command\CheckEpisodes;
+use App\Command\CheckEpisodesFactory;
 use App\Factory\GraphQLHandlerFactory;
 use App\Handler\GraphQLHandler;
+use JetBrains\PhpStorm\ArrayShape;
 
 /**
  * The configuration provider for the App module
@@ -21,24 +24,33 @@ class ConfigProvider
      * method which returns an array with its configuration.
      *
      */
-    public function __invoke(): array
+    #[ArrayShape(['dependencies' => "\string[][]", 'templates' => "array[]", 'laminas-cli' => "\string[][]"])] public function __invoke(): array
     {
         return [
             'dependencies' => $this->getDependencies(),
             'templates' => $this->getTemplates(),
+            'laminas-cli' => $this->getCliConfig(),
+        ];
+    }
+
+    #[ArrayShape(['commands' => "string[]"])] public function getCliConfig(): array
+    {
+        return [
+            'commands' => [
+                'app:check-episodes' => CheckEpisodes::class,
+            ],
         ];
     }
 
     /**
      * Returns the container dependencies
      */
-    public function getDependencies(): array
+    #[ArrayShape(['factories' => "string[]"])] public function getDependencies(): array
     {
         return [
-            'invokables' => [
-            ],
             'factories' => [
                 GraphQLHandler::class => GraphQLHandlerFactory::class,
+                CheckEpisodes::class => CheckEpisodesFactory::class,
             ],
         ];
     }
@@ -46,7 +58,7 @@ class ConfigProvider
     /**
      * Returns the templates configuration
      */
-    public function getTemplates(): array
+    #[ArrayShape(['paths' => "array"])] public function getTemplates(): array
     {
         return [
             'paths' => [

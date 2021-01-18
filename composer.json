@@ -51,6 +51,7 @@
         "jasny/container": "^2.0",
         "laminas/laminas-auradi-config": "^2.0",
         "laminas/laminas-cache": "^2.8",
+        "laminas/laminas-cli": "^0.1.5",
         "laminas/laminas-component-installer": "^2.1",
         "laminas/laminas-config-aggregator": "^1.0",
         "laminas/laminas-db": "^2.9",
@@ -75,16 +76,16 @@
         "webonyx/graphql-php": "^14.3"
     },
     "require-dev": {
+        "devster/ubench": "^2.0",
         "filp/whoops": "^2.1",
+        "laminas/laminas-development-mode": "^3.1",
+        "mezzio/mezzio-tooling": "^1.0",
         "phpmd/phpmd": "^2.6.0",
         "phpunit/phpunit": "^9.0",
         "roave/security-advisories": "dev-master",
         "squizlabs/php_codesniffer": "^2.9",
         "symfony/var-dumper": "^4.1",
-        "whoops/soap": "^1.0",
-        "mezzio/mezzio-tooling": "^1.0",
-        "laminas/laminas-development-mode": "^3.1",
-        "devster/ubench": "^2.0"
+        "whoops/soap": "^1.0"
     },
     "autoload": {
         "psr-4": {
