@@ -116,6 +116,7 @@
         "clear-result-cache": "vendor/bin/doctrine orm:clear-cache:result",
         "clear-query-cache": "vendor/bin/doctrine orm:clear-cache:query",
         "generate-proxies": "vendor/bin/doctrine orm:generate-proxies",
+        "check-episodes": "vendor/bin/laminas app:check-episodes",
         "serve": "php -S 0.0.0.0:8080 -t public/",
         "test": "phpunit --colors=always",
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
