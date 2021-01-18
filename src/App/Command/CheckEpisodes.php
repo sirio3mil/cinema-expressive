@@ -3,7 +3,6 @@
 namespace App\Command;
 
 use App\Entity\Premiere;
-use App\Entity\Tape;
 use App\Entity\TapeUser;
 use App\Entity\TvShow;
 use App\Entity\TvShowChapter;
@@ -46,6 +45,8 @@ class CheckEpisodes extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $startScript = new DateTimeImmutable();
+        $importedEpisodes = 0;
+        $times = [];
         try {
             $currentSeason = (bool)$input->getArgument('current');
             $userRepository = $this->em->getRepository(User::class);
@@ -117,13 +118,16 @@ class CheckEpisodes extends Command
                             $tape = $this->movieService->getTape();
                             $this->em->persist($tape);
                             $diff = $startEpisode->diff(new DateTimeImmutable());
+                            $seconds = $diff->s + $diff->f;
                             $output->writeln(sprintf(
                                     'Imported episode %u/%u in %f',
                                     $episodePos,
                                     $episodeCount,
-                                    $diff->s + $diff->f
+                                    $seconds
                                 )
                             );
+                            $importedEpisodes++;
+                            $times[] = $seconds;
                         } else {
                             $output->writeln(sprintf(
                                     '<comment>Episode %u %u/%u ignored</comment>',
@@ -170,6 +174,15 @@ class CheckEpisodes extends Command
                 $diff->s + $diff->f
             )
         );
+        if ($importedEpisodes) {
+            $media = array_sum($times) / $importedEpisodes;
+            $output->writeln(sprintf(
+                    "<info>Imported %u episodes at %f seconds per episode<info>!",
+                    $importedEpisodes,
+                    $media
+                )
+            );
+        }
 
         return Command::SUCCESS;
     }

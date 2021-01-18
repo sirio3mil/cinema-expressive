@@ -6023,16 +6023,16 @@
         },
         {
             "name": "sirio3mil/imdb-scraper",
-            "version": "1.1.6",
+            "version": "1.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sirio3mil/imdb-scraper.git",
-                "reference": "731d6a9cee6ea5acf45c7f6dc9e2b5773f39e8d8"
+                "reference": "6cc8746848ed4e68079f72228dc897a468717511"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sirio3mil/imdb-scraper/zipball/731d6a9cee6ea5acf45c7f6dc9e2b5773f39e8d8",
-                "reference": "731d6a9cee6ea5acf45c7f6dc9e2b5773f39e8d8",
+                "url": "https://api.github.com/repos/sirio3mil/imdb-scraper/zipball/6cc8746848ed4e68079f72228dc897a468717511",
+                "reference": "6cc8746848ed4e68079f72228dc897a468717511",
                 "shasum": ""
             },
             "require": {
@@ -6071,10 +6071,10 @@
             },
             "description": "Internet movie database's website scraper in PHP",
             "support": {
-                "source": "https://github.com/sirio3mil/imdb-scraper/tree/1.1.6",
+                "source": "https://github.com/sirio3mil/imdb-scraper/tree/1.1.7",
                 "issues": "https://github.com/sirio3mil/imdb-scraper/issues"
             },
-            "time": "2021-01-18T11:44:05+00:00"
+            "time": "2021-01-18T15:11:05+00:00"
         },
         {
             "name": "spatie/array-to-xml",
