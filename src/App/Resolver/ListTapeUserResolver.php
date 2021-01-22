@@ -9,6 +9,7 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use GraphQL\Doctrine\Annotation as API;
+use JetBrains\PhpStorm\ArrayShape;
 use function array_key_exists;
 use function is_null;
 
@@ -36,6 +37,7 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
      * @return array
      * @throws Exception
      */
+    #[ArrayShape(['elements' => "\ArrayIterator", 'total' => "int", 'pages' => "false|float"])]
     protected function execute(
         User $user,
         ?TapeUserStatus $tapeUserStatus,
@@ -117,6 +119,7 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
      * @return array
      * @throws Exception
      */
+    #[ArrayShape(['elements' => "\ArrayIterator", 'total' => "int", 'pages' => "false|float"])]
     public function resolve(array $args): array
     {
 

@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Resolver;
-
 
 use App\Entity\File;
 use App\Entity\GlobalUniqueObject;
@@ -12,17 +10,11 @@ use Psr\Http\Message\UploadedFileInterface;
 class CreateFileResolver extends AbstractResolver implements MutationResolverInterface
 {
     /**
-     * @var EntityManager
-     */
-    private EntityManager $entityManager;
-
-    /**
      * EditTapeUserResolver constructor.
      * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(private EntityManager $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**

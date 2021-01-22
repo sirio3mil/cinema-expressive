@@ -17,15 +17,8 @@ use InvalidArgumentException;
 
 class EditTvShowResolver extends AbstractResolver implements MutationResolverInterface
 {
-
-    /**
-     * @var EntityManager
-     */
-    private EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
+    public function __construct(private EntityManager $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**

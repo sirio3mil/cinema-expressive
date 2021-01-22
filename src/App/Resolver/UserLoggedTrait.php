@@ -1,14 +1,12 @@
 <?php
 
-
 namespace App\Resolver;
 
 use Mezzio\Authentication\UserInterface;
 
 trait UserLoggedTrait
 {
-    /** @var UserInterface */
-    protected $user;
+    protected UserInterface $user;
 
     /**
      * @return UserInterface

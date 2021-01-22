@@ -11,15 +11,12 @@ class Argument
      */
     private $type;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private ?string $name = null;
 
     /**
      * @return mixed
      */
-    public function getType()
+    public function getType(): mixed
     {
         return $this->type;
     }
@@ -28,7 +25,7 @@ class Argument
      * @param mixed $type
      * @return Argument
      */
-    public function setType($type): Argument
+    public function setType(mixed $type): Argument
     {
         $this->type = $type;
 
@@ -36,7 +33,7 @@ class Argument
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getName(): ?string
     {

@@ -15,31 +15,22 @@ use App\Entity\TapeUserStatus;
 use App\Entity\User;
 use App\Service\TapeUserService;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use function array_key_exists;
 
 class EditTapeUserResolver extends AbstractResolver implements MutationResolverInterface
 {
     /**
-     * @var EntityManager
-     */
-    private EntityManager $entityManager;
-
-    /**
-     * @var TapeUserService
-     */
-    private TapeUserService $tapeUserService;
-
-    /**
      * EditTapeUserResolver constructor.
      * @param EntityManager $entityManager
      * @param TapeUserService $tapeUserService
      */
-    public function __construct(EntityManager $entityManager, TapeUserService $tapeUserService)
+    public function __construct(
+        private EntityManager $entityManager,
+        private TapeUserService $tapeUserService
+    )
     {
-        $this->entityManager = $entityManager;
-        $this->tapeUserService = $tapeUserService;
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Entity\TapeUserStatus;
 use Doctrine\ORM\EntityManager;
 use Exception;
 use GraphQL\Doctrine\Annotation as API;
+use JetBrains\PhpStorm\ArrayShape;
 
 class ListTapeUserStatusResolver extends AbstractResolver implements QueryResolverInterface
 {
@@ -25,6 +26,7 @@ class ListTapeUserStatusResolver extends AbstractResolver implements QueryResolv
      * @return array
      * @throws Exception
      */
+    #[ArrayShape(['elements' => "\ArrayIterator", 'total' => "int", 'pages' => "false|float"])]
     protected function execute(int $page, int $pageSize): array
     {
         $this->qb->select('o')->from(TapeUserStatus::class, 'o');
@@ -36,6 +38,7 @@ class ListTapeUserStatusResolver extends AbstractResolver implements QueryResolv
      * @inheritDoc
      * @throws Exception
      */
+    #[ArrayShape(['elements' => "\ArrayIterator", 'total' => "int", 'pages' => "false|float"])]
     public function resolve(array $args)
     {
         return $this->execute(

@@ -15,33 +15,24 @@ use App\Entity\TvShow;
 use App\Entity\TvShowChapter;
 use App\Entity\User;
 use App\Service\TapeUserService;
-use GraphQL\Doctrine\Annotation as API;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use GraphQL\Doctrine\Annotation as API;
 use function array_key_exists;
 
 class EditSeasonUserResolver extends AbstractResolver implements MutationResolverInterface
 {
     /**
-     * @var EntityManager
-     */
-    private EntityManager $entityManager;
-
-    /**
-     * @var TapeUserService
-     */
-    private TapeUserService $tapeUserService;
-
-    /**
      * EditSeasonUserResolver constructor.
      * @param EntityManager $entityManager
      * @param TapeUserService $tapeUserService
      */
-    public function __construct(EntityManager $entityManager, TapeUserService $tapeUserService)
+    public function __construct(
+        private EntityManager $entityManager,
+        private TapeUserService $tapeUserService
+    )
     {
-        $this->entityManager = $entityManager;
-        $this->tapeUserService = $tapeUserService;
     }
 
     /**
@@ -61,7 +52,7 @@ class EditSeasonUserResolver extends AbstractResolver implements MutationResolve
         $edited = [];
         /** @var TvShowChapter[] $chapters */
         $chapters = $tvShow->getChaptersBySeason($season);
-        foreach ($chapters as $tvShowChapter){
+        foreach ($chapters as $tvShowChapter) {
             $tapeUser = $this->tapeUserService->getTapeUser($user, $tapeUserStatus, $place, $tvShowChapter->getTape());
             $this->entityManager->persist($tapeUser);
             $edited[] = $tapeUser;

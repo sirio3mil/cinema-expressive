@@ -21,8 +21,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class GraphQLHandler implements RequestHandlerInterface
 {
-
-    /** @var ServerConfig */
     private ServerConfig $serverConfig;
 
     public function __construct(Schema $schema, bool $debug)

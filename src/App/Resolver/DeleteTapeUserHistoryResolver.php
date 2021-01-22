@@ -10,14 +10,8 @@ use Doctrine\ORM\ORMException;
 
 class DeleteTapeUserHistoryResolver extends AbstractResolver
 {
-    /**
-     * @var EntityManager
-     */
-    private EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
+    public function __construct(private EntityManager $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**
@@ -39,7 +33,7 @@ class DeleteTapeUserHistoryResolver extends AbstractResolver
      * @return TapeUser
      * @throws ORMException
      */
-    public function resolve(array $args)
+    public function resolve(array $args): TapeUser
     {
         /** @var TapeUserHistory $tapeUserHistory */
         $tapeUserHistory = $args['tapeUserHistoryId']->getEntity();

@@ -2,11 +2,10 @@
 
 namespace App\Service;
 
-use App\Entity\Ranking;
 use App\Entity\Country;
 use App\Entity\Genre;
-use App\Entity\ImdbNumber;
 use App\Entity\GlobalUniqueObject;
+use App\Entity\ImdbNumber;
 use App\Entity\Language;
 use App\Entity\Location;
 use App\Entity\People;
@@ -14,6 +13,7 @@ use App\Entity\PeopleAlias;
 use App\Entity\PeopleAliasTape;
 use App\Entity\Premiere;
 use App\Entity\PremiereDetail;
+use App\Entity\Ranking;
 use App\Entity\Role;
 use App\Entity\RowType;
 use App\Entity\SearchValue;
@@ -30,9 +30,10 @@ use App\Entity\TvShowChapter;
 use Ausi\SlugGenerator\SlugGenerator;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use ImdbScraper\Iterator\AlsoKnownAsIterator;
 use ImdbScraper\Iterator\ReleaseIterator;
 use ImdbScraper\Mapper\CastMapper;
@@ -46,55 +47,37 @@ use ImdbScraper\Model\CastPeople;
 use ImdbScraper\Model\Certificate;
 use ImdbScraper\Model\Keyword;
 use ImdbScraper\Model\Location as Place;
-use ImdbScraper\Model\Release;
 use ImdbScraper\Model\People as Person;
-use Exception;
+use ImdbScraper\Model\Release;
 use function array_key_exists;
 use function in_array;
 
 class ImportImdbMovieService
 {
-    /** @var RowType */
-    protected RowType $peopleRowType;
-
-    /** @var RowType */
-    protected RowType $tapeRowType;
-
-    /** @var EntityManager */
-    protected EntityManager $entityManager;
-
-    /** @var EntityRepository */
-    protected EntityRepository $countryRepository;
-
-    /** @var Tape|null */
-    protected ?Tape $tape;
-
-    /** @var int */
-    protected int $imdbNumber;
-
-    /**
-     * @var SlugGenerator
-     */
-    private SlugGenerator $generator;
-
     /**
      * @var People[]
      */
     private array $peopleCreated;
+    protected RowType $peopleRowType;
+    protected RowType $tapeRowType;
+    protected EntityRepository $countryRepository;
+    protected ?Tape $tape;
+    protected int $imdbNumber;
 
     /**
      * ImportImdbMovieService constructor.
      * @param EntityManager $entityManager
      * @param SlugGenerator $slugGenerator
      */
-    public function __construct(EntityManager $entityManager, SlugGenerator $slugGenerator)
+    public function __construct(
+        protected EntityManager $entityManager,
+        private SlugGenerator $slugGenerator
+    )
     {
-        $this->entityManager = $entityManager;
         $this->peopleRowType = $this->getRowType(RowType::ROW_TYPE_PEOPLE);
         $this->tapeRowType = $this->getRowType(RowType::ROW_TYPE_TAPE);
         /** @var EntityRepository $countryRepository */
         $this->countryRepository = $this->entityManager->getRepository(Country::class);
-        $this->generator = $slugGenerator;
         $this->peopleCreated = [];
         $this->tape = null;
         $this->imdbNumber = 0;
@@ -186,7 +169,7 @@ class ImportImdbMovieService
         $this->entityManager->persist($imdbNumber);
         $searchValue = new SearchValue();
         $searchValue->setSearchParam($person->getFullName());
-        $searchValue->setSlug($this->generator->generate($person->getFullName()));
+        $searchValue->setSlug($this->slugGenerator->generate($person->getFullName()));
         $searchValue->setPrimaryParam(true);
         $people->getObject()->addSearchValue($searchValue);
         $this->peopleCreated[$person->getImdbNumber()] = $people;
@@ -249,7 +232,7 @@ class ImportImdbMovieService
                 $this->tape = new Tape();
                 $imdbNumber->getObject()->setTape($this->tape);
             }
-        } catch (NoResultException $e) {
+        } catch (NoResultException) {
             $object = new GlobalUniqueObject();
             $object->setRowType($this->tapeRowType);
             $imdbNumber = new ImdbNumber();
@@ -377,7 +360,7 @@ class ImportImdbMovieService
         $mapper = new HomeMapper();
         $mapper->setImdbNumber($this->imdbNumber)->setContentFromUrl();
         $this->tape->setOriginalTitle($mapper->getTitle());
-        $slug = $this->generator->generate($mapper->getTitle());
+        $slug = $this->slugGenerator->generate($mapper->getTitle());
         /** @var SearchValue $searchValue */
         if ($slug && !$searchValue = $this->tape->getObject()->getSearchValue($slug)) {
             $searchValue = new SearchValue();
@@ -519,7 +502,7 @@ class ImportImdbMovieService
                         $peopleAlias->setAlias($person->getAlias());
                         $people->addAlias($peopleAlias);
                     }
-                    $slug = $this->generator->generate($person->getAlias());
+                    $slug = $this->slugGenerator->generate($person->getAlias());
                     /** @var SearchValue $searchValue */
                     if ($slug && !$searchValue = $people->getObject()->getSearchValue($slug)) {
                         $searchValue = new SearchValue();
@@ -628,7 +611,7 @@ class ImportImdbMovieService
                     $this->tape->addTitle($tapeTitle);
                 }
                 $tapeTitle->setObservations($data->getDescription());
-                $slug = $this->generator->generate($data->getTitle());
+                $slug = $this->slugGenerator->generate($data->getTitle());
                 if ($slug && !$searchValue = $this->tape->getObject()->getSearchValue($slug)) {
                     $searchValue = new SearchValue();
                     $searchValue->setSearchParam($data->getTitle());

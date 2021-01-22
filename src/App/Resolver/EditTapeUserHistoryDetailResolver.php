@@ -12,10 +12,6 @@ use function array_key_exists;
 
 class EditTapeUserHistoryDetailResolver extends AbstractResolver implements MutationResolverInterface
 {
-
-    /**
-     * @var QueryBuilder
-     */
     protected QueryBuilder $qb;
 
     /**

@@ -17,15 +17,8 @@ use GraphQL\Doctrine\Annotation as API;
 
 class SearchResolver extends AbstractResolver implements QueryResolverInterface
 {
-
-    /**
-     * @var EntityManager
-     */
-    private EntityManager $entityManager;
-
-    public function __construct(EntityManager $entityManager)
+    public function __construct(private EntityManager $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**

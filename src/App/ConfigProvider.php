@@ -24,7 +24,8 @@ class ConfigProvider
      * method which returns an array with its configuration.
      *
      */
-    #[ArrayShape(['dependencies' => "\string[][]", 'templates' => "array[]", 'laminas-cli' => "\string[][]"])] public function __invoke(): array
+    #[ArrayShape(['dependencies' => "\string[][]", 'templates' => "array[]", 'laminas-cli' => "\string[][]"])]
+    public function __invoke(): array
     {
         return [
             'dependencies' => $this->getDependencies(),
@@ -33,7 +34,8 @@ class ConfigProvider
         ];
     }
 
-    #[ArrayShape(['commands' => "string[]"])] public function getCliConfig(): array
+    #[ArrayShape(['commands' => "string[]"])]
+    public function getCliConfig(): array
     {
         return [
             'commands' => [
@@ -45,7 +47,8 @@ class ConfigProvider
     /**
      * Returns the container dependencies
      */
-    #[ArrayShape(['factories' => "string[]"])] public function getDependencies(): array
+    #[ArrayShape(['factories' => "string[]"])]
+    public function getDependencies(): array
     {
         return [
             'factories' => [
@@ -58,7 +61,8 @@ class ConfigProvider
     /**
      * Returns the templates configuration
      */
-    #[ArrayShape(['paths' => "array"])] public function getTemplates(): array
+    #[ArrayShape(['paths' => "array"])]
+    public function getTemplates(): array
     {
         return [
             'paths' => [

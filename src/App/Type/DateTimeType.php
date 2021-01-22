@@ -31,10 +31,10 @@ class DateTimeType extends ScalarType
     /**
      * @param mixed $value
      * @param array|null $variables
-     * @return DateTime|mixed
+     * @return DateTime
      * @throws Exception
      */
-    public function parseValue($value, array $variables = null)
+    public function parseValue(mixed $value, array $variables = null): DateTime
     {
         if (!is_string($value)) {
             throw new UnexpectedValueException('Cannot represent value as DateTime date: ' . Utils::printSafe($value));

@@ -14,17 +14,11 @@ use Doctrine\ORM\EntityManager;
 class TapeUserService
 {
     /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
      * EditSeasonUserResolver constructor.
      * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(private EntityManager $entityManager)
     {
-        $this->entityManager = $entityManager;
     }
 
     /**

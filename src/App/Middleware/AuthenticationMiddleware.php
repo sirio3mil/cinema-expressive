@@ -16,18 +16,12 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use function strpos;
+use function str_starts_with;
 
 class AuthenticationMiddleware implements MiddlewareInterface
 {
-    /**
-     * @var AuthenticationInterface
-     */
-    protected AuthenticationInterface $auth;
-
-    public function __construct(AuthenticationInterface $auth)
+    public function __construct(protected AuthenticationInterface $auth)
     {
-        $this->auth = $auth;
     }
 
     /**
@@ -40,7 +34,7 @@ class AuthenticationMiddleware implements MiddlewareInterface
             return $handler->handle($request->withAttribute(UserInterface::class, $user));
         }
         $query = $request->getParsedBody()['query'] ?? null;
-        if ($query && strpos($query, 'query login') === 0) {
+        if ($query && str_starts_with($query, 'query login')) {
             return $handler->handle($request);
         }
 

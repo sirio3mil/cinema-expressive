@@ -12,32 +12,24 @@ use App\Entity\Tape;
 use App\Entity\TapeDefaultValue;
 use App\Service\ImportImdbMovieService;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\ResultSetMapping;
 
 class ImportImdbMovieResolver extends AbstractResolver implements MutationResolverInterface
 {
     /**
-     * @var EntityManager
-     */
-    private EntityManager $entityManager;
-    /**
-     * @var ImportImdbMovieService
-     */
-    private ImportImdbMovieService $service;
-
-    /**
      * ImportImdbMovieResolver constructor.
      * @param EntityManager $entityManager
-     * @param ImportImdbMovieService $service
+     * @param ImportImdbMovieService $importImdbMovieService
      */
-    public function __construct(EntityManager $entityManager, ImportImdbMovieService $service)
+    public function __construct(
+        private EntityManager $entityManager,
+        private ImportImdbMovieService $importImdbMovieService
+    )
     {
-        $this->entityManager = $entityManager;
-        $this->service = $service;
     }
 
     /**
@@ -50,9 +42,9 @@ class ImportImdbMovieResolver extends AbstractResolver implements MutationResolv
      */
     protected function execute(int $imdbNumber): Tape
     {
-        $this->service->setImdbNumber($imdbNumber);
-        $this->service->import();
-        $tape = $this->service->getTape();
+        $this->importImdbMovieService->setImdbNumber($imdbNumber);
+        $this->importImdbMovieService->import();
+        $tape = $this->importImdbMovieService->getTape();
         $this->entityManager->persist($tape);
         $this->entityManager->flush();
 

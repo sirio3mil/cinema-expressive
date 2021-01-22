@@ -10,11 +10,9 @@ use Doctrine\Common\Collections\Collection;
 use Exception;
 use GraphQL\Doctrine\Annotation\Field;
 use GraphQL\Doctrine\Types;
-use GraphQL\Type\Definition\ListOfType;
-use GraphQL\Type\Definition\NonNull;
-use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Upload\UploadType;
+use JetBrains\PhpStorm\ArrayShape;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -32,42 +30,19 @@ use function substr;
 
 class ResolverManager
 {
-    /**
-     * @var ContainerInterface
-     */
-    private ContainerInterface $container;
-    /**
-     * @var ReflectionClass
-     */
     private ReflectionClass $reflectionClass;
-    /**
-     * @var ReflectionMethod
-     */
     private ReflectionMethod $reflectionMethod;
-    /**
-     * @var Types
-     */
     private Types $types;
-    /**
-     * @var AnnotationReader
-     */
     private AnnotationReader $annotationReader;
-    /**
-     * @var string
-     */
     private string $entityNamespaceName;
-    /**
-     * @var string
-     */
     private string $typeNamespaceName;
 
     /**
      * ResolverManager constructor.
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->container = $container;
         $this->types = $this->container->get(Types::class);
         $this->annotationReader = $this->container->get(AnnotationReader::class);
         $this->entityNamespaceName = str_replace('CinemaEntity', '', CinemaEntity::class);
@@ -90,6 +65,7 @@ class ResolverManager
      * @throws ReflectionException
      * @throws Exception
      */
+    #[ArrayShape(['type' => "mixed", 'args' => "array", 'resolve' => "\Closure"])]
     public function get(string $resolverClassName): array
     {
         $this->reflectionClass = new ReflectionClass($resolverClassName);
@@ -225,12 +201,12 @@ class ResolverManager
     }
 
     /**
-     * @return ListOfType|NonNull|ObjectType|null
+     * @return Type|null
      * @throws ReflectionException
      * @throws \GraphQL\Doctrine\Exception
      * @throws Exception
      */
-    protected function getType()
+    protected function getType(): ?Type
     {
         $type = null;
         /** @var ReflectionType $returnType */
@@ -288,7 +264,7 @@ class ResolverManager
     {
         try {
             $this->reflectionMethod = $this->reflectionClass->getMethod('execute');
-        } catch (ReflectionException $e) {
+        } catch (ReflectionException) {
             $this->reflectionMethod = $this->reflectionClass->getMethod('resolve');
         }
         if (!$this->reflectionMethod->hasReturnType()) {
@@ -302,7 +278,7 @@ class ResolverManager
      * @throws ReflectionException
      * @throws Exception
      */
-    protected function getArgumentTypeNoClass(ReflectionParameter $parameter)
+    protected function getArgumentTypeNoClass(ReflectionParameter $parameter): mixed
     {
         $argType = null;
         $reflectionType = $parameter->getType();

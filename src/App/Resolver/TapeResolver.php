@@ -12,7 +12,6 @@ use App\Entity\Tape;
 
 class TapeResolver extends AbstractResolver implements QueryResolverInterface
 {
-
     /**
      * @inheritDoc
      * @return Tape

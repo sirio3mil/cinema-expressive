@@ -12,31 +12,17 @@ use App\Entity\TvShowChapter;
 use App\Service\ImportImdbMovieService;
 use Ausi\SlugGenerator\SlugGenerator;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Exception;
+use GraphQL\Doctrine\Annotation as API;
 use ImdbScraper\Mapper\EpisodeListMapper;
 use ImdbScraper\Model\Episode;
-use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\NonUniqueResultException;
-use Doctrine\ORM\ORMException;
-use Doctrine\ORM\OptimisticLockException;
-use GraphQL\Doctrine\Annotation as API;
-use Exception;
 
 class ImportImdbEpisodesResolver extends AbstractResolver implements MutationResolverInterface
 {
-
-    /**
-     * @var EntityManager
-     */
-    private EntityManager $entityManager;
-    /**
-     * @var SlugGenerator
-     */
-    private SlugGenerator $slugGenerator;
-    /**
-     * @var EpisodeListMapper
-     */
-    private EpisodeListMapper $episodeListMapper;
-
     /**
      * ImportImdbMovieResolver constructor.
      * @param EntityManager $entityManager
@@ -44,13 +30,11 @@ class ImportImdbEpisodesResolver extends AbstractResolver implements MutationRes
      * @param EpisodeListMapper $episodeListMapper
      */
     public function __construct(
-        EntityManager $entityManager,
-        SlugGenerator $slugGenerator,
-        EpisodeListMapper $episodeListMapper
-    ) {
-        $this->entityManager = $entityManager;
-        $this->slugGenerator = $slugGenerator;
-        $this->episodeListMapper = $episodeListMapper;
+        private EntityManager $entityManager,
+        private SlugGenerator $slugGenerator,
+        private EpisodeListMapper $episodeListMapper
+    )
+    {
     }
 
     /**

@@ -11,7 +11,7 @@ abstract class AbstractResolver implements ResolverInterface
     /**
      * @return mixed
      */
-    public function getSource()
+    public function getSource(): mixed
     {
         return $this->source;
     }
@@ -19,7 +19,7 @@ abstract class AbstractResolver implements ResolverInterface
     /**
      * @param mixed $source
      */
-    public function setSource($source): void
+    public function setSource(mixed $source): void
     {
         $this->source = $source;
     }

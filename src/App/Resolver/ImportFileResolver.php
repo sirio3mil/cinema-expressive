@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityRepository;
 use Exception;
 use Imagick;
 use ImagickException;
+use JetBrains\PhpStorm\Pure;
 use Ramsey\Uuid\Uuid;
 use function current;
 use function dirname;
@@ -33,11 +34,6 @@ use function strtolower;
 class ImportFileResolver extends AbstractResolver implements MutationResolverInterface
 {
     /**
-     * @var EntityManager
-     */
-    private EntityManager $entityManager;
-
-    /**
      * @var array
      */
     private array $config;
@@ -52,9 +48,8 @@ class ImportFileResolver extends AbstractResolver implements MutationResolverInt
      * @param EntityManager $entityManager
      * @param array $config
      */
-    public function __construct(EntityManager $entityManager, array $config)
+    public function __construct(private EntityManager $entityManager, array $config)
     {
-        $this->entityManager = $entityManager;
         $this->config = $config['files'] ?? [];
         $this->fileTypeRepository = $this->entityManager->getRepository(FileType::class);
     }
@@ -146,7 +141,7 @@ class ImportFileResolver extends AbstractResolver implements MutationResolverInt
      * @param string $uuid
      * @return string
      */
-    protected function getFilepath(string $uuid): string
+    #[Pure] protected function getFilepath(string $uuid): string
     {
         $parts = explode('-', $uuid, 2);
         $pieces = str_split(current($parts), 3);

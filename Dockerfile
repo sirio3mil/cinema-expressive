@@ -9,7 +9,7 @@ RUN dnf -y install dnf-plugins-core
 RUN dnf config-manager --add-repo https://packages.microsoft.com/config/rhel/8/prod.repo
 ENV ACCEPT_EULA=Y
 ENV PATH=${PATH}:/opt/mssql/bin:/opt/mssql-tools/bin
-RUN dnf --enablerepo=PowerTools -y install tinyxml2
+RUN dnf --enablerepo=powertools -y install tinyxml2
 RUN dnf -y install msodbcsql17 \
                mssql-tools \
                unixODBC-devel \
@@ -44,7 +44,7 @@ RUN chown -R nginx:nginx .
 RUN rm -f ./config/autoload/development.local.php
 # RUN chmod +x bootstrap.sh
 RUN mkdir -p /run/php-fpm
-RUN composer config --global --auth github-oauth.github.com d8fc451f4534e6f388d24f8638174567cc28f7e2
+RUN composer config --global --auth github-oauth.github.com bbe3884357d531ef7e4c37bd5c47c90f21c133ca
 RUN composer update --no-dev --ignore-platform-req=php
 # put customized config and code files to /data
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf

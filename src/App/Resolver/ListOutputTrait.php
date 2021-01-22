@@ -1,21 +1,17 @@
 <?php
 
-
 namespace App\Resolver;
 
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
-use function count;
+use JetBrains\PhpStorm\ArrayShape;
 use function ceil;
+use function count;
 
 trait ListOutputTrait
 {
-
-    /**
-     * @var QueryBuilder
-     */
-    protected $qb;
+    protected QueryBuilder $qb;
 
     /**
      * @param int $page
@@ -23,6 +19,7 @@ trait ListOutputTrait
      * @return array
      * @throws Exception
      */
+    #[ArrayShape(['elements' => "\ArrayIterator", 'total' => "int", 'pages' => "false|float"])]
     protected function getOutput(int $page, int $pageSize): array
     {
         $paginator = new Paginator($this->qb);

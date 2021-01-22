@@ -5,24 +5,14 @@ namespace App\Resolver;
 use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Laminas\Diactoros\Response;
-use Psr\Http\Message\ResponseInterface;
 use Laminas\Diactoros\ServerRequest;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\OAuthServerException;
+use Psr\Http\Message\ResponseInterface;
 use function json_decode;
 
 class LoginResolver extends AbstractResolver implements QueryResolverInterface
 {
-    /**
-     * @var AuthorizationServer
-     */
-    private AuthorizationServer $server;
-
-    /**
-     * @var EntityManager
-     */
-    private EntityManager $entityManager;
-
     /**
      * @var array
      */
@@ -41,13 +31,12 @@ class LoginResolver extends AbstractResolver implements QueryResolverInterface
      * @param array $config
      */
     public function __construct(
-        AuthorizationServer $server,
-        EntityManager $entityManager,
+        private AuthorizationServer $server,
+        private EntityManager $entityManager,
         callable $responseFactory,
         array $config
-    ) {
-        $this->server = $server;
-        $this->entityManager = $entityManager;
+    )
+    {
         $this->config = $config['oauth'] ?? [];
         $this->responseFactory = $responseFactory;
     }
