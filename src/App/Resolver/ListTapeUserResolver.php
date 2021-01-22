@@ -2,11 +2,13 @@
 
 namespace App\Resolver;
 
+use App\Entity\OrderedSubscribedTvShows;
 use App\Entity\Place;
 use App\Entity\TapeUser;
 use App\Entity\TapeUserStatus;
 use App\Entity\User;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query\Expr\Join;
 use Exception;
 use GraphQL\Doctrine\Annotation as API;
 use JetBrains\PhpStorm\ArrayShape;
@@ -49,7 +51,69 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
         int $pageSize
     ): array
     {
+        $viewed = $tapeUserStatus->getTapeUserStatusId() === TapeUserStatus::VIEW;
+        if ($visible && $isTvShow && !$finished && !$place && $viewed) {
+            $this->buildOrderedSubscribedTvShowsQuery($user);
+        } else {
+            $this->buildDefaultQuery($user, $isTvShow, $finished, $tapeUserStatus, $place, $visible);
+        }
 
+        return $this->getOutput($page, $pageSize);
+    }
+
+    /**
+     * @inheritDoc
+     * @return array
+     * @throws Exception
+     */
+    #[ArrayShape(['elements' => "\ArrayIterator", 'total' => "int", 'pages' => "false|float"])]
+    public function resolve(array $args): array
+    {
+        /** @var User $user */
+        $user = $args['userId']->getEntity();
+        $visible = $args['visible'] ?? null;
+        $finished = $args['finished'] ?? null;
+        $isTvShow = $args['isTvShow'] ?? null;
+        $tapeUserStatus = null;
+        $place = null;
+        if (array_key_exists('tapeUserStatusId', $args)) {
+            /** @var TapeUserStatus $tapeUserStatus */
+            $tapeUserStatus = $args['tapeUserStatusId']->getEntity();
+        }
+        if (array_key_exists('placeId', $args)) {
+            /** @var Place $place */
+            $place = $args['placeId']->getEntity();
+        }
+
+        return $this->execute(
+            $user,
+            $tapeUserStatus,
+            $place,
+            $isTvShow,
+            $visible,
+            $finished,
+            $args['page'],
+            $args['pageSize']
+        );
+    }
+
+    /**
+     * @param User $user
+     * @param bool|null $isTvShow
+     * @param bool|null $finished
+     * @param TapeUserStatus|null $tapeUserStatus
+     * @param Place|null $place
+     * @param bool|null $visible
+     */
+    protected function buildDefaultQuery(
+        User $user,
+        ?bool $isTvShow,
+        ?bool $finished,
+        ?TapeUserStatus $tapeUserStatus,
+        ?Place $place,
+        ?bool $visible
+    ): void
+    {
         $this->qb
             ->select('l')
             ->from(TapeUser::class, 'l')
@@ -110,44 +174,20 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
                 }
             }
         }
-
-        return $this->getOutput($page, $pageSize);
     }
 
     /**
-     * @inheritDoc
-     * @return array
-     * @throws Exception
+     * @param User $user
      */
-    #[ArrayShape(['elements' => "\ArrayIterator", 'total' => "int", 'pages' => "false|float"])]
-    public function resolve(array $args): array
+    protected function buildOrderedSubscribedTvShowsQuery(User $user): void
     {
-
-        /** @var User $user */
-        $user = $args['userId']->getEntity();
-        $visible = $args['visible'] ?? null;
-        $finished = $args['finished'] ?? null;
-        $isTvShow = $args['isTvShow'] ?? null;
-        $tapeUserStatus = null;
-        $place = null;
-        if (array_key_exists('tapeUserStatusId', $args)) {
-            /** @var TapeUserStatus $tapeUserStatus */
-            $tapeUserStatus = $args['tapeUserStatusId']->getEntity();
-        }
-        if (array_key_exists('placeId', $args)) {
-            /** @var Place $place */
-            $place = $args['placeId']->getEntity();
-        }
-
-        return $this->execute(
-            $user,
-            $tapeUserStatus,
-            $place,
-            $isTvShow,
-            $visible,
-            $finished,
-            $args['page'],
-            $args['pageSize']
-        );
+        $comparison = $this->qb->expr()->eq('o.tapeUser', 'l.tapeUserId');
+        $this->qb
+            ->select('l')
+            ->from(TapeUser::class, 'l')
+            ->innerJoin(OrderedSubscribedTvShows::class, 'o', Join::WITH, $comparison)
+            ->where('o.user = :user')
+            ->orderBy('o.updatedAt', 'desc')
+            ->setParameter('user', $user);
     }
 }

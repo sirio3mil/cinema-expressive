@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Entity(readOnly=true)
- * @ORM\Table(name="ChaptersFromViewedTvShow")
+ * @ORM\Table(name="usr.ChaptersFromViewedTvShow")
  */
 class ChaptersFromViewedTvShow implements CinemaEntity
 {
