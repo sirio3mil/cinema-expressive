@@ -44,7 +44,6 @@ RUN chown -R nginx:nginx .
 RUN rm -f ./config/autoload/development.local.php
 # RUN chmod +x bootstrap.sh
 RUN mkdir -p /run/php-fpm
-RUN composer config --global --auth github-oauth.github.com ${GITHUB_TOKEN}
 RUN composer update --no-dev --ignore-platform-req=php
 # put customized config and code files to /data
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
