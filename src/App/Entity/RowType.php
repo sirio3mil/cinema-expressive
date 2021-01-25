@@ -9,17 +9,15 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Table(name="RowType")
+ * @ORM\Cache("READ_ONLY")
  */
 class RowType
 {
 
     public const ROW_TYPE_TAPE = 4;
-
     public const ROW_TYPE_PEOPLE = 3;
 
     /**
-     * @var int
-     *
      * @ORM\Id
      * @ORM\Column(
      *     type="smallint",
@@ -28,11 +26,9 @@ class RowType
      *     options={"fixed":false}
      * )
      */
-    private $rowTypeId;
+    private int $rowTypeId;
 
     /**
-     * @var string
-     *
      * @ORM\Column(
      *     type="string",
      *     length=50,
@@ -41,7 +37,7 @@ class RowType
      *     options={"fixed":false}
      * )
      */
-    private $description;
+    private string $description;
 
     /**
      * @param int $rowTypeId

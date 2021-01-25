@@ -8,15 +8,18 @@
 
 namespace App\Factory;
 
+use App\Logger\Query;
+use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\Cache\DefaultCacheFactory;
+use Doctrine\ORM\Cache\RegionsConfiguration;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
-use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\ORMException;
-use Doctrine\Common\Cache\MemcachedCache;
-use Psr\Container\ContainerInterface;
 use Memcached;
+use Psr\Container\ContainerInterface;
 use function dirname;
 use function sys_get_temp_dir;
 
@@ -59,6 +62,15 @@ class EntityManagerFactory
             $phpFileCache = new PhpFileCache($proxyDir);
             $config->setMetadataCacheImpl($phpFileCache);
             $config->setQueryCacheImpl($phpFileCache);
+            $config->setSecondLevelCacheEnabled();
+            $config->getSecondLevelCacheConfiguration()
+                ->setCacheFactory(new DefaultCacheFactory(
+                        new RegionsConfiguration(),
+                        $phpFileCache
+                    )
+                );
+        } else {
+            $config->setSQLLogger(new Query());
         }
 
         $dirname = dirname(__DIR__, 3);

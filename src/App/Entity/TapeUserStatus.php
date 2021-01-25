@@ -9,19 +9,16 @@ use Doctrine\ORM\Mapping as ORM;
  * @package App\Entity
  * @ORM\Entity
  * @ORM\Table(name="TapeUserStatus")
+ * @ORM\Cache("READ_ONLY")
  */
 class TapeUserStatus implements CinemaEntity
 {
 
     public const WISH_LIST = 3;
-
     public const VIEW = 2;
-
     public const DOWNLOADED = 1;
 
     /**
-     * @var int
-     *
      * @ORM\Id
      * @ORM\Column(
      *     type="smallint",
@@ -31,11 +28,9 @@ class TapeUserStatus implements CinemaEntity
      * )
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    private $tapeUserStatusId;
+    private int $tapeUserStatusId;
 
     /**
-     * @var string
-     *
      * @ORM\Column(
      *     type="string",
      *     length=50,
@@ -44,7 +39,7 @@ class TapeUserStatus implements CinemaEntity
      *     options={"fixed":false}
      * )
      */
-    private $description;
+    private string $description;
 
 
     /**
