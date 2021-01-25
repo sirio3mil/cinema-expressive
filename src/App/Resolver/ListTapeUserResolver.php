@@ -54,6 +54,8 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
         $viewed = $tapeUserStatus->getTapeUserStatusId() === TapeUserStatus::VIEW;
         if ($visible && $isTvShow && !$finished && !$place && $viewed) {
             $this->buildOrderedSubscribedTvShowsQuery($user);
+        } elseif ($viewed && !$isTvShow) {
+            $this->buildLatestViewedTapesQuery($user, $tapeUserStatus);
         } else {
             $this->buildDefaultQuery($user, $isTvShow, $finished, $tapeUserStatus, $place, $visible);
         }
@@ -189,5 +191,28 @@ class ListTapeUserResolver extends AbstractResolver implements QueryResolverInte
             ->where('o.user = :user')
             ->orderBy('o.updatedAt', 'desc')
             ->setParameter('user', $user);
+    }
+
+    protected function buildLatestViewedTapesQuery(User $user, TapeUserStatus $tapeUserStatus)
+    {
+        $this->qb
+            ->select('l')
+            ->from(TapeUser::class, 'l')
+            ->innerJoin('l.tape', 't')
+            ->innerJoin('t.detail', 'dt')
+            ->innerJoin('l.history', 'h')
+            ->innerJoin('h.details', 'd')
+            ->where('l.user = :user')
+            ->andWhere('dt.tvShowChapter = :isTvShowChapter')
+            ->andWhere('dt.tvShow = :isTvShow')
+            ->andWhere('h.tapeUserStatus = :tapeUserStatus')
+            ->andWhere('h.deletedAt is NULL')
+            ->orderBy('d.createdAt', 'desc')
+            ->setParameters([
+                'user' => $user,
+                'isTvShowChapter' => false,
+                'isTvShow' => false,
+                'tapeUserStatus' => $tapeUserStatus
+            ]);
     }
 }
