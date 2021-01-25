@@ -8,23 +8,25 @@
 
 namespace App\Factory;
 
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\Common\Cache\PhpFileCache;
+use Doctrine\DBAL\Exception;
+use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManager;
 use Doctrine\DBAL\Types\Type;
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Common\Cache\MemcachedCache;
 use Psr\Container\ContainerInterface;
 use Memcached;
 use function dirname;
+use function sys_get_temp_dir;
 
 class EntityManagerFactory
 {
     /**
      * @param $config
      * @return EntityManager
-     * @throws DBALException
      * @throws ORMException
+     * @throws Exception
      */
     public static function createFromConfiguration($config): EntityManager
     {
@@ -42,14 +44,21 @@ class EntityManagerFactory
         ];
 
         Type::addType('uuid', 'Ramsey\Uuid\Doctrine\UuidType');
+        $proxyDir = sys_get_temp_dir();
+        $config = new Configuration();
+        $config->setProxyDir($proxyDir);
+        $config->setProxyNamespace('DoctrineProxies');
+        $config->setAutoGenerateProxyClasses($isDevMode);
 
         if (!$isDevMode) {
             $memcached = new Memcached();
             $memcached->addServer($cacheConfig['adapter']['options']['servers'][0], 11211);
-            $cacheDriver = new MemcachedCache();
-            $cacheDriver->setMemcached($memcached);
-        } else {
-            $cacheDriver = null;
+            $memcachedCache = new MemcachedCache();
+            $memcachedCache->setMemcached($memcached);
+            $config->setResultCacheImpl($memcachedCache);
+            $phpFileCache = new PhpFileCache($proxyDir);
+            $config->setMetadataCacheImpl($phpFileCache);
+            $config->setQueryCacheImpl($phpFileCache);
         }
 
         $dirname = dirname(__DIR__, 3);
@@ -57,8 +66,8 @@ class EntityManagerFactory
             "{$dirname}/src/App/Entity",
             "{$dirname}/vendor/ecodev/graphql-doctrine/src/Annotation"
         ];
-
-        $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode, null, $cacheDriver, false);
+        $useSimpleAnnotationReader = false;
+        $config->setMetadataDriverImpl($config->newDefaultAnnotationDriver($paths, $useSimpleAnnotationReader));
 
         return EntityManager::create($dbParams, $config);
     }
@@ -66,7 +75,7 @@ class EntityManagerFactory
     /**
      * @param ContainerInterface $container
      * @return EntityManager
-     * @throws DBALException
+     * @throws Exception
      * @throws ORMException
      */
     public function __invoke(ContainerInterface $container): EntityManager
