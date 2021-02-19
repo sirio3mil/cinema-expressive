@@ -1,11 +1,11 @@
 version: '3.7'
 services:
   proxy:
-    image: nginx:latest
+    image: nginx:alpine
     container_name: proxy
     volumes:
       - ./docker/proxy:/etc/nginx/conf.d
-      - ./docker/certs:/etc/ssl
+      - ./docker/cert:/etc/ssl
     ports:
       - 80:80
       - 443:443
@@ -17,31 +17,16 @@ services:
       - frontend:cinema.lcl
       - graphql:api.cinema.lcl
   frontend:
-    image: nginx:latest
+    build: ../cinema-frontend/.
     container_name: frontend
-    volumes:
-      - ../cinema-frontend/dist/cinema-frontend:/usr/share/nginx/html
-      - ../cinema-frontend/config/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ../cinema-frontend/config/nginx/conf.d/web.conf:/etc/nginx/conf.d/web.conf
-      - ./docker/certs:/etc/ssl
     restart: always
   graphql:
     build: .
     container_name: graphql
     volumes:
       - ~/.composer/auth.json:/root/.composer/auth.json
-      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./docker/nginx/conf.d/api.conf:/etc/nginx/conf.d/api.conf
-      - ./docker/certs:/etc/ssl
-      - ./docker/php-fpm/php-fpm.d/www.conf:/etc/php-fpm.d/www.conf
-      - ./docker/php-fpm/php.d/10-opcache.ini:/etc/php.d/10-opcache.ini
-      - ./docker/php-fpm/php.ini:/etc/php.ini
-      - ./docker/php-fpm/php-fpm.conf:/etc/php-fpm.conf
-      - ./vendor/mezzio/mezzio-router/src/RouteCollectorFactory.php:/usr/share/nginx/html/api/vendor/mezzio/mezzio-router/src/RouteCollectorFactory.php
+      # - ./vendor/mezzio/mezzio-router/src/RouteCollectorFactory.php:/usr/share/nginx/html/api/vendor/mezzio/mezzio-router/src/RouteCollectorFactory.php
       # - .:/usr/share/nginx/html/api
-      # - ./config/php-fpm/php.d/15-xdebug.ini:/etc/php.d/15-xdebug.ini
-      # - ./config/autoload/development.local.php:/usr/share/nginx/html/api/config/autoload/development.local.php
-      # - ./config/development.config.php:/usr/share/nginx/html/api/config/development.config.php
       - photos:/usr/share/nginx/html/api/public/photos
     restart: always
     depends_on:

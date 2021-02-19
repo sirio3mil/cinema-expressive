@@ -11,3 +11,4 @@ public/info.php
 docker/cert/*
 supervisord.log
 supervisord.pid
+/config/autoload/oauth/
