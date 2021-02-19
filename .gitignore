@@ -8,6 +8,6 @@ public/photos/
 logs/
 data/mssql/*
 public/info.php
-/config/cert/*
-/supervisord.log
-/supervisord.pid
+docker/cert/*
+supervisord.log
+supervisord.pid

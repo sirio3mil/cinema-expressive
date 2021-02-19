@@ -1,4 +1,5 @@
 .idea
+docker/
 data/mssql/
 data/neo4j/
 data/mongo/
