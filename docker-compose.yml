@@ -1,5 +1,21 @@
 version: '3.7'
 services:
+  proxy:
+    image: nginx:latest
+    container_name: proxy
+    volumes:
+      - ./config/proxy:/etc/nginx/conf.d
+      - ./config/certs:/etc/ssl
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    depends_on:
+      - graphql
+      - frontend
+    links:
+      - frontend:cinema.lcl
+      - graphql:api.cinema.lcl
   frontend:
     image: nginx:latest
     container_name: frontend
@@ -7,30 +23,25 @@ services:
       - ../cinema-frontend/dist/cinema-frontend:/usr/share/nginx/html
       - ../cinema-frontend/config/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ../cinema-frontend/config/nginx/conf.d/web.conf:/etc/nginx/conf.d/web.conf
-      - ../cinema-frontend/config/nginx/cert:/etc/ssl
-    ports:
-      - 8080:80
-      - 4443:443
+      - ./config/certs:/etc/ssl
     restart: always
-  web:
-    image: nginx:latest
-    container_name: web
+  graphql:
+    build: .
+    container_name: graphql
     volumes:
-      - ./public/index.php:/usr/share/nginx/html/api/public/index.php
+      - ~/.composer/auth.json:/root/.composer/auth.json
       - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./config/nginx/conf.d/api.conf:/etc/nginx/conf.d/api.conf
       - ./config/nginx/cert:/etc/ssl
-      - photos:/usr/share/nginx/html/api/public/photos
-    ports:
-      - 80:80
-      - 443:443
-    restart: always
-    depends_on:
-      - php
-  php:
-    build: .
-    container_name: php
-    volumes:
+      - ./config/php-fpm/php-fpm.d/www.conf:/etc/php-fpm.d/www.conf
+      - ./config/php-fpm/php.d/10-opcache.ini:/etc/php.d/10-opcache.ini
+      - ./config/php-fpm/php.ini:/etc/php.ini
+      - ./config/php-fpm/php-fpm.conf:/etc/php-fpm.conf
+      - ./vendor/mezzio/mezzio-router/src/RouteCollectorFactory.php:/usr/share/nginx/html/api/vendor/mezzio/mezzio-router/src/RouteCollectorFactory.php
+      # - .:/usr/share/nginx/html/api
+      # - ./config/php-fpm/php.d/15-xdebug.ini:/etc/php.d/15-xdebug.ini
+      # - ./config/autoload/development.local.php:/usr/share/nginx/html/api/config/autoload/development.local.php
+      # - ./config/development.config.php:/usr/share/nginx/html/api/config/development.config.php
       - photos:/usr/share/nginx/html/api/public/photos
     restart: always
     depends_on:

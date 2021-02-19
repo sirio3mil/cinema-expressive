@@ -6,10 +6,8 @@ phpunit.xml
 vendor/
 public/photos/
 logs/
-data/mssql/
-data/neo4j/
-data/mongo/
+data/mssql/*
 public/info.php
-/config/nginx/cert/
+/config/cert/*
 /supervisord.log
 /supervisord.pid
