@@ -82,14 +82,14 @@ class CheckEpisodes extends Command
                 $tape = $tapeUser->getTape();
                 $tvShow = $tape->getTvShow();
                 $lastChapter = $tvShow->getLastChapter();
-                $seasonNumber = $lastChapter->getSeason();
+                $seasonNumber = $lastChapter?->getSeason() || 0;
                 if (!$currentSeason) {
                     $seasonNumber++;
                 }
                 $output->writeln(sprintf(
                         '<info>%s last season %u importing season %u<info>!',
                         $tape->getOriginalTitle(),
-                        $lastChapter->getSeason(),
+                        $lastChapter?->getSeason(),
                         $seasonNumber
                     )
                 );
