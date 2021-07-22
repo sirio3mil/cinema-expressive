@@ -6,6 +6,8 @@ namespace App;
 
 use App\Command\CheckEpisodes;
 use App\Command\CheckEpisodesFactory;
+use App\Command\ImportTape;
+use App\Command\ImportTapeFactory;
 use App\Factory\GraphQLHandlerFactory;
 use App\Handler\GraphQLHandler;
 use JetBrains\PhpStorm\ArrayShape;
@@ -40,6 +42,7 @@ class ConfigProvider
         return [
             'commands' => [
                 'app:check-episodes' => CheckEpisodes::class,
+                'app:import-tape' => ImportTape::class,
             ],
         ];
     }
@@ -54,6 +57,7 @@ class ConfigProvider
             'factories' => [
                 GraphQLHandler::class => GraphQLHandlerFactory::class,
                 CheckEpisodes::class => CheckEpisodesFactory::class,
+                ImportTape::class => ImportTapeFactory::class,
             ],
         ];
     }
