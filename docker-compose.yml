@@ -7,8 +7,8 @@ services:
       - ./docker/proxy:/etc/nginx/conf.d
       - ./docker/cert:/etc/ssl
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     restart: always
     depends_on:
       - graphql
@@ -38,7 +38,7 @@ services:
     volumes:
       - ./data/mssql/backups:/var/opt/mssql/data/backups
     ports:
-      - 1433:1433
+      - "1433:1433"
     restart: always
     environment:
       - ACCEPT_EULA=Y
@@ -49,7 +49,7 @@ services:
     image: memcached:latest
     container_name: memcached
     ports:
-      - 11211:11211
+      - "11211:11211"
     restart: always
 volumes:
   photos:
