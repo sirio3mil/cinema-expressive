@@ -45,6 +45,7 @@
         "ext-pdo_sqlsrv": "*",
         "ext-sqlsrv": "*",
         "ausi/slug-generator": "^1.1",
+        "doctrine/cache": "^1.10",
         "doctrine/orm": "^2.6",
         "ecodev/graphql-doctrine": "^7.0",
         "ecodev/graphql-upload": "^6.0",
@@ -57,7 +58,7 @@
         "laminas/laminas-db": "^2.9",
         "laminas/laminas-dependency-plugin": "^2.1",
         "laminas/laminas-diactoros": "^2.5",
-        "laminas/laminas-servicemanager": "3.5.x",
+        "laminas/laminas-servicemanager": "^3.5",
         "laminas/laminas-stdlib": "^3.1",
         "laminas/laminas-stratigility": "^3.0",
         "mezzio/mezzio": "^3.2",
@@ -72,7 +73,7 @@
         "ramsey/uuid-doctrine": "^1.4",
         "sirio3mil/imdb-scraper": "^1.1",
         "symfony/yaml": "^4.1",
-        "tuupola/cors-middleware": "^0.9.1",
+        "tuupola/cors-middleware": "^1.2",
         "webonyx/graphql-php": "^14.3"
     },
     "require-dev": {
