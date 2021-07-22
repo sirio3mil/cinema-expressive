@@ -86,6 +86,9 @@ class CheckEpisodes extends Command
                 if (!$currentSeason) {
                     $seasonNumber++;
                 }
+                if (!$seasonNumber) {
+                    $seasonNumber = 1;
+                }
                 $output->writeln(sprintf(
                         '<info>%s last season %u importing season %u<info>!',
                         $tape->getOriginalTitle(),
