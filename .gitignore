@@ -12,3 +12,4 @@ docker/cert/*
 supervisord.log
 supervisord.pid
 /config/autoload/oauth/
+.DS_Store
