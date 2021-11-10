@@ -9,7 +9,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    restart: always
+    restart: unless-stopped
     depends_on:
       - graphql
       - frontend
@@ -19,7 +19,7 @@ services:
   frontend:
     build: ../cinema-frontend/.
     container_name: frontend
-    restart: always
+    restart: unless-stopped
   graphql:
     build: .
     container_name: graphql
@@ -28,29 +28,27 @@ services:
       # - ./vendor/mezzio/mezzio-router/src/RouteCollectorFactory.php:/usr/share/nginx/html/api/vendor/mezzio/mezzio-router/src/RouteCollectorFactory.php
       # - .:/usr/share/nginx/html/api
       - photos:/usr/share/nginx/html/api/public/photos
-    restart: always
+    restart: unless-stopped
     depends_on:
       - mssql
       - memcached
   mssql:
-    image: reynier3mil/centos-mssql-full:latest
+    image: mcr.microsoft.com/azure-sql-edge:latest
     container_name: mssql
-    volumes:
-      - ./data/mssql/backups:/var/opt/mssql/data/backups
     ports:
       - "1433:1433"
-    restart: always
+    restart: unless-stopped
+    cap_add:
+      - SYS_PTRACE
     environment:
       - ACCEPT_EULA=Y
       - MSSQL_SA_PASSWORD=ms3CjP{R?1^A
-      - MSSQL_PID=Developer
-      - MSSQL_AGENT_ENABLED=true
   memcached:
     image: memcached:latest
     container_name: memcached
     ports:
       - "11211:11211"
-    restart: always
+    restart: unless-stopped
 volumes:
   photos:
     external: true
