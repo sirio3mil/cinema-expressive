@@ -8,3 +8,4 @@
 !composer.lock
 !bootstrap.php
 !cli-config.php
+!supervisord.conf
